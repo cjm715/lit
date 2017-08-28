@@ -1,0 +1,4 @@
+{
+  "test_tools.py::test_h1norm_of_sinkx_is_sqrt2_times_pi_L_divided_by_k": true,
+  "test_tools.py::test_laplacian_of_sinky_is_neq_ksq_times_cosky": true
+}
