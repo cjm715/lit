@@ -78,7 +78,6 @@ class ScalarTool(object):
         plt.xlabel('x')
         plt.ylabel('y')
         plt.colorbar(im)
-        plt.show()
 
     def scalar_size_test(self, scalar):
         if np.shape(scalar) != (self.N, self.N):
