@@ -72,7 +72,7 @@ def test_that_average_of_adv_diff_operator_hat_is_0():
     assert np.isclose(mean_op, 0.0)
 
 
-def test_integral_of_theta_times_adv_diff_operator_hat_is_equal_to_neg_kappa_h1norm_sq():
+def test_integral_of_theta_times_ifft_adv_diff_operator_hat_is_equal_to_neg_kappa_h1norm_sq():
     L = 10.0
     N = 128
     kappa = 1.0

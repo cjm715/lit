@@ -74,14 +74,16 @@ class ScalarTool(object):
         self.scalar_size_test(scalar)
         im = plt.imshow(np.transpose(scalar),
                         cmap=plt.cm.gray,
-                        extent=(0, self.L, 0, self.L))
+                        extent=(0, self.L, 0, self.L),
+                        origin="lower")
         plt.xlabel('x')
         plt.ylabel('y')
         plt.colorbar(im)
 
     def scalar_size_test(self, scalar):
         if np.shape(scalar) != (self.N, self.N):
-            raise InputError("Scalar field array does not have correct shape")
+            print(np.shape(scalar))
+            raise InputError("Scalar field array does not have correct shape.")
 
     def sint(self, scalar):
         """ Performs spatial integration """
@@ -157,10 +159,9 @@ class VectorTool(object):
         Q = plt.quiver(self.X[0][1:-1:m, 1:-1:m],
                        self.X[1][1:-1:m, 1:-1:m],
                        vector[0][1:-1:m, 1:-1:m],
-                       vector[1][1:-1:m, 1:-1:m])
+                       vector[1][1:-1:m, 1:-1:m], linewidths=2.0)
         plt.quiverkey(
             Q, 0.8, 1.03, 2, r'%.2f $\frac{m}{s}$' % np.amax(vector), labelpos='E',)
-        plt.title('Vector field')
         plt.xlabel(r'$x$')
         plt.ylabel(r'$y$')
         plt.xlim(0.0, self.L)
