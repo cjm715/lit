@@ -18,3 +18,26 @@ def FE(op, th0, tarray):
             dt = tarray[i] - tarray[i - 1]
             th[i] = FE_timestepper(op, th[i - 1], dt)
     return th
+
+
+def RK4_timestepper(op, th0, dt):
+    k1 = op(th0)
+    k2 = op(th0 + 0.5 * dt * k1)
+    k3 = op(th0 + 0.5 * dt * k2)
+    k4 = op(th0 + dt * k3)
+    th = th0 + dt * (1.0 / 6.0) * (k1 + 2.0 * k2 + 2.0 * k3 + k4)
+    return th
+
+
+def RK4(op, th0, tarray):
+    num_time_steps = len(tarray)
+    shape = np.shape(th0)
+    N = shape[0]
+    th = np.zeros((num_time_steps, N, N))
+    for i, t in enumerate(tarray):
+        if i == 0:
+            th[0] = th0
+        else:
+            dt = tarray[i] - tarray[i - 1]
+            th[i] = RK4_timestepper(op, th[i - 1], dt)
+    return th

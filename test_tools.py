@@ -1,4 +1,4 @@
-from tools import ScalarTool, VectorTool, create_grid
+from tools import ScalarTool, VectorTool, create_grid, dt_cfl
 import numpy as np
 import math
 
@@ -196,7 +196,9 @@ def test_ifft_of_fft_equals_original_vector_function():
     assert np.allclose(vt.fft(vt.ifft(u)), u)
 
 
-# def test_spectral_diff():
-#     L = 10.5
-#     N = 128
-#     st = ScalarTool(N, L)
+def test_particular_case_of_parameters_for_dt_cfl():
+    N = 128
+    L = 2.0
+    U = 1
+    kappa = 0.5
+    assert np.isclose(dt_cfl(N, L, kappa, U), 0.00048828125)

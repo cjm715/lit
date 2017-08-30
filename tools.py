@@ -6,6 +6,10 @@ def create_grid(N, L):
     return np.mgrid[:N, :N].astype(float) * (L / N)
 
 
+def dt_cfl(N, L, kappa, U):
+    return min(L / (N * U), L**2 / (N**2 * kappa))
+
+
 class ScalarTool(object):
     """
     Description:
@@ -167,6 +171,14 @@ class VectorTool(object):
         plt.xlim(0.0, self.L)
         plt.ylim(0.0, self.L)
         plt.axis('scaled')
+
+    def dealias(self, vector):
+        """ Dealias vector """
+        self.vector_size_test(vector)
+        vector_hat = self.fft(vector)
+        vector_hat[0] = vector_hat[0] * self.dealias_array
+        vector_hat[1] = vector_hat[1] * self.dealias_array
+        return self.ifft(vector_hat)
 
     def vector_size_test(self, vector):
         """ Determines if vector is correct size """

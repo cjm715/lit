@@ -11,12 +11,15 @@ class OperatorKit(object):
         self.vt = VectorTool(N, L)
         self.u_sin_flow = np.zeros((2, self.N, self.N))
         self.u_sin_flow[0] = np.sin((2.0 * np.pi / self.L) * self.st.X[1])
+        self.u_sin_flow_hat = self.vt.fft(self.u_sin_flow)
         self.u_uniform_flow = np.zeros((2, self.N, self.N))
         self.u_uniform_flow[0] = np.ones((self.N, self.N))
 
     def adv_diff_op(self, u, th):
-        op = - self.st.dealias(sum(u * self.st.grad(th), 0)
-                               ) + self.kappa * self.st.lap(th)
+        th = self.st.dealias(th)
+        u = self.vt.dealias(u)
+        op = self.st.dealias(-sum(u * self.st.grad(th), 0)
+                             + self.kappa * self.st.lap(th))
         op = np.real(op)
         return op
 
@@ -29,6 +32,9 @@ class OperatorKit(object):
 
     def sin_flow_op(self, th):
         return self.adv_diff_op(self.u_sin_flow, th)
+
+    def sin_flow_op_hat(self, th_hat):
+        return self.adv_diff_op_hat(self.u_sin_flow_hat, th_hat)
 
     def uniform_flow_op(self, th):
         return self.adv_diff_op(self.u_uniform_flow, th)
