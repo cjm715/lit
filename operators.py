@@ -18,15 +18,15 @@ class OperatorKit(object):
     def adv_diff_op(self, u, th):
         th = self.st.dealias(th)
         u = self.vt.dealias(u)
-        op = self.st.dealias(-sum(u * self.st.grad(th), 0)
-                             + self.kappa * self.st.lap(th))
+        op = self.st.dealias(-sum(u * self.st.grad(th), 0) +
+                             self.kappa * self.st.lap(th))
         op = np.real(op)
         return op
 
     def adv_diff_op_hat(self, u_hat, th_hat):
-        u = self.vt.ifft(u_hat)
-        th = self.st.ifft(th_hat)
-        op_hat = - self.st.ifft(sum(u * self.st.grad(th), 0)) - \
+        u = np.real(self.vt.ifft(u_hat * self.vt.dealias_array))
+        th = np.real(self.st.ifft(th_hat * self.st.dealias_array))
+        op_hat = - self.st.fft(sum(u * self.st.grad(th), 0)) - \
             self.kappa * self.st.K2 * (2 * np.pi / self.L)**2.0 * th_hat
         return op_hat * self.st.dealias_array
 
@@ -38,6 +38,19 @@ class OperatorKit(object):
 
     def uniform_flow_op(self, th):
         return self.adv_diff_op(self.u_uniform_flow, th)
+
+    def lit_energy_op(self, th, U):
+        return self.adv_diff_op(self.u_lit_energy(th, U), th)
+
+    def u_lit_energy(self, th, U):
+        v = th * self.st.grad_invlap(th)
+        v = self.vt.div_free_proj(v)
+        return U * self.L * v / self.vt.l2norm(v)
+
+    def u_lit_enstrophy(self, th, gamma):
+        v = th * self.st.grad_invlap(th)
+        v = -self.vt.invlap(self.vt.div_free_proj(v))
+        return gamma * self.L * v / self.st.l2norm(self.vt.curl(v))
 
 
 class InputError(Exception):

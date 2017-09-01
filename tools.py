@@ -33,41 +33,42 @@ class ScalarTool(object):
         self.K = np.array(np.meshgrid(
             self.kx, self.ky, indexing='ij'), dtype=int)
         self.K2 = sum(self.K * self.K, 0).astype(float)
-        self.KoverK2 = self.K.astype(
-            float) / np.where(self.K2 == 0, 1, self.K2).astype(float)
+        self.oneoverK2 = 1.0 / np.where(
+            self.K2 == 0.0, 1.0, self.K2).astype(float)
+        self.KoverK2 = self.K.astype(float) * self.oneoverK2
+        self.mean_zero_array = self.K2 != 0.0
         self.dealias_array = (abs(self.kx[:, np.newaxis]) < self.N / 3.0) * \
             (abs(self.ky[np.newaxis, :]) < self.N / 3.0)
 
     def l2norm(self, scalar):
-        self.scalar_size_test(scalar)
-
+        self.scalar_input_test(scalar)
         return np.sum(np.ravel(scalar)**2.0 * self.h**2.0)**0.5
 
     def grad(self, scalar):
-        self.scalar_size_test(scalar)
+        self.scalar_input_test(scalar)
 
         scalar_hat = np.fft.fftn(scalar)
         return np.real(np.fft.ifftn(1.0j * self.K * (2 * np.pi / self.L) * scalar_hat, axes=(1, 2)))
 
     def h1norm(self, scalar):
-        self.scalar_size_test(scalar)
+        self.scalar_input_test(scalar)
         grad_scalar = self.grad(scalar)
         grad_scalar_sq = sum(grad_scalar * grad_scalar, 0)
         integrand = np.ravel(grad_scalar_sq)
         return np.sum(integrand * self.h**2.0)**0.5
 
     def lap(self, scalar):
-        self.scalar_size_test(scalar)
+        self.scalar_input_test(scalar)
         scalar_hat = np.fft.fftn(scalar)
         return np.real(np.fft.ifftn((-1.0) * self.K2 * (2 * np.pi / self.L)**2.0 * scalar_hat))
 
     def grad_invlap(self, scalar):
-        self.scalar_size_test(scalar)
+        self.scalar_input_test(scalar)
         scalar_hat = np.fft.fftn(scalar)
         return np.real(np.fft.ifftn(-1.0j * self.KoverK2 * (2 * np.pi / self.L)**(-1.0) * scalar_hat, axes=(1, 2)))
 
     def hm1norm(self, scalar):
-        self.scalar_size_test(scalar)
+        self.scalar_input_test(scalar)
         grad_invlap_scalar = self.grad_invlap(scalar)
         grad_invlap_scalar_sq = sum(grad_invlap_scalar *
                                     grad_invlap_scalar, 0)  # dot product
@@ -75,7 +76,7 @@ class ScalarTool(object):
         return np.sum(integrand * self.h**2.0)**0.5
 
     def plot(self, scalar):
-        self.scalar_size_test(scalar)
+        self.scalar_input_test(scalar)
         im = plt.imshow(np.transpose(scalar),
                         cmap=plt.cm.gray,
                         extent=(0, self.L, 0, self.L),
@@ -84,31 +85,44 @@ class ScalarTool(object):
         plt.ylabel('y')
         plt.colorbar(im)
 
-    def scalar_size_test(self, scalar):
+    def scalar_input_test(self, scalar):
         if np.shape(scalar) != (self.N, self.N):
             print(np.shape(scalar))
+            raise InputError("Scalar field array does not have correct shape.")
+        if not np.all(np.isrealobj(scalar)):
+            raise InputError("Scalar field array should be real.")
+
+    def scalar_hat_input_test(self, scalar_hat):
+        if np.shape(scalar_hat) != (self.N, self.N):
+            print(np.shape(scalar_hat))
             raise InputError("Scalar field array does not have correct shape.")
 
     def sint(self, scalar):
         """ Performs spatial integration """
-        self.scalar_size_test(scalar)
+        self.scalar_input_test(scalar)
         return np.sum(np.ravel(scalar) * self.h**2.0)
 
     def dealias(self, scalar):
         """ Perform 1/3 dealias on scalar """
-        self.scalar_size_test(scalar)
+        self.scalar_input_test(scalar)
         temp_hat = self.fft(scalar) * self.dealias_array
         return self.ifft(temp_hat)
 
     def fft(self, scalar):
         """ Performs fft of scalar field """
-        self.scalar_size_test(scalar)
+        self.scalar_input_test(scalar)
         return np.fft.fftn(scalar)
 
     def ifft(self, scalar_hat):
         """ Performs inverse fft of scalar field """
-        self.scalar_size_test(scalar_hat)
-        return np.fft.ifftn(scalar_hat)
+        self.scalar_hat_input_test(scalar_hat)
+        return np.real(np.fft.ifftn(scalar_hat))
+
+    def subtract_mean(self, scalar):
+        """ subtract off mean """
+        self.scalar_input_test(scalar)
+        scalar_hat = self.fft(scalar)
+        return np.real(self.ifft(scalar_hat * self.mean_zero_array))
 
 
 class VectorTool(object):
@@ -134,24 +148,32 @@ class VectorTool(object):
         self.K = np.array(np.meshgrid(
             self.kx, self.ky, indexing='ij'), dtype=int)
         self.K2 = sum(self.K * self.K, 0).astype(float)
-        self.KoverK2 = self.K.astype(
-            float) / np.where(self.K2 == 0, 1, self.K2).astype(float)
+        self.oneoverK2 = 1.0 / np.where(
+            self.K2 == 0.0, 1.0, self.K2).astype(float)
+        self.KoverK2 = self.K.astype(float) * self.oneoverK2
+        self.mean_zero_array = self.K2 != 0.0
         self.dealias_array = (abs(self.kx[:, np.newaxis]) < self.N / 3.0) * \
             (abs(self.ky[np.newaxis, :]) < self.N / 3.0)
 
+    def div(self, vector):
+        """ Take divergence of vector """
+        self.vector_input_test(vector)
+        vector_hat = self.fft(vector)
+        return np.real(np.fft.ifftn(sum(1j * self.K * (2 * np.pi / self.L) * vector_hat, 0)))
+
     def fft(self, vector):
         """ Performs fft of vector field """
-        self.vector_size_test(vector)
+        self.vector_input_test(vector)
         return np.fft.fftn(vector, axes=(1, 2))
 
     def ifft(self, vector_hat):
         """ Performs inverse fft of vector hat field """
-        self.vector_size_test(vector_hat)
-        return np.fft.ifftn(vector_hat, axes=(1, 2))
+        self.vector_hat_input_test(vector_hat)
+        return np.real(np.fft.ifftn(vector_hat, axes=(1, 2)))
 
     def plot(self, vector, high_quality=False):
         """ Plots a quiver plot of the vector field """
-        self.vector_size_test(vector)
+        self.vector_input_test(vector)
         if high_quality:
             plt.rc('text', usetex=True)
             plt.rc('font', family='serif', size=12)
@@ -168,22 +190,76 @@ class VectorTool(object):
             Q, 0.8, 1.03, 2, r'%.2f $\frac{m}{s}$' % np.amax(vector), labelpos='E',)
         plt.xlabel(r'$x$')
         plt.ylabel(r'$y$')
+        plt.title('')
         plt.xlim(0.0, self.L)
         plt.ylim(0.0, self.L)
         plt.axis('scaled')
 
     def dealias(self, vector):
         """ Dealias vector """
-        self.vector_size_test(vector)
+        self.vector_input_test(vector)
         vector_hat = self.fft(vector)
-        vector_hat[0] = vector_hat[0] * self.dealias_array
-        vector_hat[1] = vector_hat[1] * self.dealias_array
-        return self.ifft(vector_hat)
+        vector_hat = vector_hat * self.dealias_array
+        return np.real(self.ifft(vector_hat))
 
-    def vector_size_test(self, vector):
+    def l2norm(self, vector):
+        """ L2 norm of a vector field """
+        self.vector_input_test(vector)
+        integrand = sum(vector * vector, 0)
+
+        return sum(np.ravel(integrand) * self.h**2)**0.5
+
+    def vector_input_test(self, vector):
         """ Determines if vector is correct size """
         if np.shape(vector) != (2, self.N, self.N):
+            print(np.shape(vector))
             raise InputError("Vector field array does not have correct shape")
+
+        if not np.all(np.isrealobj(vector)):
+            raise InputError("Scalar field array should be real.")
+
+    def vector_hat_input_test(self, vector_hat):
+        """ Determines if vector is correct size """
+        if np.shape(vector_hat) != (2, self.N, self.N):
+            print(np.shape(vector_hat))
+            raise InputError("Vector field array does not have correct shape")
+
+    def is_incompressible(self, vector):
+        self.vector_input_test(vector)
+        return np.allclose(self.div(vector), 0)
+
+    def div_free_proj(self, vector):
+        """ performs leray divergence-free projection """
+        self.vector_input_test(vector)
+        vector_hat = self.fft(vector)
+        return self.ifft(vector_hat - self.KoverK2 * sum(self.K * vector_hat, 0))
+
+    def curl(self, vector):
+        """ Perform curl of vector """
+        self.vector_input_test(vector)
+        vector_hat = self.fft(vector)
+        w = np.real(np.fft.ifftn(
+            1j * self.K[1] * vector_hat[0] - 1j * self.K[0] * vector_hat[1]))
+        return w
+
+    def invlap(self, vector):
+        """ Inverse laplacian of vector """
+        self.vector_input_test(vector)
+        vector_hat = self.fft(vector)
+        return np.real(self.ifft(-1.0 * (2.0 * np.pi / self.L)**(-2.0) *
+                                 self.oneoverK2 * self.mean_zero_array * vector_hat))
+
+    def lap(self, vector):
+        """ Laplacian of vector """
+        self.vector_input_test(vector)
+        vector_hat = self.fft(vector)
+        return np.real(self.ifft(-1.0 * (2.0 * np.pi / self.L)**(2.0) * (self.K2) * vector_hat))
+
+    def subtract_mean(self, vector):
+        """ subtract off mean """
+        self.vector_input_test(vector)
+        vector_hat = self.fft(vector)
+        return np.real(self.ifft(vector_hat * self.mean_zero_array))
 
 
 class InputError(Exception):

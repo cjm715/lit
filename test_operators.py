@@ -1,4 +1,4 @@
-from tools import ScalarTool, create_grid
+from tools import ScalarTool, create_grid, VectorTool
 from operators import OperatorKit
 import numpy as np
 
@@ -89,3 +89,54 @@ def test_integral_of_theta_times_ifft_adv_diff_operator_hat_is_equal_to_neg_kapp
     op_output = np.real(np.fft.ifftn(op.adv_diff_op_hat(u_hat, th_hat)))
 
     assert np.isclose(st.sint(th * op_output), - kappa * st.h1norm(th)**2.0)
+
+
+def test_that_LIT_energy_flow_satisfies_budget_constriant():
+    L = 10.0
+    N = 128
+    kappa = 0.1
+    U = 2.0
+    vt = VectorTool(N, L)
+    st = ScalarTool(N, L)
+    th = np.sin((2 * np.pi / L) * st.X[0])
+    okit = OperatorKit(N, L, kappa)
+    assert np.isclose(vt.l2norm(okit.u_lit_energy(th, U)), U * L)
+
+
+def test_that_LIT_energy_flow_is_incompressible():
+    L = 10.0
+    N = 128
+    kappa = 0.1
+    U = 2.0
+    vt = VectorTool(N, L)
+    st = ScalarTool(N, L)
+    th = np.sin((2 * np.pi / L) * st.X[0])
+    okit = OperatorKit(N, L, kappa)
+    assert vt.is_incompressible(okit.u_lit_energy(th, U))
+
+
+def test_that_LIT_enstrophy_flow_satisfies_budget_constraint():
+    L = 10.0
+    N = 128
+    kappa = 0.1
+    gamma = 2.0
+    vt = VectorTool(N, L)
+    st = ScalarTool(N, L)
+    th = np.exp(np.sin((2 * np.pi / L) *
+                       st.X[0]) * np.cos((2 * np.pi / L) * st.X[1]))
+    okit = OperatorKit(N, L, kappa)
+    assert np.isclose(
+        st.l2norm(vt.curl(okit.u_lit_enstrophy(th, gamma))), gamma * L)
+
+
+def test_that_LIT_enstrophy_flow_is_incompressible():
+    L = 10.0
+    N = 128
+    kappa = 0.1
+    gamma = 2.0
+    vt = VectorTool(N, L)
+    st = ScalarTool(N, L)
+    th = np.exp(np.sin((2 * np.pi / L) *
+                       st.X[0]) * np.cos((2 * np.pi / L) * st.X[1]))
+    okit = OperatorKit(N, L, kappa)
+    assert vt.is_incompressible(okit.u_lit_enstrophy(th, gamma))

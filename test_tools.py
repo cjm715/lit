@@ -180,7 +180,7 @@ def test_ifft_of_fft_equals_original_scalar_function():
     X = np.mgrid[:N, :N].astype(float) * (L / N)
     th = np.sin(k * X[0])
     st = ScalarTool(N, L)
-    assert np.allclose(st.fft(st.ifft(th)), th)
+    assert np.allclose(st.ifft(st.fft(th)), th)
 
 
 def test_ifft_of_fft_equals_original_vector_function():
@@ -193,7 +193,7 @@ def test_ifft_of_fft_equals_original_vector_function():
     u[1] = np.cos(k * X[0])
 
     vt = VectorTool(N, L)
-    assert np.allclose(vt.fft(vt.ifft(u)), u)
+    assert np.allclose(vt.ifft(vt.fft(u)), u)
 
 
 def test_particular_case_of_parameters_for_dt_cfl():
@@ -202,3 +202,118 @@ def test_particular_case_of_parameters_for_dt_cfl():
     U = 1
     kappa = 0.5
     assert np.isclose(dt_cfl(N, L, kappa, U), 0.00048828125)
+
+
+def test_that_l2norm_of_vector_with_siny_for_xcomponent_equals_sqrt_of_half_of_Lsq():
+    L = 2.0 * np.pi
+    N = 128
+    vt = VectorTool(N, L)
+    X = np.mgrid[:N, :N].astype(float) * (L / N)
+    u = np.zeros((2, N, N))
+    u[0] = np.sin(2.0 * np.pi * X[1] / L)
+    assert np.isclose(vt.l2norm(u), (0.5 * L ** 2)**0.5)
+
+
+def test_that_is_incompressible_function_returns_true_for_cellular_flow():
+    N = 128
+    L = 2 * np.pi
+    vt = VectorTool(N, L)
+    u = np.zeros((2, N, N))
+    u[0] = np.sin((2.0 * np.pi / L) * vt.X[0]) * \
+        np.sin((2.0 * np.pi / L) * vt.X[1])
+    u[1] = np.cos((2.0 * np.pi / L) * vt.X[0]) * \
+        np.cos((2.0 * np.pi / L) * vt.X[1])
+    assert vt.is_incompressible(u)
+
+
+def test_that_div_free_projector_converts_a_compressible_flow_to_incompressible():
+    N = 128
+    L = 2 * np.pi
+    vt = VectorTool(N, L)
+    u = np.zeros((2, N, N))
+    # Compressible flow
+    u[0] = np.sin((2.0 * np.pi / L) * vt.X[0]) * \
+        np.sin((2.0 * np.pi / L) * vt.X[1])
+    u[1] = -np.cos((2.0 * np.pi / L) * vt.X[0]) * \
+        np.cos((2.0 * np.pi / L) * vt.X[1])
+
+    w = np.zeros((2, N, N))
+
+    w[0] = np.sin((2.0 * np.pi / L) * vt.X[0]) * \
+        np.sin((2.0 * np.pi / L) * vt.X[1])
+    w[1] = np.cos((2.0 * np.pi / L) * vt.X[0]) * \
+        np.cos((2.0 * np.pi / L) * vt.X[1])
+
+    u = u + 0.1 * w
+
+    assert vt.is_incompressible(vt.div_free_proj(u))
+
+
+def test_validate_div_free_projector():
+    L = 2.0 * np.pi
+    N = 128
+    st = ScalarTool(N, L)
+    vt = VectorTool(N, L)
+    u = np.zeros((2, N, N))
+    # Compressible flow
+    u[0] = np.sin((2.0 * np.pi / L) * vt.X[0]) * \
+        np.sin((2.0 * np.pi / L) * vt.X[1])
+    u[1] = -np.cos((2.0 * np.pi / L) * vt.X[0]) * \
+        np.cos((2.0 * np.pi / L) * vt.X[1])
+
+    w = np.zeros((2, N, N))
+
+    w[0] = np.sin((2.0 * np.pi / L) * vt.X[0]) * \
+        np.sin((2.0 * np.pi / L) * vt.X[1])
+    w[1] = np.cos((2.0 * np.pi / L) * vt.X[0]) * \
+        np.cos((2.0 * np.pi / L) * vt.X[1])
+
+    u = u + 0.1 * w
+
+    projection_alt = u - st.grad_invlap(vt.div(u))
+    assert np.allclose(projection_alt, vt.div_free_proj(u))
+
+
+def test_lap_invlap_of_th_is_th_minus_mean_value():
+    L = 2.0 * np.pi
+    N = 128
+    vt = VectorTool(N, L)
+    u = np.zeros((2, N, N))
+    # Compressible flow
+    u[0] = np.sin((2.0 * np.pi / L) * vt.X[0]) * \
+        np.sin((2.0 * np.pi / L) * vt.X[1]) + 2.0
+    u[1] = -np.cos((2.0 * np.pi / L) * vt.X[0]) * \
+        np.cos((2.0 * np.pi / L) * vt.X[1]) + 1.0
+
+    assert np.allclose(vt.lap(vt.invlap(u)), vt.subtract_mean(u))
+
+
+def test_subtract_mean_of_sinkx_plus_constant_equals_sinkx():
+    L = 2.0
+    N = 128
+    st = ScalarTool(N, L)
+    sinkx = np.sin((2 * np.pi / L) * st.X[0])
+    th = sinkx + 10.0
+    assert np.allclose(st.subtract_mean(th), sinkx)
+
+
+def test_subtract_mean_of_velocity():
+    L = 2.0
+    N = 128
+    vt = VectorTool(N, L)
+    u = np.zeros((2, N, N))
+    sinkx = np.sin((2 * np.pi / L) * vt.X[0])
+    u[0] = sinkx + 2.0
+    u[1] = sinkx + 1.0
+
+    assert np.allclose(vt.subtract_mean(u), np.array([sinkx, sinkx]))
+
+
+def test_st_ifft_of_function_is_real():
+    L = 10.5
+    N = 128
+    k = 2.0 * np.pi / L
+    X = np.mgrid[:N, :N].astype(float) * (L / N)
+    th = np.sin(k * X[0])
+    st = ScalarTool(N, L)
+    assert np.all(np.isreal(st.ifft(st.fft(th))))
