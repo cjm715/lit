@@ -1,5 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import pyfftw.interfaces.numpy_fft as fft
+# from numpy import fft
 
 
 def create_grid(N, L):
@@ -32,7 +34,7 @@ class ScalarTool(object):
         self.ky = np.fft.fftfreq(self.N, 1. / self.N).astype(float)
         self.K = np.array(np.meshgrid(
             self.kx, self.ky, indexing='ij'), dtype=int)
-        self.K2 = sum(self.K * self.K, 0).astype(float)
+        self.K2 = np.sum(self.K * self.K, 0).astype(float)
         self.oneoverK2 = 1.0 / np.where(
             self.K2 == 0.0, 1.0, self.K2).astype(float)
         self.KoverK2 = self.K.astype(float) * self.oneoverK2
@@ -47,31 +49,31 @@ class ScalarTool(object):
     def grad(self, scalar):
         self.scalar_input_test(scalar)
 
-        scalar_hat = np.fft.fftn(scalar)
-        return np.real(np.fft.ifftn(1.0j * self.K * (2 * np.pi / self.L) * scalar_hat, axes=(1, 2)))
+        scalar_hat = fft.fftn(scalar)
+        return np.real(fft.ifftn(1.0j * self.K * (2 * np.pi / self.L) * scalar_hat, axes=(1, 2)))
 
     def h1norm(self, scalar):
         self.scalar_input_test(scalar)
         grad_scalar = self.grad(scalar)
-        grad_scalar_sq = sum(grad_scalar * grad_scalar, 0)
+        grad_scalar_sq = np.sum(grad_scalar * grad_scalar, 0)
         integrand = np.ravel(grad_scalar_sq)
         return np.sum(integrand * self.h**2.0)**0.5
 
     def lap(self, scalar):
         self.scalar_input_test(scalar)
-        scalar_hat = np.fft.fftn(scalar)
-        return np.real(np.fft.ifftn((-1.0) * self.K2 * (2 * np.pi / self.L)**2.0 * scalar_hat))
+        scalar_hat = fft.fftn(scalar)
+        return np.real(fft.ifftn((-1.0) * self.K2 * (2 * np.pi / self.L)**2.0 * scalar_hat))
 
     def grad_invlap(self, scalar):
         self.scalar_input_test(scalar)
-        scalar_hat = np.fft.fftn(scalar)
-        return np.real(np.fft.ifftn(-1.0j * self.KoverK2 * (2 * np.pi / self.L)**(-1.0) * scalar_hat, axes=(1, 2)))
+        scalar_hat = fft.fftn(scalar)
+        return np.real(fft.ifftn(-1.0j * self.KoverK2 * (2 * np.pi / self.L)**(-1.0) * scalar_hat, axes=(1, 2)))
 
     def hm1norm(self, scalar):
         self.scalar_input_test(scalar)
         grad_invlap_scalar = self.grad_invlap(scalar)
-        grad_invlap_scalar_sq = sum(grad_invlap_scalar *
-                                    grad_invlap_scalar, 0)  # dot product
+        grad_invlap_scalar_sq = np.sum(grad_invlap_scalar *
+                                       grad_invlap_scalar, 0)  # dot product
         integrand = np.ravel(grad_invlap_scalar_sq)
         return np.sum(integrand * self.h**2.0)**0.5
 
@@ -111,12 +113,12 @@ class ScalarTool(object):
     def fft(self, scalar):
         """ Performs fft of scalar field """
         self.scalar_input_test(scalar)
-        return np.fft.fftn(scalar)
+        return fft.fftn(scalar)
 
     def ifft(self, scalar_hat):
         """ Performs inverse fft of scalar field """
         self.scalar_hat_input_test(scalar_hat)
-        return np.real(np.fft.ifftn(scalar_hat))
+        return np.real(fft.ifftn(scalar_hat))
 
     def subtract_mean(self, scalar):
         """ subtract off mean """
@@ -147,7 +149,7 @@ class VectorTool(object):
         self.ky = np.fft.fftfreq(self.N, 1. / self.N).astype(float)
         self.K = np.array(np.meshgrid(
             self.kx, self.ky, indexing='ij'), dtype=int)
-        self.K2 = sum(self.K * self.K, 0).astype(float)
+        self.K2 = np.sum(self.K * self.K, 0).astype(float)
         self.oneoverK2 = 1.0 / np.where(
             self.K2 == 0.0, 1.0, self.K2).astype(float)
         self.KoverK2 = self.K.astype(float) * self.oneoverK2
@@ -159,17 +161,17 @@ class VectorTool(object):
         """ Take divergence of vector """
         self.vector_input_test(vector)
         vector_hat = self.fft(vector)
-        return np.real(np.fft.ifftn(sum(1j * self.K * (2 * np.pi / self.L) * vector_hat, 0)))
+        return np.real(np.fft.ifftn(np.sum(1j * self.K * (2 * np.pi / self.L) * vector_hat, 0)))
 
     def fft(self, vector):
         """ Performs fft of vector field """
         self.vector_input_test(vector)
-        return np.fft.fftn(vector, axes=(1, 2))
+        return fft.fftn(vector, axes=(1, 2))
 
     def ifft(self, vector_hat):
         """ Performs inverse fft of vector hat field """
         self.vector_hat_input_test(vector_hat)
-        return np.real(np.fft.ifftn(vector_hat, axes=(1, 2)))
+        return np.real(fft.ifftn(vector_hat, axes=(1, 2)))
 
     def plot(self, vector, high_quality=False):
         """ Plots a quiver plot of the vector field """
@@ -205,9 +207,9 @@ class VectorTool(object):
     def l2norm(self, vector):
         """ L2 norm of a vector field """
         self.vector_input_test(vector)
-        integrand = sum(vector * vector, 0)
+        integrand = np.sum(vector * vector, 0)
 
-        return sum(np.ravel(integrand) * self.h**2)**0.5
+        return np.sum(np.ravel(integrand) * self.h**2)**0.5
 
     def vector_input_test(self, vector):
         """ Determines if vector is correct size """
@@ -232,7 +234,7 @@ class VectorTool(object):
         """ performs leray divergence-free projection """
         self.vector_input_test(vector)
         vector_hat = self.fft(vector)
-        return self.ifft(vector_hat - self.KoverK2 * sum(self.K * vector_hat, 0))
+        return self.ifft(vector_hat - self.KoverK2 * np.sum(self.K * vector_hat, 0))
 
     def curl(self, vector):
         """ Perform curl of vector """

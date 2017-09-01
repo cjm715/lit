@@ -16,17 +16,15 @@ class OperatorKit(object):
         self.u_uniform_flow[0] = np.ones((self.N, self.N))
 
     def adv_diff_op(self, u, th):
-        th = self.st.dealias(th)
-        u = self.vt.dealias(u)
-        op = self.st.dealias(-sum(u * self.st.grad(th), 0) +
+        op = self.st.dealias(-np.sum(u * self.st.grad(th), 0) +
                              self.kappa * self.st.lap(th))
         op = np.real(op)
         return op
 
     def adv_diff_op_hat(self, u_hat, th_hat):
-        u = np.real(self.vt.ifft(u_hat * self.vt.dealias_array))
-        th = np.real(self.st.ifft(th_hat * self.st.dealias_array))
-        op_hat = - self.st.fft(sum(u * self.st.grad(th), 0)) - \
+        u = self.vt.ifft(u_hat * self.vt.dealias_array)
+        th = self.st.ifft(th_hat * self.st.dealias_array)
+        op_hat = - self.st.fft(np.sum(u * self.st.grad(th), 0)) - \
             self.kappa * self.st.K2 * (2 * np.pi / self.L)**2.0 * th_hat
         return op_hat * self.st.dealias_array
 
@@ -46,6 +44,26 @@ class OperatorKit(object):
         v = th * self.st.grad_invlap(th)
         v = self.vt.div_free_proj(v)
         return U * self.L * v / self.vt.l2norm(v)
+
+    def lit_energy_op_hat(self, th_hat, U):
+        th = self.st.ifft(th_hat)
+
+        grad_invlap_th = self.vt.ifft(-1.0j * self.st.KoverK2 *
+                                      (2 * np.pi / self.L)**(-1.0) * th_hat)
+
+        v = th * grad_invlap_th
+
+        v = self.vt.div_free_proj(v)
+
+        v = U * self.L * v / self.vt.l2norm(v)
+
+        grad_th = self.vt.ifft(
+            1.0j * self.st.K * (2 * np.pi / self.L) * th_hat)
+
+        op_hat = self.st.fft(np.sum(-v * grad_th, 0)) - self.kappa * \
+            self.st.K2 * (2 * np.pi / self.L)**2.0 * th_hat
+
+        return op_hat
 
     def u_lit_enstrophy(self, th, gamma):
         v = th * self.st.grad_invlap(th)

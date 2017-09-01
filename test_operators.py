@@ -1,6 +1,7 @@
 from tools import ScalarTool, create_grid, VectorTool
 from operators import OperatorKit
 import numpy as np
+import pytest
 
 
 def test_that_adv_diff_operator_output_is_real():
