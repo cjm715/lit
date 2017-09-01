@@ -38,7 +38,25 @@ class OperatorKit(object):
         return self.adv_diff_op(self.u_uniform_flow, th)
 
     def lit_energy_op(self, th, U):
-        return self.adv_diff_op(self.u_lit_energy(th, U), th)
+
+        th_hat = self.st.fft(th)
+
+        grad_invlap_th = self.vt.ifft(-1.0j * self.st.KoverK2 *
+                                      (2 * np.pi / self.L)**(-1.0) * th_hat)
+        v = th * grad_invlap_th
+        v = self.vt.div_free_proj(v)
+        v = U * self.L * v / self.vt.l2norm(v)
+
+        grad_th = self.vt.ifft(
+            1.0j * self.st.K * (2 * np.pi / self.L) * th_hat)
+
+        lap_th = self.st.ifft((-1.0) * self.st.K2 *
+                              (2 * np.pi / self.L)**2.0 * th_hat)
+
+        op = self.st.dealias(-np.sum(v * grad_th, 0) +
+                             self.kappa * lap_th)
+
+        return op
 
     def u_lit_energy(self, th, U):
         v = th * self.st.grad_invlap(th)
@@ -47,16 +65,11 @@ class OperatorKit(object):
 
     def lit_energy_op_hat(self, th_hat, U):
         th = self.st.ifft(th_hat)
-
         grad_invlap_th = self.vt.ifft(-1.0j * self.st.KoverK2 *
                                       (2 * np.pi / self.L)**(-1.0) * th_hat)
-
         v = th * grad_invlap_th
-
         v = self.vt.div_free_proj(v)
-
         v = U * self.L * v / self.vt.l2norm(v)
-
         grad_th = self.vt.ifft(
             1.0j * self.st.K * (2 * np.pi / self.L) * th_hat)
 
