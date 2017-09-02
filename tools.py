@@ -30,17 +30,23 @@ class ScalarTool(object):
         self.L = L
         self.h = self.L / self.N
         self.X = np.mgrid[:self.N, :self.N].astype(float) * self.h
-        self.kx = np.fft.fftfreq(self.N, 1. / self.N).astype(float)
-        self.ky = np.fft.fftfreq(self.N, 1. / self.N).astype(float)
+
+        self.Nf = self.N // 2 + 1
+        self.kx = np.fft.fftfreq(self.N, 1. / self.N).astype(int)
+        self.ky = self.kx[:self.Nf].copy()
+        self.ky[-1] *= -1
         self.K = np.array(np.meshgrid(
             self.kx, self.ky, indexing='ij'), dtype=int)
-        self.K2 = np.sum(self.K * self.K, 0).astype(float)
-        self.oneoverK2 = 1.0 / np.where(
-            self.K2 == 0.0, 1.0, self.K2).astype(float)
-        self.KoverK2 = self.K.astype(float) * self.oneoverK2
+        self.K2 = np.sum(self.K * self.K, 0, dtype=int)
+        self.KoverK2 = self.K.astype(
+            float) / np.where(self.K2 == 0, 1, self.K2).astype(float)
+        self.oneoverK2 = 1.0 / \
+            np.where(self.K2 == 0.0, 1.0, self.K2).astype(float)
         self.mean_zero_array = self.K2 != 0.0
-        self.dealias_array = (abs(self.kx[:, np.newaxis]) < self.N / 3.0) * \
-            (abs(self.ky[np.newaxis, :]) < self.N / 3.0)
+        self.kmax_dealias = 2. / 3. * (self.N / 2 + 1)
+        self.dealias_array = np.array((abs(self.K[0]) < self.kmax_dealias) * (
+            abs(self.K[1]) < self.kmax_dealias), dtype=bool)
+        self.num_threads = 1
 
     def l2norm(self, scalar):
         self.scalar_input_test(scalar)
@@ -49,8 +55,8 @@ class ScalarTool(object):
     def grad(self, scalar):
         self.scalar_input_test(scalar)
 
-        scalar_hat = fft.fftn(scalar)
-        return np.real(fft.ifftn(1.0j * self.K * (2 * np.pi / self.L) * scalar_hat, axes=(1, 2)))
+        scalar_hat = self.fft(scalar)
+        return fft.irfftn(1.0j * self.K * (2 * np.pi / self.L) * scalar_hat, axes=(1, 2), threads=self.num_threads)
 
     def h1norm(self, scalar):
         self.scalar_input_test(scalar)
@@ -61,13 +67,13 @@ class ScalarTool(object):
 
     def lap(self, scalar):
         self.scalar_input_test(scalar)
-        scalar_hat = fft.fftn(scalar)
-        return np.real(fft.ifftn((-1.0) * self.K2 * (2 * np.pi / self.L)**2.0 * scalar_hat))
+        scalar_hat = self.fft(scalar)
+        return self.ifft((-1.0) * self.K2 * (2 * np.pi / self.L)**2.0 * scalar_hat)
 
     def grad_invlap(self, scalar):
         self.scalar_input_test(scalar)
-        scalar_hat = fft.fftn(scalar)
-        return np.real(fft.ifftn(-1.0j * self.KoverK2 * (2 * np.pi / self.L)**(-1.0) * scalar_hat, axes=(1, 2)))
+        scalar_hat = self.fft(scalar)
+        return fft.irfftn(-1.0j * self.KoverK2 * (2 * np.pi / self.L)**(-1.0) * scalar_hat, axes=(1, 2), threads=self.num_threads)
 
     def hm1norm(self, scalar):
         self.scalar_input_test(scalar)
@@ -95,7 +101,7 @@ class ScalarTool(object):
             raise InputError("Scalar field array should be real.")
 
     def scalar_hat_input_test(self, scalar_hat):
-        if np.shape(scalar_hat) != (self.N, self.N):
+        if np.shape(scalar_hat) != (self.N, self.Nf):
             print(np.shape(scalar_hat))
             raise InputError("Scalar field array does not have correct shape.")
 
@@ -113,13 +119,13 @@ class ScalarTool(object):
     def fft(self, scalar):
         """ Performs fft of scalar field """
         self.scalar_input_test(scalar)
-        scalar_hat = fft.fftn(scalar)
+        scalar_hat = fft.rfftn(scalar, threads=self.num_threads)
         return scalar_hat
 
     def ifft(self, scalar_hat):
         """ Performs inverse fft of scalar field """
         self.scalar_hat_input_test(scalar_hat)
-        scalar = np.real(fft.ifftn(scalar_hat))
+        scalar = fft.irfftn(scalar_hat, threads=self.num_threads)
         return scalar
 
     def subtract_mean(self, scalar):
@@ -147,34 +153,39 @@ class VectorTool(object):
         self.L = L
         self.h = self.L / self.N
         self.X = np.mgrid[:self.N, :self.N].astype(float) * self.h
-        self.kx = np.fft.fftfreq(self.N, 1. / self.N).astype(float)
-        self.ky = np.fft.fftfreq(self.N, 1. / self.N).astype(float)
+        self.Nf = self.N // 2 + 1
+        self.kx = np.fft.fftfreq(self.N, 1. / self.N).astype(int)
+        self.ky = self.kx[:self.Nf].copy()
+        self.ky[-1] *= -1
         self.K = np.array(np.meshgrid(
             self.kx, self.ky, indexing='ij'), dtype=int)
-        self.K2 = np.sum(self.K * self.K, 0).astype(float)
-        self.oneoverK2 = 1.0 / np.where(
-            self.K2 == 0.0, 1.0, self.K2).astype(float)
-        self.KoverK2 = self.K.astype(float) * self.oneoverK2
+        self.K2 = np.sum(self.K * self.K, 0, dtype=int)
+        self.KoverK2 = self.K.astype(
+            float) / np.where(self.K2 == 0, 1, self.K2).astype(float)
+        self.oneoverK2 = 1.0 / \
+            np.where(self.K2 == 0.0, 1.0, self.K2).astype(float)
         self.mean_zero_array = self.K2 != 0.0
-        self.dealias_array = (abs(self.kx[:, np.newaxis]) < self.N / 3.0) * \
-            (abs(self.ky[np.newaxis, :]) < self.N / 3.0)
+        self.kmax_dealias = 2. / 3. * (self.N / 2 + 1)
+        self.dealias_array = np.array((abs(self.K[0]) < self.kmax_dealias) * (
+            abs(self.K[1]) < self.kmax_dealias), dtype=bool)
+        self.num_threads = 1
 
     def div(self, vector):
         """ Take divergence of vector """
         self.vector_input_test(vector)
         vector_hat = self.fft(vector)
-        return np.real(np.fft.ifftn(np.sum(1j * self.K * (2 * np.pi / self.L) * vector_hat, 0)))
+        return fft.irfftn(np.sum(1j * self.K * (2 * np.pi / self.L) * vector_hat, 0), threads=self.num_threads)
 
     def fft(self, vector):
         """ Performs fft of vector field """
         self.vector_input_test(vector)
-        vector_hat = fft.fftn(vector, axes=(1, 2))
+        vector_hat = fft.rfftn(vector, axes=(1, 2), threads=self.num_threads)
         return vector_hat
 
     def ifft(self, vector_hat):
         """ Performs inverse fft of vector hat field """
         self.vector_hat_input_test(vector_hat)
-        vector = np.real(fft.ifftn(vector_hat, axes=(1, 2)))
+        vector = fft.irfftn(vector_hat, axes=(1, 2), threads=self.num_threads)
 
         return vector
 
@@ -227,7 +238,7 @@ class VectorTool(object):
 
     def vector_hat_input_test(self, vector_hat):
         """ Determines if vector is correct size """
-        if np.shape(vector_hat) != (2, self.N, self.N):
+        if np.shape(vector_hat) != (2, self.N, self.Nf):
             print(np.shape(vector_hat))
             raise InputError("Vector field array does not have correct shape")
 
@@ -245,8 +256,8 @@ class VectorTool(object):
         """ Perform curl of vector """
         self.vector_input_test(vector)
         vector_hat = self.fft(vector)
-        w = np.real(np.fft.ifftn(
-            1j * self.K[1] * vector_hat[0] - 1j * self.K[0] * vector_hat[1]))
+        w = fft.irfftn(
+            1j * self.K[1] * vector_hat[0] - 1j * self.K[0] * vector_hat[1], threads=self.num_threads)
         return w
 
     def invlap(self, vector):

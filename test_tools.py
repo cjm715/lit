@@ -41,6 +41,9 @@ def test_that_sinx_on_domain_with_L_of_2pi_has_equal_norms():
     l2norm = st.l2norm(th)
     h1norm = st.h1norm(th)
     hm1norm = st.hm1norm(th)
+    print(l2norm)
+    print(h1norm)
+    print(hm1norm)
     assert (math.isclose(l2norm, h1norm) and math.isclose(l2norm, hm1norm))
 
 

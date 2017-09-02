@@ -28,7 +28,7 @@ def integrator(op, timestepper, th0, tarray):
     shape = np.shape(th0)
     N = shape[0]
     if np.iscomplexobj(th0):
-        th = np.zeros((num_time_steps, N, N), dtype=complex)
+        th = np.zeros((num_time_steps, N, N // 2 + 1), dtype=complex)
     else:
         th = np.zeros((num_time_steps, N, N))
     for i, t in enumerate(tarray):

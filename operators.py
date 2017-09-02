@@ -64,6 +64,7 @@ class OperatorKit(object):
         return U * self.L * v / self.vt.l2norm(v)
 
     def lit_energy_op_hat(self, th_hat, U):
+
         th = self.st.ifft(th_hat)
         grad_invlap_th = self.vt.ifft(-1.0j * self.st.KoverK2 *
                                       (2 * np.pi / self.L)**(-1.0) * th_hat)
