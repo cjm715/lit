@@ -318,25 +318,3 @@ def test_st_ifft_of_function_is_real():
     th = np.sin(k * X[0])
     st = ScalarTool(N, L)
     assert np.all(np.isreal(st.ifft(st.fft(th))))
-
-
-def test_conversion_between_scalar_rhat_and_hat_formats_is_correct_in_both_directions():
-    L = 2.0
-    N = 128
-    st = ScalarTool(N, L)
-    scalar_rhat = np.random.random(
-        (N, N // 2 + 1)) + 1j * np.random.random(((N, N // 2 + 1)))
-    scalar_hat = st.rhat_2_hat(scalar_rhat)
-    scalar_rhat2 = st.hat_2_rhat(scalar_hat)
-    assert np.allclose(scalar_rhat2, scalar_rhat)
-
-
-def test_conversion_between_vector_rhat_and_hat_formats_is_correct_in_both_directions():
-    L = 2.0
-    N = 128
-    vt = VectorTool(N, L)
-    v_rhat = np.random.random(
-        (2, N, N // 2 + 1)) + 1j * np.random.random(((2, N, N // 2 + 1)))
-    v_hat = vt.rhat_2_hat(v_rhat)
-    v_rhat2 = vt.hat_2_rhat(v_hat)
-    assert np.allclose(v_rhat2, v_rhat)

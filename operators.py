@@ -73,8 +73,8 @@ class OperatorKit(object):
         grad_th = self.vt.ifft(
             1.0j * self.st.K * (2 * np.pi / self.L) * th_hat)
 
-        op_hat = self.st.fft(np.sum(-v * grad_th, 0)) - self.kappa * \
-            self.st.K2 * (2 * np.pi / self.L)**2.0 * th_hat
+        op_hat = (self.st.fft(np.sum(-v * grad_th, 0)) - self.kappa *
+                  self.st.K2 * (2 * np.pi / self.L)**2.0 * th_hat) * self.st.dealias_array
 
         return op_hat
 
@@ -82,6 +82,43 @@ class OperatorKit(object):
         v = th * self.st.grad_invlap(th)
         v = -self.vt.invlap(self.vt.div_free_proj(v))
         return gamma * self.L * v / self.st.l2norm(self.vt.curl(v))
+
+    def lit_enstrophy_op(self, th, gamma):
+        th_hat = self.st.fft(th)
+
+        grad_invlap_th = self.vt.ifft(-1.0j * self.st.KoverK2 *
+                                      (2 * np.pi / self.L)**(-1.0) * th_hat)
+        v = th * grad_invlap_th
+        v = -self.vt.invlap(self.vt.div_free_proj(v))
+        v = gamma * self.L * v / self.st.l2norm(self.vt.curl(v))
+
+        grad_th = self.vt.ifft(
+            1.0j * self.st.K * (2 * np.pi / self.L) * th_hat)
+
+        lap_th = self.st.ifft((-1.0) * self.st.K2 *
+                              (2 * np.pi / self.L)**2.0 * th_hat)
+
+        op = self.st.dealias(-np.sum(v * grad_th, 0) +
+                             self.kappa * lap_th)
+
+        return op
+
+    def lit_enstrophy_op_hat(self, th_hat, gamma):
+        th = self.st.ifft(th_hat)
+        grad_invlap_th = self.vt.ifft(-1.0j * self.st.KoverK2 *
+                                      (2 * np.pi / self.L)**(-1.0) * th_hat)
+
+        v = th * grad_invlap_th
+        v = -self.vt.invlap(self.vt.div_free_proj(v))
+        v = gamma * self.L * v / self.st.l2norm(self.vt.curl(v))
+
+        grad_th = self.vt.ifft(
+            1.0j * self.st.K * (2 * np.pi / self.L) * th_hat)
+
+        op_hat = (self.st.fft(np.sum(-v * grad_th, 0)) - self.kappa *
+                  self.st.K2 * (2 * np.pi / self.L)**2.0 * th_hat) * self.st.dealias_array
+
+        return op_hat
 
 
 class InputError(Exception):

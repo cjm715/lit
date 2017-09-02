@@ -113,24 +113,14 @@ class ScalarTool(object):
     def fft(self, scalar):
         """ Performs fft of scalar field """
         self.scalar_input_test(scalar)
-        # scalar_rhat = fft.rfftn(scalar)
-        # scalar_hat = self.rhat_2_hat(scalar_rhat)
         scalar_hat = fft.fftn(scalar)
         return scalar_hat
 
     def ifft(self, scalar_hat):
         """ Performs inverse fft of scalar field """
         self.scalar_hat_input_test(scalar_hat)
-        # scalar_rhat = self.hat_2_rhat(scalar_hat)
-        # scalar = fft.irfftn(scalar_rhat)
         scalar = np.real(fft.ifftn(scalar_hat))
         return scalar
-
-    def rhat_2_hat(self, scalar_rhat):
-        return np.concatenate([scalar_rhat, np.fliplr(scalar_rhat[:, 1:-1])], axis=1)
-
-    def hat_2_rhat(self, scalar_hat):
-        return scalar_hat[:, 0:(self.N // 2 + 1)]
 
     def subtract_mean(self, scalar):
         """ subtract off mean """
@@ -178,18 +168,12 @@ class VectorTool(object):
     def fft(self, vector):
         """ Performs fft of vector field """
         self.vector_input_test(vector)
-
-        # vector_rhat = fft.rfftn(vector, axes=(1, 2))
-        # vector_hat = self.rhat_2_hat(vector_rhat)
         vector_hat = fft.fftn(vector, axes=(1, 2))
         return vector_hat
 
     def ifft(self, vector_hat):
         """ Performs inverse fft of vector hat field """
         self.vector_hat_input_test(vector_hat)
-
-        # vector_rhat = self.hat_2_rhat(vector_hat)
-        # vector = fft.irfftn(vector_rhat, axes=(1, 2))
         vector = np.real(fft.ifftn(vector_hat, axes=(1, 2)))
 
         return vector
@@ -283,12 +267,6 @@ class VectorTool(object):
         self.vector_input_test(vector)
         vector_hat = self.fft(vector)
         return np.real(self.ifft(vector_hat * self.mean_zero_array))
-
-    def rhat_2_hat(self, vector_rhat):
-        return np.concatenate([vector_rhat, np.conj(np.fliplr(vector_rhat[:, :, 1:-1]))], axis=2)
-
-    def hat_2_rhat(self, vector_hat):
-        return vector_hat[:, :, 0:(self.N // 2 + 1)]
 
 
 class InputError(Exception):

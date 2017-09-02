@@ -24,13 +24,17 @@ if __name__ == "__main__":
     th0_hat = st.ifft(th0)
 
     # Create operators: d th / dt = operator (th)
-    def lit_op_hat(scalar_hat):
+    def lit_energy_op_hat(scalar_hat):
         return okit.lit_energy_op_hat(scalar_hat, U)
 
     def sin_op_hat(scalar_hat):
         return okit.sin_flow_op_hat(scalar_hat)
 
+    def lit_enstrophy_op_hat(scalar_hat):
+        return okit.lit_enstrophy_op_hat(scalar_hat, U)
+
     time = np.linspace(0, 0.2, 200)
     th0_hat = RK4_timestepper(sin_op_hat, th0_hat, 0.001)
-    th_hist_hat = RK4(lit_op_hat, th0_hat, time)
+    # th_hist_hat = RK4(lit_energy_op_hat, th0_hat, time)
+    th_hist_hat = RK4(lit_enstrophy_op_hat, th0_hat, time)
     th2_hist = np.array([st.ifft(th_hat) for th_hat in th_hist_hat])

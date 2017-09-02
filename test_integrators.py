@@ -217,3 +217,45 @@ def test_lit_energy_op_and_lit_energy_op_hat_integrations_give_the_same_results(
 
     print(np.amax(abs(th2_hist - th_hist)))
     assert np.allclose(th2_hist, th_hist)
+
+
+def test_lit_enstrophy_op_and_lit_enstrophy_op_hat_integrations_give_the_same_results():
+    # Parameters
+    L = 1.0
+    N = 64
+    Pe = 100.0
+    kappa = 1.0 / Pe
+    gamma = 1.0
+
+    # Create tool box
+    st = ScalarTool(N, L)
+    okit = OperatorKit(N, L, kappa)
+
+    # Initial condition
+    X = create_grid(N, L)
+    th0 = np.sin((2.0 * np.pi / L) * X[0])
+    th0_hat = st.fft(th0)
+
+    # Create operators: d th / dt = operator (th)
+    def lit_op_hat(scalar_hat):
+        return okit.lit_enstrophy_op_hat(scalar_hat, gamma)
+
+    def lit_op(scalar):
+        return okit.lit_enstrophy_op(scalar, gamma)
+
+    def sin_op_hat(scalar_hat):
+        return okit.sin_flow_op_hat(scalar_hat)
+
+    def sin_op(scalar):
+        return okit.sin_flow_op(scalar)
+
+    time = np.linspace(0, 0.02, 20)
+    th0 = RK4_timestepper(sin_op, th0, 0.001)
+    th_hist = RK4(lit_op, th0, time)
+
+    th0_hat = RK4_timestepper(sin_op_hat, th0_hat, 0.001)
+    th_hist_hat = RK4(lit_op_hat, th0_hat, time)
+    th2_hist = np.array([st.ifft(th_hat) for th_hat in th_hist_hat])
+
+    print(np.amax(abs(th2_hist - th_hist)))
+    assert np.allclose(th2_hist, th_hist)
