@@ -2,6 +2,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pyfftw.interfaces.numpy_fft as fft
 # from numpy import fft
+from pyfftw.interfaces import cache
+
+cache.enable()
 
 
 def create_grid(N, L):
@@ -46,7 +49,7 @@ class ScalarTool(object):
         self.kmax_dealias = 2. / 3. * (self.N / 2 + 1)
         self.dealias_array = np.array((abs(self.K[0]) < self.kmax_dealias) * (
             abs(self.K[1]) < self.kmax_dealias), dtype=bool)
-        self.num_threads = 1
+        self.num_threads = 4
 
     def l2norm(self, scalar):
         self.scalar_input_test(scalar)

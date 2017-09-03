@@ -13,7 +13,7 @@ if __name__ == "__main__":
     Pe = 100.0
     kappa = 1.0 / Pe
     U = 1.0
-
+    T = 2.0
     # Create tool box
     okit = OperatorKit(N, L, kappa)
 
@@ -31,7 +31,9 @@ if __name__ == "__main__":
     def sin_op(scalar):
         return okit.sin_flow_op(scalar)
 
-    time = np.linspace(0, 0.2, 200)
+    dt = 0.25 * dt_cfl(N, L, kappa, U)
+    print('dt= ', dt)
+    time = np.linspace(0, T, round(T / dt))
     th0 = RK4_timestepper(sin_op, th0, 0.001)
     th = RK4(lit_energy_op, th0, time)
     # th = RK4(lit_enstrophy_op, th0, time)

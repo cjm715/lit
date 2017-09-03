@@ -1,4 +1,5 @@
 import numpy as np
+import pyfftw
 
 
 def FE_timestepper(op, th0, dt):
@@ -28,9 +29,11 @@ def integrator(op, timestepper, th0, tarray):
     shape = np.shape(th0)
     N = shape[0]
     if np.iscomplexobj(th0):
-        th = np.zeros((num_time_steps, N, N // 2 + 1), dtype=complex)
+        th = pyfftw.empty_aligned(
+            (num_time_steps, N, N // 2 + 1), dtype=complex)
     else:
-        th = np.zeros((num_time_steps, N, N))
+        th = pyfftw.empty_aligned(
+            (num_time_steps, N, N), dtype=float)
     for i, t in enumerate(tarray):
         if i == 0:
             th[0] = th0

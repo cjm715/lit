@@ -1,5 +1,8 @@
 import numpy as np
 from tools import ScalarTool, VectorTool
+import pyfftw
+from numba import jit
+import numba
 
 
 class OperatorKit(object):
@@ -14,6 +17,14 @@ class OperatorKit(object):
         self.u_sin_flow_hat = self.vt.fft(self.u_sin_flow)
         self.u_uniform_flow = np.zeros((2, self.N, self.N))
         self.u_uniform_flow[0] = np.ones((self.N, self.N))
+
+        # Temporary arrays
+        self.th = pyfftw.empty_aligned((self.N, self.N), dtype=float)
+        self.grad_invlap_th = pyfftw.empty_aligned(
+            (2, self.N, self.N), dtype=float)
+        self.v = pyfftw.empty_aligned((2, self.N, self.N), dtype=float)
+        self.grad_th = pyfftw.empty_aligned((2, self.N, self.N), dtype=float)
+        self.out_hat = pyfftw.empty_aligned((self.N, self.N), dtype=complex)
 
     def adv_diff_op(self, u, th):
         op = self.st.dealias(-np.sum(u * self.st.grad(th), 0) +
@@ -63,21 +74,28 @@ class OperatorKit(object):
         v = self.vt.div_free_proj(v)
         return U * self.L * v / self.vt.l2norm(v)
 
+    # @profile
+    # @jit(numba.complex128[:, :](numba.complex128[:, :], numba.float64))
     def lit_energy_op_hat(self, th_hat, U):
 
-        th = self.st.ifft(th_hat)
-        grad_invlap_th = self.vt.ifft(-1.0j * self.st.KoverK2 *
-                                      (2 * np.pi / self.L)**(-1.0) * th_hat)
-        v = th * grad_invlap_th
-        v = self.vt.div_free_proj(v)
-        v = U * self.L * v / self.vt.l2norm(v)
-        grad_th = self.vt.ifft(
+        self.th = self.st.ifft(th_hat)
+        self.v = self.th * self.vt.ifft(
+            -1.0j * self.st.KoverK2 * (2 * np.pi / self.L)**(-1.0) * th_hat)
+
+        self.v -= self.vt.ifft(self.vt.KoverK2 *
+                               np.sum(self.vt.K * self.vt.fft(self.v), 0))
+
+        self.v *= U * self.L / self.vt.l2norm(self.v)
+
+        self.grad_th = self.vt.ifft(
             1.0j * self.st.K * (2 * np.pi / self.L) * th_hat)
 
-        op_hat = (self.st.fft(np.sum(-v * grad_th, 0)) - self.kappa *
-                  self.st.K2 * (2 * np.pi / self.L)**2.0 * th_hat) * self.st.dealias_array
+        self.out_hat = self.st.fft(np.sum(-self.v * self.grad_th, 0))
+        self.out_hat -= self.kappa * self.st.K2 * \
+            (2 * np.pi / self.L)**2.0 * th_hat
+        self.out_hat *= self.st.dealias_array
 
-        return op_hat
+        return self.out_hat
 
     def u_lit_enstrophy(self, th, gamma):
         v = th * self.st.grad_invlap(th)
