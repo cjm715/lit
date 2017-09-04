@@ -1,6 +1,15 @@
 from tools import ScalarTool, VectorTool, create_grid, dt_cfl
 import numpy as np
 import math
+from tools import N_boyd
+
+
+# def test_N_boyd_should_return_50_given_M_10():
+#     assert N_boyd(10) == 50
+#
+#
+# def test_N_boyd_should_return_14_given_M_1():
+#     assert N_boyd(1) == 14
 
 
 def test_that_l2norm_of_sinx_on_domain_with_L_of_2pi_equals_sqrt_of_half_of_Lsq():

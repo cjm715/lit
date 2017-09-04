@@ -41,3 +41,34 @@ def integrator(op, timestepper, th0, tarray):
             dt = tarray[i] - tarray[i - 1]
             th[i] = timestepper(op, th[i - 1], dt)
     return th
+
+
+def integrator2(op, timestepper, th0, tarray, dt0_cfl):
+    num_time_steps = len(tarray)
+    shape = np.shape(th0)
+    N = shape[0]
+    num_time_steps = len(tarray)
+    if np.iscomplexobj(th0):
+        th = pyfftw.empty_aligned(
+            (num_time_steps, N, N // 2 + 1), dtype=complex)
+    else:
+        th = pyfftw.empty_aligned(
+            (num_time_steps, N, N), dtype=float)
+    for i, t in enumerate(tarray):
+        if i == 0:
+            th[0] = th0
+        else:
+            dt = tarray[i] - tarray[i - 1]
+            M = np.ceil(dt / dt0_cfl).astype('int') if dt > dt0_cfl else 1
+            print(M)
+            th[i] = timestepper(op, th[i - 1], dt, M)
+
+        print('Fraction complete: %.2f' % (t / tarray[-1]))
+    return th
+
+
+def mega_RK4_timestepper(op, th0, dt, M):
+    th = np.copy(th0)
+    for i in range(M):
+        th = RK4_timestepper(op, th, dt / M)
+    return th

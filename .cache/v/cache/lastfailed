@@ -1,4 +1,5 @@
 {
+  "test_integrators.py::test_dt_alpha": true,
   "test_integrators.py::test_that_RK4_timestepper_has_first_order_convergence": true,
   "test_operators.py::test_integral_of_theta_times_adv_diff_op_is_equal_to_kappa_h1norm_sq": true,
   "test_operators.py::test_that_FE_time_step_with_adv_diff_op_perserves_l2norm_when_kappa_is_0": true,

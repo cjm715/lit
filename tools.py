@@ -7,6 +7,13 @@ from pyfftw.interfaces import cache
 cache.enable()
 
 
+def N_boyd(M):
+    """ Boyd's rule of thumb. M is the number of wave lengths
+    given by M = L/l where L is the box size and l is the smallest
+    scale to be resolved """
+    return int(2**np.ceil(np.log2(4 * (M + 1) + 6)))
+
+
 def create_grid(N, L):
     return np.mgrid[:N, :N].astype(float) * (L / N)
 
@@ -49,7 +56,7 @@ class ScalarTool(object):
         self.kmax_dealias = 2. / 3. * (self.N / 2 + 1)
         self.dealias_array = np.array((abs(self.K[0]) < self.kmax_dealias) * (
             abs(self.K[1]) < self.kmax_dealias), dtype=bool)
-        self.num_threads = 4
+        self.num_threads = 1
 
     def l2norm(self, scalar):
         self.scalar_input_test(scalar)
@@ -122,14 +129,12 @@ class ScalarTool(object):
     def fft(self, scalar):
         """ Performs fft of scalar field """
         self.scalar_input_test(scalar)
-        scalar_hat = fft.rfftn(scalar, threads=self.num_threads)
-        return scalar_hat
+        return fft.rfftn(scalar, threads=self.num_threads)
 
     def ifft(self, scalar_hat):
         """ Performs inverse fft of scalar field """
         self.scalar_hat_input_test(scalar_hat)
-        scalar = fft.irfftn(scalar_hat, threads=self.num_threads)
-        return scalar
+        return fft.irfftn(scalar_hat, threads=self.num_threads)
 
     def subtract_mean(self, scalar):
         """ subtract off mean """
@@ -182,15 +187,12 @@ class VectorTool(object):
     def fft(self, vector):
         """ Performs fft of vector field """
         self.vector_input_test(vector)
-        vector_hat = fft.rfftn(vector, axes=(1, 2), threads=self.num_threads)
-        return vector_hat
+        return fft.rfftn(vector, axes=(1, 2), threads=self.num_threads)
 
     def ifft(self, vector_hat):
         """ Performs inverse fft of vector hat field """
         self.vector_hat_input_test(vector_hat)
-        vector = fft.irfftn(vector_hat, axes=(1, 2), threads=self.num_threads)
-
-        return vector
+        return fft.irfftn(vector_hat, axes=(1, 2), threads=self.num_threads)
 
     def plot(self, vector, high_quality=False):
         """ Plots a quiver plot of the vector field """

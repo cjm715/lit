@@ -3,6 +3,8 @@ import matplotlib.pyplot as plt
 from tools import ScalarTool, VectorTool
 import pyfftw
 
+import os
+
 
 def compute_norms(scalar_hist, N, L):
     st = ScalarTool(N, L)
@@ -35,3 +37,23 @@ def plot_norms(time, scalar_hist, N, L, high_quality=False):
     plt.legend()
     plt.xlabel('Time')
     plt.grid(alpha=0.5)
+
+
+def movie(time, scalar_hist, N, L, output_path='output/'):
+    os.system('mkdir ' + output_path + 'images/')
+    st = ScalarTool(N, L)
+    # st.plot(scalar_hist[i])
+    # plt.savefig(outputPath + "image%.4d.png" % i, format='png')
+    for i in range(len(time)):
+        fig = plt.figure()
+        st.plot(np.real(scalar_hist[i]))
+        plt.title('Time = %.3f' % time[i])
+        plt.savefig(output_path + 'images/' + "image%.4d.png" %
+                    i, format='png')
+        # plt.savefig("image.png", format='png')
+        plt.close(fig)
+
+    os.system("ffmpeg -y -framerate 20 -i " + output_path + 'images/'
+              "image%04d.png -c:v libx264 -pix_fmt yuv420p " + output_path + "movies.mp4")
+
+    os.system('rm -r ' + output_path + 'images/')

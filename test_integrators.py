@@ -1,5 +1,5 @@
 from operators import OperatorKit
-from integrators import FE_timestepper, FE, RK4_timestepper, RK4
+from integrators import FE_timestepper, FE, RK4_timestepper, RK4, mega_RK4_timestepper, integrator2
 import numpy as np
 from tools import ScalarTool, create_grid, dt_cfl
 from copy import copy
@@ -259,3 +259,42 @@ def test_lit_enstrophy_op_and_lit_enstrophy_op_hat_integrations_give_the_same_re
 
     print(np.amax(abs(th2_hist - th_hist)))
     assert np.allclose(th2_hist, th_hist)
+
+
+def test_integrator2_and_integrator_give_same_results():
+    # Parameters
+    L = 1.0
+    Pe = 50.0
+    kappa = 1.0 / Pe
+    U = 1.0
+    T = 0.2
+    N = 64
+
+    # Create tool box
+    okit = OperatorKit(N, L, kappa)
+
+    # Initial condition
+    X = create_grid(N, L)
+    th0 = np.sin((2.0 * np.pi / L) * X[0])
+
+    # Create operators: d th / dt = operator (th)
+    def lit_energy_op(scalar):
+        return okit.lit_energy_op(scalar, U)
+
+    def lit_enstrophy_op(scalar):
+        return okit.lit_enstrophy_op(scalar, U)
+
+    def sin_op(scalar):
+        return okit.sin_flow_op(scalar)
+
+    time_array = np.linspace(0, T, 100)
+    th0 = RK4_timestepper(sin_op, th0, 0.001)
+
+    th = RK4(lit_energy_op, th0, time_array)
+
+    dt0_cfl = 2.0 * (time_array[1] - time_array[0])
+    th2 = integrator2(lit_energy_op, mega_RK4_timestepper,
+                      th0, time_array, dt0_cfl)
+
+    # print(np.amax(np.abs(th - th2)))
+    assert np.allclose(th, th2)
