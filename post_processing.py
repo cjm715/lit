@@ -1,5 +1,8 @@
 import numpy as np
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
+
 from tools import ScalarTool, VectorTool
 import pyfftw
 
@@ -22,7 +25,7 @@ def compute_norms(scalar_hist, N, L):
     return [hm1norm_hist, l2norm_hist, h1norm_hist]
 
 
-def plot_norms(time, scalar_hist, N, L, high_quality=False):
+def plot_norms(time, scalar_hist, N, L, high_quality=False, graph='log'):
     if high_quality:
         plt.rc('text', usetex=True)
         plt.rc('font', family='serif', size=12)
@@ -30,10 +33,22 @@ def plot_norms(time, scalar_hist, N, L, high_quality=False):
         plt.rc('text', usetex=False)
         plt.rc('font', family='sans-serif', size=12)
     hm1norm_hist, l2norm_hist, h1norm_hist = compute_norms(scalar_hist, N, L)
-    plt.semilogy(time, hm1norm_hist,
+
+    if graph == 'log':
+        plt.semilogy(time, hm1norm_hist,
+                     label=r'$H^{-1}$', linestyle='-', color='k')
+        plt.semilogy(time, l2norm_hist, label=r'$L^2$',
+                     linestyle='--', color='k')
+        plt.semilogy(time, h1norm_hist,
+                     label=r'$H^{1}$', linestyle=':', color='k')
+    elif graph == 'linear':
+        plt.plot(time, hm1norm_hist,
                  label=r'$H^{-1}$', linestyle='-', color='k')
-    plt.semilogy(time, l2norm_hist, label=r'$L^2$', linestyle='--', color='k')
-    plt.semilogy(time, h1norm_hist, label=r'$H^{1}$', linestyle=':', color='k')
+        plt.plot(time, l2norm_hist, label=r'$L^2$',
+                 linestyle='--', color='k')
+        plt.plot(time, h1norm_hist,
+                 label=r'$H^{1}$', linestyle=':', color='k')
+
     plt.legend()
     plt.xlabel('Time')
     plt.grid(alpha=0.5)

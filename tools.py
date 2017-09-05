@@ -1,9 +1,10 @@
 import numpy as np
-import matplotlib.pyplot as plt
 import pyfftw.interfaces.numpy_fft as fft
 # from numpy import fft
 from pyfftw.interfaces import cache
-
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
 cache.enable()
 
 
@@ -11,7 +12,7 @@ def N_boyd(M):
     """ Boyd's rule of thumb. M is the number of wave lengths
     given by M = L/l where L is the box size and l is the smallest
     scale to be resolved """
-    return int(2**np.ceil(np.log2(4 * (M + 1) + 6)))
+    return int(2**np.ceil(np.log2(4 * (M - 1) + 6)))
 
 
 def create_grid(N, L):
@@ -19,7 +20,12 @@ def create_grid(N, L):
 
 
 def dt_cfl(N, L, kappa, U):
-    return min(L / (N * U), L**2 / (N**2 * kappa))
+    if kappa == 0:
+        dt = L / (N * U)
+    else:
+        dt = min(L / (N * U), L**2 / (N**2 * kappa))
+
+    return dt
 
 
 class ScalarTool(object):
@@ -93,14 +99,22 @@ class ScalarTool(object):
         integrand = np.ravel(grad_invlap_scalar_sq)
         return np.sum(integrand * self.h**2.0)**0.5
 
-    def plot(self, scalar):
+    def plot(self, scalar, high_quality=False):
+
+        if high_quality:
+            plt.rc('text', usetex=True)
+            plt.rc('font', family='serif', size=12)
+        else:
+            plt.rc('text', usetex=False)
+            plt.rc('font', family='sans-serif', size=12)
+
         self.scalar_input_test(scalar)
         im = plt.imshow(np.transpose(scalar),
                         cmap=plt.cm.gray,
                         extent=(0, self.L, 0, self.L),
                         origin="lower")
-        plt.xlabel('x')
-        plt.ylabel('y')
+        plt.xlabel(r'$x$')
+        plt.ylabel(r'$y$')
         plt.colorbar(im)
 
     def scalar_input_test(self, scalar):

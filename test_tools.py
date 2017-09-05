@@ -10,6 +10,12 @@ from tools import N_boyd
 #
 # def test_N_boyd_should_return_14_given_M_1():
 #     assert N_boyd(1) == 14
+def test_that_dt_cfl_works_for_kappa_0():
+    N = 128
+    L = 2.0
+    kappa = 0.0
+    U = 3.0
+    assert dt_cfl(N, L, kappa, U) == L / (N * U)
 
 
 def test_that_l2norm_of_sinx_on_domain_with_L_of_2pi_equals_sqrt_of_half_of_Lsq():

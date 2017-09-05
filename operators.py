@@ -1,8 +1,6 @@
 import numpy as np
 from tools import ScalarTool, VectorTool
 import pyfftw
-from numba import jit
-import numba
 
 
 class OperatorKit(object):
@@ -64,8 +62,7 @@ class OperatorKit(object):
         lap_th = self.st.ifft((-1.0) * self.st.K2 *
                               (2 * np.pi / self.L)**2.0 * th_hat)
 
-        op = self.st.dealias(-np.sum(v * grad_th, 0) +
-                             self.kappa * lap_th)
+        op = -np.sum(v * grad_th, 0) + self.kappa * lap_th
 
         return op
 
@@ -93,7 +90,7 @@ class OperatorKit(object):
         self.out_hat = self.st.fft(np.sum(-self.v * self.grad_th, 0))
         self.out_hat -= self.kappa * self.st.K2 * \
             (2 * np.pi / self.L)**2.0 * th_hat
-        self.out_hat *= self.st.dealias_array
+        # self.out_hat *= self.st.dealias_array #REMOVED DEALIASING
 
         return self.out_hat
 
@@ -117,8 +114,7 @@ class OperatorKit(object):
         lap_th = self.st.ifft((-1.0) * self.st.K2 *
                               (2 * np.pi / self.L)**2.0 * th_hat)
 
-        op = self.st.dealias(-np.sum(v * grad_th, 0) +
-                             self.kappa * lap_th)
+        op = np.sum(-v * grad_th, 0) + self.kappa * lap_th
 
         return op
 
@@ -134,8 +130,8 @@ class OperatorKit(object):
         grad_th = self.vt.ifft(
             1.0j * self.st.K * (2 * np.pi / self.L) * th_hat)
 
-        op_hat = (self.st.fft(np.sum(-v * grad_th, 0)) - self.kappa *
-                  self.st.K2 * (2 * np.pi / self.L)**2.0 * th_hat) * self.st.dealias_array
+        op_hat = self.st.fft(np.sum(-v * grad_th, 0)) - self.kappa * \
+            self.st.K2 * (2 * np.pi / self.L)**2.0 * th_hat
 
         return op_hat
 
