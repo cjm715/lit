@@ -25,17 +25,16 @@ class OperatorKit(object):
         self.out_hat = pyfftw.empty_aligned((self.N, self.N), dtype=complex)
 
     def adv_diff_op(self, u, th):
-        op = self.st.dealias(-np.sum(u * self.st.grad(th), 0) +
-                             self.kappa * self.st.lap(th))
+        op = -np.sum(u * self.st.grad(th), 0) + self.kappa * self.st.lap(th)
         op = np.real(op)
         return op
 
     def adv_diff_op_hat(self, u_hat, th_hat):
-        u = self.vt.ifft(u_hat * self.vt.dealias_array)
-        th = self.st.ifft(th_hat * self.st.dealias_array)
+        u = self.vt.ifft(u_hat)
+        th = self.st.ifft(th_hat)
         op_hat = - self.st.fft(np.sum(u * self.st.grad(th), 0)) - \
             self.kappa * self.st.K2 * (2 * np.pi / self.L)**2.0 * th_hat
-        return op_hat * self.st.dealias_array
+        return op_hat
 
     def sin_flow_op(self, th):
         return self.adv_diff_op(self.u_sin_flow, th)
@@ -90,7 +89,6 @@ class OperatorKit(object):
         self.out_hat = self.st.fft(np.sum(-self.v * self.grad_th, 0))
         self.out_hat -= self.kappa * self.st.K2 * \
             (2 * np.pi / self.L)**2.0 * th_hat
-        # self.out_hat *= self.st.dealias_array #REMOVED DEALIASING
 
         return self.out_hat
 
