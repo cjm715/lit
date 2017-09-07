@@ -6,17 +6,23 @@ import matplotlib.pyplot as plt
 from tools import ScalarTool
 
 
-def sol_lit_enstrophy_checker(sol_N_collection, sol_M_collection, Pe, L=1.0, gamma=1.0):
+def sol_lit_enstrophy_checker(sol_N_collection, sol_M_collection, Pe, L, gamma, T):
     # last in collection is most resolved
     best_sol = sol_N_collection[-1]
+    [_, best_sol_th_hist] = best_sol
+    [M, N, _] = np.shape(best_sol_th_hist)
+    [_, l2norm_best_sol, _] = compute_norms(best_sol_th_hist, N, L)
 
     # Check each criterion
     print('')
     print('')
     print(colored('====== Solution Checker Report ======', 'green'))
-    print('Pe = ', Pe)
-    print('L = ', L)
-    print('gamma = ', gamma)
+    print('Peclet = ', Pe)
+    print('Box side length = ', L)
+    print('Rate of strain = ', gamma)
+    print('Final time = ', T)
+    print('Number of time steps: ', M)
+    print('Number of modes per side: ', N)
     print('')
 
     criteria = []
@@ -50,6 +56,19 @@ def sol_lit_enstrophy_checker(sol_N_collection, sol_M_collection, Pe, L=1.0, gam
     print('L2 decay relation: ' + _criterion_report_msg(criterion))
     criteria.append(criterion)
 
+    # Report errors
+    abs_error = abs_error_N + abs_error_M
+    rel_error = (abs_error_N + abs_error_M) / l2norm_best_sol[-1]
+    machine_eps = np.finfo(float).eps
+
+    if abs_error == 0.0:
+        abs_error = machine_eps
+    if rel_error == 0.0:
+        rel_error = machine_eps
+
+    print('')
+    print('Estimated absolute error of L2 Norm at final time: ', abs_error)
+    print('Estimated relative error of L2 Norm at final time: ', rel_error)
     print('')
     print(colored('====== Solution Checker Report ======', 'green'))
     print('')
@@ -70,7 +89,7 @@ def check_N_convergence(sol_N_collection, L):
         error = abs(l2norm_hist[-1] - l2norm_hist_largest_N[-1])
         error_list.append(error)
         N_list.append(N)
-
+        # print(N, error)
     check = _sequence_converges_to_zero(error_list)
     abs_error = abs(error_list[-1])
     rel_error = abs_error / l2norm_hist_largest_N[-1]
@@ -90,7 +109,7 @@ def check_M_convergence(sol_M_collection, L, tol=10**(-10)):
         error = abs(l2norm_hist[-1] - l2norm_hist_largest_M[-1])
         error_list.append(error)
         M_list.append(M)
-
+        # print(M, error)
     check = _sequence_converges_to_zero(error_list, tol=tol)
     abs_error = abs(error_list[-1])
     rel_error = abs_error / l2norm_hist_largest_M[-1]

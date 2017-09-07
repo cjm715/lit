@@ -34,4 +34,5 @@ def test_lit_enstrophy_sim():
     sol_N_collection.append(best_solution)
     sol_M_collection.append(best_solution)
 
-    assert sol_lit_enstrophy_checker(sol_N_collection, sol_M_collection, Pe)
+    assert sol_lit_enstrophy_checker(
+        sol_N_collection, sol_M_collection, Pe=Pe, L=L, gamma=gamma, T=T)
