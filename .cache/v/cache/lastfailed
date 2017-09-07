@@ -1,4 +1,6 @@
 {
+  "test_check_sol.py": true,
+  "test_integrators.py::test_dt_alpha": true,
   "test_integrators.py::test_that_RK4_timestepper_has_first_order_convergence": true,
   "test_operators.py::test_integral_of_theta_times_adv_diff_op_is_equal_to_kappa_h1norm_sq": true,
   "test_operators.py::test_that_FE_time_step_with_adv_diff_op_perserves_l2norm_when_kappa_is_0": true,
@@ -6,6 +8,11 @@
   "test_operators.py::test_that_LIT_energy_hat_flow_satisfies_budget_constriant": true,
   "test_operators.py::test_that_LIT_enstrophy_flow_satisfies_budget_constriant": true,
   "test_operators.py::test_that_average_of_adv_diff_operator_is_0_when_kappa_0": true,
+  "test_simulations.py::test_lit_energy_sim": true,
+  "test_sol_checking.py::test_check_no_spectral_blocking_negative_codition": true,
+  "test_sol_checking.py::test_check_no_spectral_blocking_positive_codition": true,
+  "test_sol_checking.py::test_criterion_report_msg": true,
+  "test_sol_checking.py::test_sequence_converges_to_zero_function": true,
   "test_tools.py::test_conversion_between_scalar_rhat_and_hat_formats_is_correct_in_both_directions": true,
   "test_tools.py::test_conversion_between_vector_rhat_and_hat_formats_is_correct_in_both_directions": true,
   "test_tools.py::test_div_curl_of_vector_is_zero": true,

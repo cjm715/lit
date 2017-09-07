@@ -1,7 +1,18 @@
 import numpy as np
-import matplotlib.pyplot as plt
 import pyfftw.interfaces.numpy_fft as fft
 # from numpy import fft
+from pyfftw.interfaces import cache
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+cache.enable()
+
+
+def N_boyd(M):
+    """ Boyd's rule of thumb. M is the number of wave lengths
+    given by M = L/l where L is the box size and l is the smallest
+    scale to be resolved """
+    return int(2**np.ceil(np.log2(4 * (M - 1) + 6)))
 
 
 def create_grid(N, L):
@@ -9,7 +20,12 @@ def create_grid(N, L):
 
 
 def dt_cfl(N, L, kappa, U):
-    return min(L / (N * U), L**2 / (N**2 * kappa))
+    if kappa == 0:
+        dt = L / (N * U)
+    else:
+        dt = min(L / (N * U), L**2 / (N**2 * kappa))
+
+    return dt
 
 
 class ScalarTool(object):
@@ -30,17 +46,23 @@ class ScalarTool(object):
         self.L = L
         self.h = self.L / self.N
         self.X = np.mgrid[:self.N, :self.N].astype(float) * self.h
-        self.kx = np.fft.fftfreq(self.N, 1. / self.N).astype(float)
-        self.ky = np.fft.fftfreq(self.N, 1. / self.N).astype(float)
+
+        self.Nf = self.N // 2 + 1
+        self.kx = np.fft.fftfreq(self.N, 1. / self.N).astype(int)
+        self.ky = self.kx[:self.Nf].copy()
+        self.ky[-1] *= -1
         self.K = np.array(np.meshgrid(
             self.kx, self.ky, indexing='ij'), dtype=int)
-        self.K2 = np.sum(self.K * self.K, 0).astype(float)
-        self.oneoverK2 = 1.0 / np.where(
-            self.K2 == 0.0, 1.0, self.K2).astype(float)
-        self.KoverK2 = self.K.astype(float) * self.oneoverK2
+        self.K2 = np.sum(self.K * self.K, 0, dtype=int)
+        self.KoverK2 = self.K.astype(
+            float) / np.where(self.K2 == 0, 1, self.K2).astype(float)
+        self.oneoverK2 = 1.0 / \
+            np.where(self.K2 == 0.0, 1.0, self.K2).astype(float)
         self.mean_zero_array = self.K2 != 0.0
-        self.dealias_array = (abs(self.kx[:, np.newaxis]) < self.N / 3.0) * \
-            (abs(self.ky[np.newaxis, :]) < self.N / 3.0)
+        self.kmax_dealias = 2. / 3. * (self.N / 2 + 1)
+        self.dealias_array = np.array((abs(self.K[0]) < self.kmax_dealias) * (
+            abs(self.K[1]) < self.kmax_dealias), dtype=bool)
+        self.num_threads = 1
 
     def l2norm(self, scalar):
         self.scalar_input_test(scalar)
@@ -49,8 +71,8 @@ class ScalarTool(object):
     def grad(self, scalar):
         self.scalar_input_test(scalar)
 
-        scalar_hat = fft.fftn(scalar)
-        return np.real(fft.ifftn(1.0j * self.K * (2 * np.pi / self.L) * scalar_hat, axes=(1, 2)))
+        scalar_hat = self.fft(scalar)
+        return fft.irfftn(1.0j * self.K * (2 * np.pi / self.L) * scalar_hat, axes=(1, 2), threads=self.num_threads)
 
     def h1norm(self, scalar):
         self.scalar_input_test(scalar)
@@ -61,13 +83,13 @@ class ScalarTool(object):
 
     def lap(self, scalar):
         self.scalar_input_test(scalar)
-        scalar_hat = fft.fftn(scalar)
-        return np.real(fft.ifftn((-1.0) * self.K2 * (2 * np.pi / self.L)**2.0 * scalar_hat))
+        scalar_hat = self.fft(scalar)
+        return self.ifft((-1.0) * self.K2 * (2 * np.pi / self.L)**2.0 * scalar_hat)
 
     def grad_invlap(self, scalar):
         self.scalar_input_test(scalar)
-        scalar_hat = fft.fftn(scalar)
-        return np.real(fft.ifftn(-1.0j * self.KoverK2 * (2 * np.pi / self.L)**(-1.0) * scalar_hat, axes=(1, 2)))
+        scalar_hat = self.fft(scalar)
+        return fft.irfftn(-1.0j * self.KoverK2 * (2 * np.pi / self.L)**(-1.0) * scalar_hat, axes=(1, 2), threads=self.num_threads)
 
     def hm1norm(self, scalar):
         self.scalar_input_test(scalar)
@@ -77,14 +99,22 @@ class ScalarTool(object):
         integrand = np.ravel(grad_invlap_scalar_sq)
         return np.sum(integrand * self.h**2.0)**0.5
 
-    def plot(self, scalar):
+    def plot(self, scalar, high_quality=False):
+
+        if high_quality:
+            plt.rc('text', usetex=True)
+            plt.rc('font', family='serif', size=12)
+        else:
+            plt.rc('text', usetex=False)
+            plt.rc('font', family='sans-serif', size=12)
+
         self.scalar_input_test(scalar)
         im = plt.imshow(np.transpose(scalar),
                         cmap=plt.cm.gray,
                         extent=(0, self.L, 0, self.L),
                         origin="lower")
-        plt.xlabel('x')
-        plt.ylabel('y')
+        plt.xlabel(r'$x$')
+        plt.ylabel(r'$y$')
         plt.colorbar(im)
 
     def scalar_input_test(self, scalar):
@@ -95,7 +125,7 @@ class ScalarTool(object):
             raise InputError("Scalar field array should be real.")
 
     def scalar_hat_input_test(self, scalar_hat):
-        if np.shape(scalar_hat) != (self.N, self.N):
+        if np.shape(scalar_hat) != (self.N, self.Nf):
             print(np.shape(scalar_hat))
             raise InputError("Scalar field array does not have correct shape.")
 
@@ -113,20 +143,44 @@ class ScalarTool(object):
     def fft(self, scalar):
         """ Performs fft of scalar field """
         self.scalar_input_test(scalar)
-        scalar_hat = fft.fftn(scalar)
-        return scalar_hat
+        return fft.rfftn(scalar, threads=self.num_threads)
 
     def ifft(self, scalar_hat):
         """ Performs inverse fft of scalar field """
         self.scalar_hat_input_test(scalar_hat)
-        scalar = np.real(fft.ifftn(scalar_hat))
-        return scalar
+        return fft.irfftn(scalar_hat, threads=self.num_threads)
 
     def subtract_mean(self, scalar):
         """ subtract off mean """
         self.scalar_input_test(scalar)
         scalar_hat = self.fft(scalar)
         return np.real(self.ifft(scalar_hat * self.mean_zero_array))
+
+    def get_spectrum(self, scalar):
+        """ gets spectrum """
+        self.scalar_input_test(scalar)
+        scalar_hat = self.fft(scalar)
+        amp = 2.0 * np.absolute(scalar_hat) / \
+            self.N**2.0  # corrects normalization
+        k_list = np.arange(0, self.N // 2 + 1, 1)  # beginning of bin intervals
+        K_inf = np.maximum(abs(self.K[0]), abs(self.K[1]))  # infinity norm
+        amp_list = []
+
+        for k in k_list:
+            K_shell_bool = k == K_inf
+            max_amp_in_shell = np.amax(amp * K_shell_bool)
+            amp_list.append(max_amp_in_shell)
+
+        return [k_list, amp_list]
+
+    def isblocked(self, scalar, k_frac=0.85, amp_thres=10.**(-10)):
+        """ determines if spectral blocking is present """
+        self.scalar_input_test(scalar)
+        k_thres = int(k_frac * (self.N / 2))
+        [k_list, amp_list] = self.get_spectrum(scalar)
+        amp_beyond_k_thres = [amp_list[i]
+                              for i in range(len(k_list)) if k_list[i] > k_thres]
+        return max(amp_beyond_k_thres) > amp_thres
 
 
 class VectorTool(object):
@@ -147,36 +201,38 @@ class VectorTool(object):
         self.L = L
         self.h = self.L / self.N
         self.X = np.mgrid[:self.N, :self.N].astype(float) * self.h
-        self.kx = np.fft.fftfreq(self.N, 1. / self.N).astype(float)
-        self.ky = np.fft.fftfreq(self.N, 1. / self.N).astype(float)
+        self.Nf = self.N // 2 + 1
+        self.kx = np.fft.fftfreq(self.N, 1. / self.N).astype(int)
+        self.ky = self.kx[:self.Nf].copy()
+        self.ky[-1] *= -1
         self.K = np.array(np.meshgrid(
             self.kx, self.ky, indexing='ij'), dtype=int)
-        self.K2 = np.sum(self.K * self.K, 0).astype(float)
-        self.oneoverK2 = 1.0 / np.where(
-            self.K2 == 0.0, 1.0, self.K2).astype(float)
-        self.KoverK2 = self.K.astype(float) * self.oneoverK2
+        self.K2 = np.sum(self.K * self.K, 0, dtype=int)
+        self.KoverK2 = self.K.astype(
+            float) / np.where(self.K2 == 0, 1, self.K2).astype(float)
+        self.oneoverK2 = 1.0 / \
+            np.where(self.K2 == 0.0, 1.0, self.K2).astype(float)
         self.mean_zero_array = self.K2 != 0.0
-        self.dealias_array = (abs(self.kx[:, np.newaxis]) < self.N / 3.0) * \
-            (abs(self.ky[np.newaxis, :]) < self.N / 3.0)
+        self.kmax_dealias = 2. / 3. * (self.N / 2 + 1)
+        self.dealias_array = np.array((abs(self.K[0]) < self.kmax_dealias) * (
+            abs(self.K[1]) < self.kmax_dealias), dtype=bool)
+        self.num_threads = 1
 
     def div(self, vector):
         """ Take divergence of vector """
         self.vector_input_test(vector)
         vector_hat = self.fft(vector)
-        return np.real(np.fft.ifftn(np.sum(1j * self.K * (2 * np.pi / self.L) * vector_hat, 0)))
+        return fft.irfftn(np.sum(1j * self.K * (2 * np.pi / self.L) * vector_hat, 0), threads=self.num_threads)
 
     def fft(self, vector):
         """ Performs fft of vector field """
         self.vector_input_test(vector)
-        vector_hat = fft.fftn(vector, axes=(1, 2))
-        return vector_hat
+        return fft.rfftn(vector, axes=(1, 2), threads=self.num_threads)
 
     def ifft(self, vector_hat):
         """ Performs inverse fft of vector hat field """
         self.vector_hat_input_test(vector_hat)
-        vector = np.real(fft.ifftn(vector_hat, axes=(1, 2)))
-
-        return vector
+        return fft.irfftn(vector_hat, axes=(1, 2), threads=self.num_threads)
 
     def plot(self, vector, high_quality=False):
         """ Plots a quiver plot of the vector field """
@@ -227,7 +283,7 @@ class VectorTool(object):
 
     def vector_hat_input_test(self, vector_hat):
         """ Determines if vector is correct size """
-        if np.shape(vector_hat) != (2, self.N, self.N):
+        if np.shape(vector_hat) != (2, self.N, self.Nf):
             print(np.shape(vector_hat))
             raise InputError("Vector field array does not have correct shape")
 
@@ -245,8 +301,8 @@ class VectorTool(object):
         """ Perform curl of vector """
         self.vector_input_test(vector)
         vector_hat = self.fft(vector)
-        w = np.real(np.fft.ifftn(
-            1j * self.K[1] * vector_hat[0] - 1j * self.K[0] * vector_hat[1]))
+        w = fft.irfftn(
+            1j * self.K[1] * vector_hat[0] - 1j * self.K[0] * vector_hat[1], threads=self.num_threads)
         return w
 
     def invlap(self, vector):

@@ -1,6 +1,21 @@
 from tools import ScalarTool, VectorTool, create_grid, dt_cfl
 import numpy as np
 import math
+from tools import N_boyd
+
+
+# def test_N_boyd_should_return_50_given_M_10():
+#     assert N_boyd(10) == 50
+#
+#
+# def test_N_boyd_should_return_14_given_M_1():
+#     assert N_boyd(1) == 14
+def test_that_dt_cfl_works_for_kappa_0():
+    N = 128
+    L = 2.0
+    kappa = 0.0
+    U = 3.0
+    assert dt_cfl(N, L, kappa, U) == L / (N * U)
 
 
 def test_that_l2norm_of_sinx_on_domain_with_L_of_2pi_equals_sqrt_of_half_of_Lsq():
@@ -41,6 +56,9 @@ def test_that_sinx_on_domain_with_L_of_2pi_has_equal_norms():
     l2norm = st.l2norm(th)
     h1norm = st.h1norm(th)
     hm1norm = st.hm1norm(th)
+    print(l2norm)
+    print(h1norm)
+    print(hm1norm)
     assert (math.isclose(l2norm, h1norm) and math.isclose(l2norm, hm1norm))
 
 
@@ -318,3 +336,55 @@ def test_st_ifft_of_function_is_real():
     th = np.sin(k * X[0])
     st = ScalarTool(N, L)
     assert np.all(np.isreal(st.ifft(st.fft(th))))
+
+
+def test_get_spectrum_of_sinky():
+    L = 10.5
+    N = 128
+    k = int(N / 4) * 2.0 * np.pi / L
+    st = ScalarTool(N, L)
+    th = np.sin(k * st.X[1])  # SIN(K Y)
+    [klist, spectrum] = st.get_spectrum(th)
+    spectrum_expected = np.zeros(len(klist))
+    spectrum_expected[int(N / 4)] = 1.0
+    assert np.allclose(spectrum, spectrum_expected)
+
+
+def test_get_spectrum_of_sinkx():
+    L = 10.5
+    N = 128
+    k = int(N / 4) * 2.0 * np.pi / L
+    st = ScalarTool(N, L)
+    th = np.sin(k * st.X[0])  # SIN(K X)
+    [klist, spectrum] = st.get_spectrum(th)
+    spectrum_expected = np.zeros(len(klist))
+    spectrum_expected[int(N / 4)] = 1.0
+    assert np.allclose(spectrum, spectrum_expected)
+
+
+def test_get_spectrum_includes_Nyquist_mode():
+    L = 10.5
+    N = 128
+    k = int(N / 2) * 2.0 * np.pi / L
+    st = ScalarTool(N, L)
+    th = np.cos(k * st.X[0])  # SIN(K X)
+    [klist, spectrum] = st.get_spectrum(th)
+    spectrum_expected = np.zeros(len(klist))
+    spectrum_expected[int(N / 2)] = 2.0
+    assert np.allclose(spectrum, spectrum_expected)
+
+
+def test_check_no_spectral_blocking_negative_codition():
+    N = 64
+    L = 1.0
+    st = ScalarTool(N, L)
+    th = np.zeros((N, N))
+    assert (not st.isblocked(th))
+
+
+def test_check_no_spectral_blocking_positive_codition():
+    N = 64
+    L = 1.0
+    st = ScalarTool(N, L)
+    th = np.sin((N / 2 - 2) * (2. * np.pi / L) * st.X[0])
+    assert st.isblocked(th)
