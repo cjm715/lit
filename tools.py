@@ -156,6 +156,32 @@ class ScalarTool(object):
         scalar_hat = self.fft(scalar)
         return np.real(self.ifft(scalar_hat * self.mean_zero_array))
 
+    def get_spectrum(self, scalar):
+        """ gets spectrum """
+        self.scalar_input_test(scalar)
+        scalar_hat = self.fft(scalar)
+        amp = 2.0 * np.absolute(scalar_hat) / \
+            self.N**2.0  # corrects normalization
+        k_list = np.arange(0, self.N // 2 + 1, 1)  # beginning of bin intervals
+        K_inf = np.maximum(abs(self.K[0]), abs(self.K[1]))  # infinity norm
+        amp_list = []
+
+        for k in k_list:
+            K_shell_bool = k == K_inf
+            max_amp_in_shell = np.amax(amp * K_shell_bool)
+            amp_list.append(max_amp_in_shell)
+
+        return [k_list, amp_list]
+
+    def isblocked(self, scalar, k_frac=0.85, amp_thres=10.**(-10)):
+        """ determines if spectral blocking is present """
+        self.scalar_input_test(scalar)
+        k_thres = int(k_frac * (self.N / 2))
+        [k_list, amp_list] = self.get_spectrum(scalar)
+        amp_beyond_k_thres = [amp_list[i]
+                              for i in range(len(k_list)) if k_list[i] > k_thres]
+        return max(amp_beyond_k_thres) > amp_thres
+
 
 class VectorTool(object):
     """

@@ -40,6 +40,7 @@ def integrator(op, timestepper, th0, tarray):
         else:
             dt = tarray[i] - tarray[i - 1]
             th[i] = timestepper(op, th[i - 1], dt)
+        # print('Time: ', tarray[i])
     return th
 
 
@@ -60,10 +61,10 @@ def integrator2(op, timestepper, th0, tarray, dt0_cfl):
         else:
             dt = tarray[i] - tarray[i - 1]
             M = np.ceil(dt / dt0_cfl).astype('int') if dt > dt0_cfl else 1
-            print(M)
+            # print(M)
             th[i] = timestepper(op, th[i - 1], dt, M)
 
-        print('Fraction complete: %.2f' % (t / tarray[-1]))
+        #print('Time: ', tarray[i])
     return th
 
 

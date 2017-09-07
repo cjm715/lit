@@ -336,3 +336,55 @@ def test_st_ifft_of_function_is_real():
     th = np.sin(k * X[0])
     st = ScalarTool(N, L)
     assert np.all(np.isreal(st.ifft(st.fft(th))))
+
+
+def test_get_spectrum_of_sinky():
+    L = 10.5
+    N = 128
+    k = int(N / 4) * 2.0 * np.pi / L
+    st = ScalarTool(N, L)
+    th = np.sin(k * st.X[1])  # SIN(K Y)
+    [klist, spectrum] = st.get_spectrum(th)
+    spectrum_expected = np.zeros(len(klist))
+    spectrum_expected[int(N / 4)] = 1.0
+    assert np.allclose(spectrum, spectrum_expected)
+
+
+def test_get_spectrum_of_sinkx():
+    L = 10.5
+    N = 128
+    k = int(N / 4) * 2.0 * np.pi / L
+    st = ScalarTool(N, L)
+    th = np.sin(k * st.X[0])  # SIN(K X)
+    [klist, spectrum] = st.get_spectrum(th)
+    spectrum_expected = np.zeros(len(klist))
+    spectrum_expected[int(N / 4)] = 1.0
+    assert np.allclose(spectrum, spectrum_expected)
+
+
+def test_get_spectrum_includes_Nyquist_mode():
+    L = 10.5
+    N = 128
+    k = int(N / 2) * 2.0 * np.pi / L
+    st = ScalarTool(N, L)
+    th = np.cos(k * st.X[0])  # SIN(K X)
+    [klist, spectrum] = st.get_spectrum(th)
+    spectrum_expected = np.zeros(len(klist))
+    spectrum_expected[int(N / 2)] = 2.0
+    assert np.allclose(spectrum, spectrum_expected)
+
+
+def test_check_no_spectral_blocking_negative_codition():
+    N = 64
+    L = 1.0
+    st = ScalarTool(N, L)
+    th = np.zeros((N, N))
+    assert (not st.isblocked(th))
+
+
+def test_check_no_spectral_blocking_positive_codition():
+    N = 64
+    L = 1.0
+    st = ScalarTool(N, L)
+    th = np.sin((N / 2 - 2) * (2. * np.pi / L) * st.X[0])
+    assert st.isblocked(th)

@@ -97,7 +97,7 @@ class OperatorKit(object):
         v = -self.vt.invlap(self.vt.div_free_proj(v))
         return gamma * self.L * v / self.st.l2norm(self.vt.curl(v))
 
-    def lit_enstrophy_op(self, th, gamma):
+    def lit_enstrophy_op(self, th, gamma, dealias=False):
         th_hat = self.st.fft(th)
 
         grad_invlap_th = self.vt.ifft(-1.0j * self.st.KoverK2 *
@@ -113,6 +113,9 @@ class OperatorKit(object):
                               (2 * np.pi / self.L)**2.0 * th_hat)
 
         op = np.sum(-v * grad_th, 0) + self.kappa * lap_th
+
+        if dealias is True:
+            op = self.st.dealias(op)
 
         return op
 

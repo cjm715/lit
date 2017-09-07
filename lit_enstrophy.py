@@ -47,12 +47,9 @@ if __name__ == "__main__":
     time_array = np.linspace(0, T, 200)
 
     th0 = RK4_timestepper(sin_op, th0, dt0_cfl)
-    start_time = time.time()
 
     th = integrator2(lit_enstrophy_op, mega_RK4_timestepper,
                      th0, time_array, dt0_cfl)
-
-    print(time.time() - start_time)
 
     # Output
     output_folder = 'output-pe=%d' % Pe + '-N=%d' % N + '/'
