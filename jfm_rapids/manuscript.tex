@@ -64,7 +64,7 @@ Ann Arbor, MI 48104-1107, USA}
 \maketitle
 
 \begin{abstract}
-An incompressible flow can be an effective mixer of a dye by appropriately advecting the dye to produce small filamentation length scales. It is known that the Batchelor length scale [\cite{Batchelor1959a}] is the theorized lower limit of dye length scales  achievable under turbulent flows. We provide numerical evidence that this limitation may be more general and applies to incompressible flows under mild physical constraints such as fixed enstrophy and energy. We consider local-in-time flow optimization under these constraints with the objective of maximizing mixing rate performance. For enstrophy-bounded optimal flows, we find that the strength of diffusion has no impact on the long-term mixing rate performance. For energy-constrained optimal flows, we find that an increase in the strength of diffusion worsens this performance. We provide analytical lower bounds on mixing rates and length scales achievable under related constraints (pointwise bounded speed and rate-of-strain) by extending the work of \cite{JFM2011} and \cite{Chi-Cheu1996}. 
+An incompressible flow can be an effective mixer of a dye by appropriately advecting the dye to produce small filamentation length scales. It is known that the Batchelor length scale \citep{Batchelor1959a} is the theorized lower limit of dye length scales  achievable under turbulent flows. We provide numerical evidence that this limitation may be more general and applies to incompressible flows under mild physical constraints such as fixed enstrophy and energy. We consider local-in-time flow optimization under these constraints with the objective of maximizing mixing rate performance. For enstrophy-bounded optimal flows, we find that the strength of diffusion has no impact on the long-term mixing rate performance. For energy-constrained optimal flows, we find that an increase in the strength of diffusion worsens this performance. We provide analytical lower bounds on mixing rates and length scales achievable under related constraints (pointwise bounded speed and rate-of-strain) by extending the work of \cite{JFM2011} and \cite{Chi-Cheu1996}. 
 
 
 \end{abstract}
@@ -80,12 +80,12 @@ Optimal mixing is important to many areas of science and engineering. A question
 	\label{eq:PDE_advection}
 	\ppt{\theta}+\mathbf{u}\cdot \nabla \theta=\kappa \lap\theta,
 \end{equation}
-with initial data $\theta(\mathbf{x},0)=\theta_{0}(\mathbf{x})$, where $\kappa$ is the molecular diffusion coefficient and $\mathbf{u}(\mathbf{x},t)$ is the incompressible ($\nabla\,\cdot\, \vec{u}=0$) flow field. The flow is constrained by enstrophy $\ltwo{\nabla\u} = \Gamma L^{d/2}$ or energy $\ltwo{\u} = UL^{d/2}$ where $\Gamma$ is the root mean square rate-of-strain and $U$ is the root mean square speed. We primarily use the $H^{-1}$ norm or mix-norm throughout to measure homogenization,   
+with initial data $\theta(\mathbf{x},0)=\theta_{0}(\mathbf{x})$, where $\kappa$ is the molecular diffusion coefficient and $\mathbf{u}(\mathbf{x},t)$ is a incompressible ($\nabla\,\cdot\, \vec{u}=0$) flow field. The flow is constrained by enstrophy $\ltwo{\nabla\u} = \Gamma L^{d/2}$ or energy $\ltwo{\u} = UL^{d/2}$ where $\Gamma$ is the root mean square rate-of-strain and $U$ is the root mean square speed. We primarily use the $H^{-1}$ norm or mix-norm throughout to measure homogenization,   
 
 \begin{equation}
 \hmone{\theta}=\sqrt{\sint{ |\nabla^{-1} \theta( \vec{x},t)|^2}}=\sqrt{ \sum_{\vec{k}\neq \vec{0}} L^d \frac{|\hat{\theta}_{\vec{k}}(t)|^{2}}{|\vec{k}|^2}}
 \end{equation}
-where $\nabla^{-1}=\nabla \Delta^{-1}$, the operator $\Delta^{-1}$ acting on  a function $\rho$ returns the solution $\phi$ of the Poisson equation $ \Delta \phi = \rho $, and $\hat{\theta}_{\vec{k}}(t) =  \frac{1}{L^{d}}\sint{\theta(\vec{x},t)e^{-i\vec{k}\cdot\vec{x}}}$.  Lower values of the  $H^{-1}$ norm corresponds to a more mixed state. Note that $H^{-1}$ norm can decrease in two ways: either by decreasing the amplitudes of $|\hat{\theta}_{\vec{k}}|$ or by advecting the flow such that the tracer concentration acquires more spectral mass in the higher wave-numbers and takes advantage of the $1/|\vec{k}|^2$ dependence. We use the $H^{-1}$ norm to define the (exponential) rate of mixing as
+where $\nabla^{-1}=\nabla \Delta^{-1}$, the operator $\Delta^{-1}$ acting on  a function $\rho$ returns the solution $\phi$ of the Poisson equation $ \Delta \phi = \rho $, and $\hat{\theta}_{\vec{k}}(t) =  \frac{1}{L^{d}}\sint{\theta(\vec{x},t)e^{-i\vec{k}\cdot\vec{x}}}$.  Lower values of the  $H^{-1}$ norm corresponds to a more mixed state. Note that $H^{-1}$ norm can decrease in two ways: either by decreasing the amplitudes of $|\hat{\theta}_{\vec{k}}|$ or by advecting the flow such that the tracer concentration acquires more spectral mass in the higher wavenumbers and takes advantage of the $1/|\vec{k}|^2$ dependence. We use the $H^{-1}$ norm to define the (exponential) rate of mixing as
 \begin{equation}
 \label{eq:rate}
 r(t) = -  \frac{\ddt{}\hmone{\theta}}{\hmone{\theta}}.
@@ -96,7 +96,7 @@ We define the following ratio as a measure of the characteristic filamentation l
 \begin{equation}
 \lambda(t)\equiv  2\pi \frac{\|\nabla^{-1}\theta(\,\cdot\,,t)\|_{L^{2}}}{\|\theta(\,\cdot\,,t)\|_{L^{2}}}.
 \end{equation}
-Note that $\lambda(t)$ returns the wavelength of the wavenumber $\vec{k}$ for a tracer concentration field composed only of the Fourier mode with wavenumber $\vec{k}$ (i.e. $\theta(\vec{x},t) = Re[ A e^{-i\vec{k}\cdot \vec{x}}]$ and $A$ is a complex constant). In general, $\lambda$ is the weighted root mean square wavelength with weights given by $|\theta_{\vec{k}}|/\ltwo{\theta}$. 
+Note that $\lambda(t)$ returns the wavelength of the wavenumber $\vec{k}$ for a tracer concentration field composed only of the Fourier mode with wavenumber $\vec{k}$ (i.e. $\theta(\vec{x},t) = Re[ A e^{-i\vec{k}\cdot \vec{x}}]$ where $A$ is a complex constant). In general, $\lambda$ is the weighted root mean square wavelength with weights given by $|\theta_{\vec{k}}|/\ltwo{\theta}$. 
 
 
 For the enstrophy-bounded flow problem, we choose the same length scale $L$, the velocity scale $L\Gamma $, and  the time scale $1/\Gamma$. For the energy-bounded flow problem, we non-dimensionalize the system by choosing $L$ as the length scale, $U$ as the velocity scale, and $L/U$ as the time scale.  Both scalings produce the following form of the advection-diffusion equation,
@@ -108,14 +108,16 @@ where $Pe=  \frac{\Gamma L^2}{\kappa}$ for the enstrophy-constrained case and $P
 
 
 
-We will first review results for the $Pe = \infty$ enstrophy-constrained case. \cite{JFM2011} showed numerical evidence that the filament width $\lambda$ seemingly decreased continually by instanateous flow optimization. This type of optimization will be considered in this work as well. Self-similar flows can realize a decreasing $\lambda$ over time as shown analytically by [\cite{Alberti2014a}].  It was rigorously proven indepedently by \cite{GI2014} and \cite{CS2013} that $\lambda$ decreased at most exponentially --- consistent with \cite{JFM2011}  and \cite{Alberti2014a}. The work of \cite{GI2014} relied on PDE regularization results of \cite{Crippa} while the approach of\cite{CS2013} used methods from optimal transportation theory \cite{villani2003topics}.
+We will first review results for the $Pe = \infty$ enstrophy-constrained case. \cite{JFM2011} showed numerical evidence that the filament width $\lambda$ seemingly decreased continually by instanateous flow optimization. This type of optimization will be considered in this work as well. Self-similar flows can realize a decreasing $\lambda$ over time as shown analytically by \cite{Alberti2014a}.  It was rigorously proven indepedently by \cite{GI2014} and \cite{CS2013} that $\lambda$ decreased at most exponentially --- consistent with \cite{JFM2011}  and \cite{Alberti2014a}. The work of \cite{GI2014} relied on PDE regularization results of \cite{Crippa} while the approach of \cite{CS2013} used methods from optimal transportation theory \citep{villani2003topics}.
 
 For $Pe = \infty$ energy-constrained problem, \cite{JMP2012} showed that a `checkerboard' flow can also provide continually decreasing length scales. Moreover, $\lambda$ decreased at a fast enough rate to approach zero in finite time in contrast to the enstrophy-constrained problem where $\lambda$ decreases to zero in infinite time.
 
-The inclusion of diffusion ($Pe <\infty$) with the objective of optimal mixing has been explored.  \cite{DF2014} investigated optimal mixing and study the evolution of the mentioned measures ($H^{-1}, L^2,$ and $H^1$ norms) of mixing under the checkerboard flow introduced by \cite{JMP2012}. They show that the $H^{-1}$ and $L^2$ norms decrease monotonically under this flow while the $H^{1}$ increases until it reaches a peak and then decreases. This peak corresponds to a  time when the length scales developed are small enough for diffusion to effectively act on steep gradients. \cite{Miles2017a} explored this phenomena further in the context of optimal mixing of a shell model, a reduced model using ordinary differential equations that mimic the spectral dynamics of the advection-diffusion equation. The authors concluded that shell-model mixing could not surpass length scales given by $\kappa/ \Gamma$ for enstrophy-constrained flows and $U/K$ for energy-constrained flows up to $O(1)$ constants. These length scales can be identified as a generalized Batchelor scale [\cite{Batchelor1959a}], introduced in the context of turbulence theory. 
+The inclusion of diffusion ($Pe <\infty$) with the objective of optimal mixing has been explored.  \cite{DF2014} investigated optimal mixing and study the evolution of the mentioned measures ($H^{-1}, L^2,$ and $H^1$ norms) of mixing under the checkerboard flow introduced by \cite{JMP2012}. They show that the $H^{-1}$ and $L^2$ norms decrease monotonically under this flow while the $H^{1}$ increases until it reaches a peak and then decreases. This peak corresponds to a  time when the length scales developed are small enough for diffusion to effectively act on steep gradients. \cite{Miles2017a} explored this phenomena further in the context of a shell model, a reduced model using ordinary differential equations that mimic the spectral dynamics of the advection-diffusion equation. The authors concluded that shell-model mixing could not surpass length scales given by $\sqrt{\kappa/ \Gamma}$ for enstrophy-constrained flows and $\kappa/U$ for energy-constrained flows up to $O(1)$ constants. These length scales can be identified as a generalized Batchelor scale \citep{Batchelor1959a}, introduced in the context of turbulence theory. 
  
  
-In this work, we explore how diffusion impacts the evolution of the filament width $\lambda$ over time and mixing rates. We show numerical evidence that $\lambda$ appears to be limited by the Batchelor scale as seen in the shell model. Even when actively trying to choose the most optimal flow to minimize filimentation length. Thus, this may suggest that the Batchelor scale does not only limit turbulent flows but also all incompressible flows under the flow constraints considered here. 
+In this work, we explore how diffusion impacts the evolution of the filament width $\lambda$ over time and mixing rates. We show numerical evidence that $\lambda$ appears to be limited by the Batchelor scale as seen in the shell model. Even when actively trying to choose the most optimal flow to minimize filimentation length. Thus, this may suggest that the Batchelor scale does not only limit turbulent flows but also all incompressible flows under the flow constraints considered here. Although these quantities have been known in the context of turbulence theory, the impact of these limitations on mixing rates has not been fully studied to our knowledge.
+
+Furthermore, we believe that the study of determining the smallest length scales achievable demands more attention. This assumption is used today throughout the computational fluid dynamics community to provide a heuristic for the grid resolutions necessary. Thus, we believe it is imperative to determine what conditions on $\mathbf{u}$ are necessary to justify this assumption.
 
 The paper is organized as follows. We introduce the necessary theory regarding local-in-time optimization, a shell model, and $L^{\infty}$ flow constraints in section \ref{sec:theory}. Section \ref{sec:numerical_experiment} details the methodology and results of numerically implementing local-in-time flow optimization. Lastly, we finish with a discussion and conclusion in sections \ref{sec:discussion} and \ref{sec:conclusion} respectively.
 
@@ -139,7 +141,7 @@ for the enstrophy constraint where $\mathds{P}$ is the Leray divergence-free pro
 
 \subsection{Shell model predictions of local-in-time optimization}
 
-The shell model is a reduced model of the spectral dynamics present in the advection-diffusion equation. The model consists of a system of ordinary differential equations with nearest-neighboring coupling between `shells' in wavenumber space. \cite{Miles2017a} performed local-in-time mixing optimization in this model. The shell-model analysis predicts a limiting length scale given by the Batchelor scale, $\Lambda_{\Gamma} \propto\sqrt{\frac{\kappa}{\Gamma}}$  and its generalization $\Lambda_{U} \propto \frac{U}{\kappa} $. The non-dimensional versions are given by $\lambda_{\Gamma} \propto \frac{1}{\sqrt{Pe}}$ and $\lambda_{U} \propto\frac{1}{Pe}$. Throughout, when the symbol $\propto $ is used, the proportionality constant is $O(1)$. Also from here forward, we will refer to the Batchelor scale to mean either $\lambda_{\Gamma}$ or its generalization $\lambda_{U}$.  The predicted long-run rates (after reaching the Batchelor scale) are given by $R_{\Gamma} \propto \kappa/\lambda_{\Gamma}^2 $  and  $R_{U}\propto \kappa/\lambda_{U}^2$  The non-dimensional versions are given by $r_{\Gamma} \propto 1$ and $r_{U} \propto 1/Pe $.
+The shell model is a reduced model of the spectral dynamics present in the advection-diffusion equation. The model consists of a system of ordinary differential equations with nearest-neighboring coupling between `shells' in wavenumber space. \cite{Miles2017a} performed local-in-time mixing optimization in this model. The shell-model analysis predicts a limiting length scale given by the Batchelor scale, $\Lambda_{\Gamma} =\sqrt{\frac{\kappa}{\Gamma}}$  and its generalization $\Lambda_{U}= \frac{U}{\kappa} $. The non-dimensional versions are given by $\lambda_{\Gamma}= \frac{1}{\sqrt{Pe}}$ and $\lambda_{U} = \frac{1}{Pe}$.  Also from here forward, we will refer to the Batchelor scale to mean either $\lambda_{\Gamma}$ or its generalization $\lambda_{U}$.  The predicted long-term rates (after reaching the Batchelor scale) are given by $R_{\Gamma} =\kappa/\lambda_{\Gamma}^2 $  and  $R_{U}=\kappa/\lambda_{U}^2$  The non-dimensional versions are given by $r_{\Gamma} =1$ and $r_{U} = Pe $.
 
 \subsection{Bounds for $L^{\infty}$ constrained flows}
 We consider a subset of $L^{2}$ constrained flows --- those belonging to $L^{\infty}$. Quantities of rate-of-strain and speed are bounded point-wise uniformly in space and time rather than demanding that they be $L^2$ integrable as before. We will provide bounds on $\lambda$ and measures of mixing in this restricted setting. 
@@ -319,7 +321,7 @@ Using the above relation with  \eqref{eq:lambda_bound}, we arrive at
 \label{sec:numerical_experiment}
 \subsection{Methodology}
 
-We solve \eqref{eq:nd_ade} by using a Fourier basis to represent the spatial domain with a 4th order Runge-Kutta time-stepping method. All simulation code was created in the programming language Python with package modules, pyfftw and numpy. The code repository can be found at \href{http://github.com/cjm715/lit}{ http://github.com/cjm715/lit}.
+We solve \eqref{eq:nd_ade} by using a Fourier basis to represent the $512 \times 512$ discretized spatial domain with a 4th order Runge-Kutta time-stepping method. All simulation code was created in the programming language Python with package modules, pyfftw and numpy. The code repository can be found at \href{http://github.com/cjm715/lit}{ http://github.com/cjm715/lit}.
 
 \subsection{Results}
 
@@ -328,82 +330,84 @@ We solve \eqref{eq:nd_ade} by using a Fourier basis to represent the spatial dom
 \caption{Local-in-time optimization with enstrophy constraint. Top filmstrip is for $Pe =\infty$ and the bottom filmstrip is $Pe=256$.}
 \label{fig:enstrophy_film}
 \end{figure}
-
+%
 \begin{figure}
 \includegraphics[width=\textwidth]{energy_film}
 \caption{Local-in-time optimization with energy constraint. Top filmstrip is for $Pe = \infty$ and the bottom filmstrip is $Pe=32$.}
 \label{fig:energy_film}
 \end{figure}
-
+%
 \begin{figure}
 \includegraphics[width=\textwidth]{enstrophy_norms}
-\caption{Enstrophy}
+\caption{$H^{-1}, L^{2},$ and $H^{1}$ norms of the concentration field under the optimal enstrophy-constrained flow.}
 \label{fig:enstrophy_norms}
 \end{figure}
+%
 \begin{figure}
 \includegraphics[width=\textwidth]{energy_norms}
-\caption{Energy}
+\caption{$H^{-1}, L^{2},$ and $H^{1}$ norms of the concentration field under the optimal energy-constrained flow.}
 \label{fig:energy_norms}
 \end{figure}
+%
 \begin{figure}
 \includegraphics[width=\textwidth]{enstrophy_length}
-\caption{Enstrophy}
+\caption{The left subplot shows the filament length $\lambda$ over time subject to the optimal enstrophy-constrained flow. The right subplot is the same data except scaled: $\lambda(t)/\lambda_{\Gamma} = \lambda(t)\sqrt{Pe}$.}
 \label{fig:enstrophy_length}
 \end{figure}
-
-
+%
 \begin{figure}
 \includegraphics[width=\textwidth]{energy_length}
-\caption{Energy}
+\caption{The left subplot shows the filament length $\lambda$ over time subject to the optimal energy-constrained flow. The right subplot is the same data except scaled: $\lambda(t)/\lambda_{U} = \lambda(t) Pe$.}
 \label{fig:energy_length}
 \end{figure}
-
-
+%
 \begin{figure}
 \centering
 \includegraphics[width=0.5\textwidth]{enstrophy_rate}
-\caption{Enstrophy}
+\caption{Mixing rate $r(t)$ over time when subject to the optimal enstrophy-constrained flow.}
 \label{fig:enstrophy_rate}
 \end{figure}
-
-
-
+%
 \begin{figure}
 \centering
 \includegraphics[width=\textwidth]{energy_rate}
-\caption{Energy}
+\caption{The left subplot shows the mixing rate $r(t)$ over time when subject to the optimal energy-constrained flow. The right subplot is the same data except scaled: $r(t)/r_{U} = r(t)/Pe$.}
 \label{fig:energy_rate}
 \end{figure}
 
 
 
- Figure \ref{fig:enstrophy_film} shows the evolution of a scalar field under the optimal flow for the enstrophy constraint. The top film strip corresponds to $Pe =\infty$ while the bottom is $Pe = 256$. The time evolution is initially similar but soon diverges over time. Figure \ref{fig:energy_film} shows the evolution for the energy case. The top film strip corresponds to $Pe =\infty$ while the bottom is $Pe = 32$. Notice that, unlike the $Pe = \infty$ cases, the flows with finite $Pe$ are incapable of creating length scales arbitrarily small for either the energy or enstrophy cases.  The left subplot of Figures \ref{fig:enstrophy_length} and \ref{fig:energy_length} shows this phenomena more quantitatively by showing $\lambda$ over time eventually reaching a plateau. The shell-model prediction of this limiting length scale is the Batchelor scale given by $\lambda_{\Gamma} = L/\sqrt{Pe}$ for the enstrophy case and  $\lambda_{U} = L/Pe$ for the energy case. The right plots of Figures \ref{fig:enstrophy_length} and \ref{fig:energy_length} shows scaled versions of $\lambda$ given by  $\lambda/\lambda_{\Gamma}$ and $\lambda/\lambda_{U}$ respectively.  Notice how they plateau around an $O(1)$ constant. Thus, this result is consistent with the shell-model predictions. 
+ Figure \ref{fig:enstrophy_film} shows the evolution of a scalar field under the optimal flow for the enstrophy constraint. The top film strip corresponds to $Pe =\infty$ while the bottom is $Pe = 256$. The time evolution is initially similar but soon diverges over time. Figure \ref{fig:energy_film} shows the evolution for the energy case. The top film strip corresponds to $Pe =\infty$ while the bottom is $Pe = 32$. Notice that, unlike the $Pe = \infty$ cases, the flows with finite $Pe$ are incapable of creating length scales arbitrarily small for either the energy or enstrophy cases.  The left subplot of Figures \ref{fig:enstrophy_length} and \ref{fig:energy_length} shows this phenomena more quantitatively by showing $\lambda$ over time eventually reaching a plateau. The shell-model prediction of this limiting length scale is the Batchelor scale given by $\lambda_{\Gamma} = 1/\sqrt{Pe}$ for the enstrophy case and  $\lambda_{U} = 1/Pe$ for the energy case. The right plots of Figures \ref{fig:enstrophy_length} and \ref{fig:energy_length} shows scaled versions of $\lambda$ given by  $\lambda/\lambda_{\Gamma}$ and $\lambda/\lambda_{U}$ respectively.  Notice how they plateau around an $O(1)$ constant. Thus, this result is consistent with the shell-model predictions. 
+   
+Figure \ref{fig:enstrophy_rate} shows the mixing rates for the enstrophy case. The rate during the transient phase is $\Gamma$ which is consistent with rates expected from $Pe=\infty$ mixing studies. For all $Pe$ considered, there is an increase in the rate of mixing after transient behavior has finished to a long-term rate. Surprisingly, this long-term mixing rate appears to be independent of $Pe$ for fixed enstrophy. {\it Thus, this implies that the long-term rate of mixing is only dependent on the rate-of-strain $\Gamma$ and not influenced by the strength of diffusion. }Although, it should be noted that the onset of the long-term rate is affected by the value of $Pe$. When there is strong diffusion (small $Pe$), the Batchelor scale is reached early. From the work of \cite{GI2014} and \cite{CS2013}, $\lambda$ decreases at most exponentially for $Pe = \infty$. If we assume that the local-in-time flows nearly saturate this bound in the transient phase, we model $\lambda$ as  $\lambda (t) = \lambda(0)\exp(- \alpha t) $ during this time. We expect the critical transition time $t_{c}$ that marks the end of this transient period to satisfy $\lambda(t_{c})= \lambda_{\Gamma}$. This time is theorized to be $t_{c}=\frac{1}{\alpha}\ln(\lambda(0)/\lambda_{\Gamma}) = \frac{1}{\alpha}\ln ( \sqrt{Pe} )$ for $Pe>1$ (If $Pe \leq 1$, then there is no transient phase). Hence, a smaller value of $Pe$ will result in an earlier onset of the long-term rate of mixing. Therefore, it is advantageous to have strong diffusion (small $Pe$) so that there is an earlier onset of the long-term mixing rate (although independent of $Pe$) which is an improvement over the mixing rate of the purely non-diffusive situation ($Pe=\infty$).
  
- 
- Figures \ref{fig:enstrophy_rate} and \ref{fig:energy_rate} shows the rate $r$ as defined in \eqref{eq:rate}. The rate during the transient phase for the enstrophy case is $\Gamma$ which is consistent with rates expected from $Pe=\infty$ mixing studies.  For all values of $Pe$ considered, there is an increase in the rate of mixing after transient behavior has finished to a long-run rate. Surprisingly, this long-run mixing rate appears to be {\it independent} of $Pe$ for fixed enstrophy. Thus, this implies that the rate of mixing is only dependent on the rate-of-strain $\Gamma$ and not influenced by the strength of diffusion. Although, it should be noted that the onset of the long-run rate is affected by the values of $Pe$. When $Pe$ is small (strong diffusion), the Batchelor scale is reached early. From the work of \cite{GI2014} and \cite{CS2013}, $\lambda$ can decreases at most exponentially for $Pe = \infty$. If we assume that the local-in-time flows nearly saturate this bound in the transient phase, we model $\lambda$ as  $\lambda (t) = \lambda(0)\exp(- t) $ during this time. Thus, we expect the critical transition time $t_{c}$ that marks the end of this transient period is given by the condition $\lambda(t_{c})= \lambda_{\Gamma}$. Thus, this time is theorized to be $t_{c}=\ln(\lambda(0)/\lambda_{\Gamma}) = \ln ( \sqrt{Pe} )$ for $Pe>1$ (If $Pe \leq 1$, then there is no transient phase).  From the work of \cite{JMP2012} on the fixed energy case, $\lambda(t)$ can decrease linearly in time to produce perfect mixing in finite time. Thus, we model the transient phase as $\lambda(t)=\lambda(0)(1/2-t)$ where we are assuming that the optimal local-in-time flow nearly saturates the bound of the modified checkerboard flow (See Appendix \ref{appendix:checkerboard}). Therefore, we theorize that the critical transition time is $t_{c}=1/2 - \lambda_{U}/\lambda(0) = 1/2 - 1/Pe$ with $Pe> 2$ (If $Pe \leq 2$, there is not transient phase) for the energy case.
- 
- 
- 
- For the energy case, we again have an increase in mixining rate compared to the $Pe=\infty$ transient behavior. The long-term mixing rate is proportional to $Pe$ in contrast to the long-term mixing rate of enstrophy which carried no dependence on $Pe$. 
+For the energy case, the long-term mixing rate decreases with decreasing $Pe$ (see the left subplot of figure \ref{fig:energy_rate}).  {\it Thus, strong diffusion results in a weak long-term mixing rate}. The right subplot of Figure \ref{fig:energy_rate} is $r/r_{U} =  r/Pe$. We see oscillations of $r/r_{U}$ around a value that is $O(1)$ which indicates that our numerical results are consistent with our predictions from the shell model. Thus, the long-term mixing rate is proportional to $Pe$ in contrast to the long-term mixing rate of enstrophy which carries no dependence on $Pe$. For the enstrophy case, we saw a benefit of picking a lower $Pe$ to result in a earlier onset of the long-term mixing behavior. The fixed energy case however is different. The onset of the long run-mixing behavior can be determined by the following model. From the work of \cite{JMP2012} on the fixed energy case, $\lambda(t)$ can decrease linearly in time to produce perfect mixing in finite time. We model the transient phase as $\lambda(t)=\lambda(0)(1-\beta t)$. Therefore, we theorize that the critical transition time is $t_{c}=\frac{1}{\beta}(1 -\lambda_{U}/\lambda(0)) = \frac{1}{\beta}(1 - 1/Pe)$ with $Pe> 1$ (If $Pe \leq 1$, there is not transient phase) for the energy case. Thus, it is true that on can still achieve an earlier onset of the long-term mixing behavior by choosing a smaller $Pe$. However, an earlier onset time is accompanied by a slower long-term mixing rate. As for choosing a large $Pe$, the onset time is bounded above by $\frac{1}{\beta}$ and results in a faster long-term mixing rate. Thus, it is advantageous to have weak diffusion (large $Pe$) for mixing in the fixed energy case. This benefit is well illustrated by $H^{-1}$ norm in figure \ref{fig:energy_norms}. Notice that the mixing rate is initially slow for $Pe = 512$ but then outcompetes the mixing rate of smaller values of $Pe$. 
 
-The right subplot of Figure \ref{fig:energy_rate} is the rate $r$ divided by $Pe$. We see oscillations of $r/Pe$ around the value $1.0$ which indicates that our numerical results are consistent with our predictions from the shell model.
 
 
 % Figures \ref{fig:enstrophy_norms} and \ref{fig:energy_norms} show the evolution the  $H^{-1}$,  $L^{2}$, and $H^{1}$ norms for different values of finite $Pe$.
 
 \section{Discussion}
 \label{sec:discussion}
-Our local-in-time optimization results suggest that there is a limiting length scale and rate. The bounds derived under the $L^{\infty}$ constrained flow assumption did result in proving either of these observations. However, they did definitely rule out the possibility of perfect mixing in finite time in either case of enstrophy and energy. However this result may have already been known based on regularity theory of partial differential equations.  Although, we believe there is a gap between the inequalities derived. We surmise that the deficiencies in our predictions is not due to the added assumption of optimal flows belonging to $L^{\infty}$, but rather that the incompressibility condition was not fully exploited and maybe crucial to proving the limiting length scale. The analysis for energy and enstrophy constrained cases both relied on bounding the $\frac{\hone{\theta}}{\ltwo{\theta}}$ over time. This analysis allowed for the possibility of infinite growth without bound. From our local-in-time optimization analysis, we can see that this is not the case and approaches a maximum in time. Thus, we believe that this maybe a crucial step in proving the limiting length and rate. However, we have not successfully ruled out the possibility of infinite growth of this quantity over time. The the question remains, "Does there exist energy or enstrophy-constrained incompressible flows where $\frac{\hone{\theta}}{\ltwo{\theta}}$grows to infinity in time in the presence of molecular diffusion?" Or rather, can this possibility be ruled out definitively by proof.
+The local-in-time optimization results suggest that there is a limiting length scale and rate. The bounds derived, under the $L^{\infty}$ constrained flow assumption, did not result in proving either of these observations. However, they did definitively rule out the possibility of perfect mixing in finite time in either constraint. We believe these bounds could be drastically improved. We surmise that the deficiencies in these bounds is due to not fully exploiting the incompressibility condition. It remains to be shown that $\liminf_{t\rightarrow \infty} \lambda (t)\geq C\lambda_{\Gamma}$ where C is constant dependent on domain and initial condition under an enstrophy constrained flow. A similar problem remains open for the fixed energy case.  If these statements are shown, then many of the results demonstrated here numerically will hold more generally. 
 
-
-In future work, we would like to consider the optimal control problem coined global-in-time optimization which tries to minimize the filamentation width at the end time rather than instantaneously attempting to minimize the its decay rate. This may lead to flows that are able to extend to even smaller length scales. This global-in-time optimization has been explored in the work of \cite{Miles2017a} within the context of the shell model. The authors showed that global-in-time and local-in-time optimization appeared to give similar mixing rates. 
+In future work, we would like to consider the optimal control problem coined global-in-time optimization which tries to minimize the filamentation width at the end time rather than instantaneously attempting to minimize its decay rate. This may lead to flows that are able to extend to even smaller length scales. This global-in-time optimization has been explored in the work of \cite{Miles2017a} within the context of the shell model. The authors showed that global-in-time and local-in-time optimization appeared to give similar mixing rates. 
 
 
 \section{Conclusion}
 \label{sec:conclusion}
-We provided numerical evidence that the Batchelor scale may be the limiting scale for incompressible flows with bounded energy and enstrophy. It remains an open question if this can be proved rigorously. We also demonstrated that larger diffusion strength (larger $Pe$)  does not appear to affect the long-term mixing performance for the enstrophy case. For the energy-case, an increase in diffusion strength has an adverse affect and worsens the long-term mixing performance. .
 
 
+Our numerical study of local-in-time optimization suggests that there is a limiting length scale given by a generalized Batchelor length scale which in turn determines a long-term mixing Batchelor rate. Although the Batchelor scale has been a theorized lower bound on the length scales present on turbulent flows, it has not been shown rigorously. We hope this numerical study provides insight and promotes investigation into proving what conditions are necessary on the flow for this to be the case. Furthermore, we showed that these limitations imply that (1), for fixed enstrophy optimal flows, strong diffusion can benefit from an early onset of a long-term mixing rate (where the rate itself however is independent of diffusion strength) while (2), for energy fixed optimal flows, strong diffusion weakens the long-term mixing rate.  
+
+
+\section*{Acknowledgements}
+
+This work was supported in part by NSF Awards PHY-1205219 and DMS-1515161. One of us (CRD) is additionally grateful for Fellowship funding from the John Simon Guggenheim Memorial Foundation. We are appreciative of the valuable feedback provided by Guatum Iyer, Alexander Kiselev, Ian Tobasco, and Karen Zaya.
+
+ 
+
+%Our numerical study of local-in-time optimization suggest that there is a limiting length scale given by $\lambda_{\Gamma} = 1/\sqrt{Pe}$ (in dimensional form, $\sqrt{\kappa/\Gamma}$) for fixed enstrophy and $\lambda_{U} = 1/Pe$ (in dimensional form $\kappa/U$) for fixed energy. The study also suggests a long-term mixing rate given by  $r_{\Gamma} = 1 $ (in dimensional form, $\Gamma$) for fixed enstrophy and $r_{U} = Pe$ (in dimensional form, $U^2/\kappa$) for fixed energy.
 
 
 %
@@ -442,16 +446,12 @@ We provided numerical evidence that the Batchelor scale may be the limiting scal
 %We conclude that ...
 %
 %By a dimensional analysis, we conjecture that the velocity field with $\hmone{\u}$=1 may be capable decreasing $\lambda$ past the Batchelor scale. 
-\
-\section*{Acknowledgements}
-
-This work was supported in part by NSF Awards PHY-1205219 and DMS-1515161. One of us (CRD) is additionally grateful for Fellowship funding from the John Simon Guggenheim Memorial Foundation. We are appreciative of the valuable feedback provided by Ian Tobasco and Karen Zaya.
 
 
-\appendix
-\section{Mixing time of modified checkerboard flow}
-\label{appendix:checkerboard}
-The  consider a modified version of the checkerboard flow from \cite{JMP2012}. Suppose one starts with the initial `binary' dye concentration field where $\theta_{0}(\vec{x}) = 1$ for $x_{1}< 1/2$ and $\theta_{0}(\vec{x}) = -1$ for $x_{1}\geq 1/2$ as done in  \cite{JMP2012}. We constrain $\vec{u}$ to be  $\ltwo{\vec{u}} = 1$. 
+%\appendix
+%\section{Mixing time of modified checkerboard flow}
+%\label{appendix:checkerboard}
+%We consider a similar  the checkerboard flow from \cite{JMP2012}. Suppose one starts with the initial `binary' dye concentration field where $\theta_{0}(\vec{x}) = 1$ for $x_{1}< 1/2$ and $\theta_{0}(\vec{x}) = -1$ for $x_{1}\geq 1/2$. We constrain $\vec{u}$ to be  $\ltwo{\vec{u}} = 1$. We consider a sheer flow as described by \cite{JMP2012}
 
 
 %\section{Numerical analysis}
