@@ -160,7 +160,7 @@ The inclusion of diffusion ($Pe <\infty$) with the objective of optimal mixing h
  
 In this work, we explore how diffusion impacts the evolution of the filament width $\lambda$ over time and mixing rates. We show numerical evidence that $\lambda$ appears to be limited by the Batchelor scale as seen in the shell model. Even when actively trying to choose the most optimal flow to minimize filimentation length. Thus, this may suggest that the Batchelor scale does not only limit turbulent flows but also all incompressible flows under the flow constraints considered here. Although these quantities have been known in the context of turbulence theory, the impact of these limitations on mixing rates has not been fully studied to our knowledge.
 
-Furthermore, we believe that the study of determining the smallest length scales achievable demands more attention. This assumption is used today throughout the computational fluid dynamics community to provide a heuristic for the grid resolutions necessary. Thus, it is important to determine what conditions on $\mathbf{u}$ are necessary to justify this assumption.
+Furthermore, we believe that the study of determining the smallest length scales achievable demands more attention. This assumption is used today throughout the computational fluid dynamics community to provide a heuristic for the grid resolutions necessary. Thus, it is important to determine what conditions on $\mathbf{u}$ are necessary to justify this assumption. 
 
 The paper is organized as follows. We introduce the necessary theory regarding local-in-time optimization, a shell model, and $L^{\infty}$ flow constraints in section \ref{sec:theory}. Section \ref{sec:numerical_experiment} details the methodology and results of numerically implementing local-in-time flow optimization. Lastly, we finish with a discussion and conclusion in sections \ref{sec:discussion} and \ref{sec:conclusion} respectively.
 
@@ -187,12 +187,12 @@ for the enstrophy constraint where $\mathds{P}$ is the Leray divergence-free pro
 The shell model is a reduced model of the spectral dynamics present in the advection-diffusion equation. The model consists of a system of ordinary differential equations with nearest-neighboring coupling between `shells' in wavenumber space. \cite{Miles2017a} performed local-in-time mixing optimization in this model. The shell-model analysis predicts a limiting length scale given by the Batchelor scale, $\Lambda_{\Gamma} =\sqrt{\frac{\kappa}{\Gamma}}$  and its generalization $\Lambda_{U}= \frac{U}{\kappa} $. The non-dimensional versions are given by $\lambda_{\Gamma}= \frac{1}{\sqrt{Pe}}$ and $\lambda_{U} = \frac{1}{Pe}$.  Also from here forward, we will refer to the Batchelor scale to mean either $\lambda_{\Gamma}$ or its generalization $\lambda_{U}$.  The predicted long-term rates (after reaching the Batchelor scale) are given by $R_{\Gamma} =\kappa/\lambda_{\Gamma}^2 $  and  $R_{U}=\kappa/\lambda_{U}^2$  The non-dimensional versions are given by $r_{\Gamma} =1$ and $r_{U} = Pe $.
 
 \subsection{Bounds for $L^{\infty}$ constrained flows}
-We consider a subset of $L^{2}$ constrained flows --- those belonging to $L^{\infty}$. Quantities of rate-of-strain and speed are bounded point-wise uniformly in space and time rather than demanding that they be $L^2$ integrable as before. We will provide bounds on $\lambda$ and measures of mixing in this restricted setting. 
+We consider a subset of $L^{2}$ constrained flows --- those belonging to $L^{\infty}$. In this restricted setting the rate-of-strain and speed are bounded point-wise uniformly in space and time rather than demanding that they merely be $L^2$ integrable as before. We will provide bounds on $\lambda$ and measures of mixing in this restricted setting. 
 
 \label{sec:linfty_flows}
 \subsubsection{Results for $\linf{\nabla \vec{u}} = 1$}
 
-Taking the time derivative of $\lambda^2$, we find
+The time derivative of $\lambda^2$ is
 %
 \begin{equation}
 	\ddt{\lambda^2} = \frac{2}{Pe}
@@ -203,9 +203,9 @@ Taking the time derivative of $\lambda^2$, we find
 		\right]
 		+ 2 \frac{\sint{\nabla^{-1}\theta \cdot \nabla\vec{u} \cdot 
 							\nabla^{-1}\theta  }}
-					  {\ltwo{\theta}^{2}}.
+					  {\ltwo{\theta}^{2}}
 \end{equation}
-By H\"older's inequality, we have that
+and by H\"older's inequality, we deduce
 \begin{equation}
 \label{eq:length_ineq_rate-of-strain}
 	\ddt{\lambda^2} \geq \frac{2}{Pe} \left[ 
@@ -214,16 +214,16 @@ By H\"older's inequality, we have that
 			- 1
 		\right] - 2  \lambda^2 .
 \end{equation}
-We can provide a lower bound on $\lambda$ at each instant. By apply Gr\"onwall's inequality and the fact that the bracketed term is greater than or equal to zero, it follows from (\ref{eq:length_ineq_rate-of-strain}) that
+This establishes a lower bound on $\lambda$ at each instant: by apply Gr\"onwall's inequality and the fact that the bracketed term is greater than or equal to zero, it follows that
 %
 \begin{equation}
 \label{eq:exponential_enstrophy}
 	\lambda (t) \geq \lambda(0)e^{- t}.
 \end{equation}
 %
-Therefore, perfect mixing in finite time is impossible.
+Therefore, perfect mixing in finite time is impossible for bounded rate-of-strain flows.
 
-One can show that 
+Furthermore,
 %
 \numparts \begin{eqnarray}
 \frac{d}{dt}\left(\frac{\|\nabla\theta\|_{L^{2}}^2}{\|\theta\|_{L^{2}}^2}\right) &= \frac{\|\theta\|_{L^{2}}^2\frac{d}{dt}\|\nabla\theta\|_{L^{2}}^2-\|\nabla\theta\|_{L^{2}}^2\frac{d}{dt}\|\theta\|_{L^{2}}^2}{\|\theta\|_{L^{2}}^4}\\
@@ -232,11 +232,11 @@ One can show that
 							\nabla\theta  }}{\|\theta\|_{L^{2}}^2} 
 \\
 &\leq 2 \frac{\hone{\theta}^2}{\ltwo{\theta}^2}
-\end{eqnarray} \endnumparts:
+\end{eqnarray} \endnumparts
 %
-From $\ddt{}\ltwo{\theta}^2 = -\frac{2}{Pe} \hone{\theta}^2$, one finds that 
+and using $\ddt{}\ltwo{\theta}^2 = -\frac{2}{Pe} \hone{\theta}^2$, it follows that
 \begin{equation}
-\ltwo{\theta}\geq  \ltwo{\theta_{0}}\exp\left[-\frac{1}{2Pe}\frac{\hone{\theta_{0}}^2}{\ltwo{\theta_{0}}^2}\left(e^{2 t} -1\right)\right]
+\ltwo{\theta}\geq  \ltwo{\theta_{0}}\exp\left[-\frac{1}{2Pe}\frac{\hone{\theta_{0}}^2}{\ltwo{\theta_{0}}^2}\left(e^{2 t} -1\right)\right].
 \end{equation}
 Using this with (\ref{eq:exponential_enstrophy}), we find that 
 \begin{equation}
