@@ -98,13 +98,13 @@ Ann Arbor, MI 48104-1107, USA}
 Incompressible flows can be effective mixers by appropriately advecting a passive tracer to produce small filamentation length scales. The Batchelor length scale \cite{Batchelor1959a} was proposed as the lower limit of length scales achievable in turbulent flows. Here, we provide numerical evidence that this limitation may be even more general, applying as well to all incompressible flows under mild physical constraints such as bounded enstrophy or energy. We consider local-in-time flow optimization under these flow intensity constraints with the objective of maximizing mixing rate performance. We observe that, for enstrophy-bounded optimal flows, the strength of diffusion has no impact on the long-term mixing rate performance. For energy-constrained optimal flows, however an increase in the strength of diffusion decreases the mixing rate. We provide analytical lower bounds on mixing rates and length scales achievable under related constraints (pointwise bounded speed and rate-of-strain) by extending the work of \cite{JFM2011} and \cite{Chi-Cheu1996}. 
 
 \end{abstract}
-
-% Uncomment for PACS numbers
-\pacs{00.00, 20.00, 42.10}
+%
+\pacs{47.85.lk, 47.85.L-, 42.10, 47.57.eb}
+\ams{76R50, 37A25, 76F25, 76D55}
 %
 % Uncomment for keywords
 \vspace{2pc}
-\noindent{\it Keywords}: Optimal mixing, incompressible flow, diffusion, Batchelor scale
+\noindent{\it Keywords}: Mixing, incompressible flow, diffusion processes, flow control and optimization, Batchelor scale
 
 % Uncomment for Submitted to journal title message
 \submitto{\NL}
@@ -118,7 +118,7 @@ Incompressible flows can be effective mixers by appropriately advecting a passiv
 
 \section{Introduction}
 
-Optimal mixing is important to many areas of science and engineering. A question of interest across these domains is ``How can one stir to enhance the rate of mixing?'' We explore this question and study the impact of molecular diffusion. We address this topic by considering an incompressible flow with mild physical constraints in a periodic box with side length $L$ in $d$ dimensions. We consider a mean-zero tracer concentration field $\theta$ that evolves according to the advection-diffusion equation,
+Mixing a passive tracer concentration via an incompressible fluid flow is important to many areas of science and engineering. A question of interest across these domains is ``How can one stir to enhance the rate of mixing?'' We explore this question and study the impact of molecular diffusion. We address this topic by considering an incompressible flow with mild physical constraints in a periodic box with side length $L$ in $d$ dimensions. We consider a mean-zero tracer concentration field $\theta$ that evolves according to the advection-diffusion equation,
 \begin{equation}
 	\label{eq:PDE_advection}
 	\ppt{\theta}+\mathbf{u}\cdot \nabla \theta=\kappa \lap\theta,
@@ -160,7 +160,7 @@ The inclusion of diffusion ($Pe <\infty$) with the objective of optimal mixing h
  
 In this work, we explore how diffusion impacts the evolution of the filament width $\lambda$ over time and mixing rates. We show numerical evidence that $\lambda$ appears to be limited by the Batchelor scale as seen in the shell model. Even when actively trying to choose the most optimal flow to minimize filimentation length. Thus, this may suggest that the Batchelor scale does not only limit turbulent flows but also all incompressible flows under the flow constraints considered here. Although these quantities have been known in the context of turbulence theory, the impact of these limitations on mixing rates has not been fully studied to our knowledge.
 
-Furthermore, we believe that the study of determining the smallest length scales achievable demands more attention. This assumption is used today throughout the computational fluid dynamics community to provide a heuristic for the grid resolutions necessary. Thus, we believe it is imperative to determine what conditions on $\mathbf{u}$ are necessary to justify this assumption.
+Furthermore, we believe that the study of determining the smallest length scales achievable demands more attention. This assumption is used today throughout the computational fluid dynamics community to provide a heuristic for the grid resolutions necessary. Thus, it is important to determine what conditions on $\mathbf{u}$ are necessary to justify this assumption.
 
 The paper is organized as follows. We introduce the necessary theory regarding local-in-time optimization, a shell model, and $L^{\infty}$ flow constraints in section \ref{sec:theory}. Section \ref{sec:numerical_experiment} details the methodology and results of numerically implementing local-in-time flow optimization. Lastly, we finish with a discussion and conclusion in sections \ref{sec:discussion} and \ref{sec:conclusion} respectively.
 
