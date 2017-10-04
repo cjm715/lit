@@ -1,5 +1,6 @@
 import numpy as np
 import pyfftw
+import pdb
 
 
 def FE_timestepper(op, th0, dt):
@@ -62,6 +63,7 @@ def integrator2(op, timestepper, th0, tarray, dt0_cfl):
             dt = tarray[i] - tarray[i - 1]
             M = np.ceil(dt / dt0_cfl).astype('int') if dt > dt0_cfl else 1
             # print(M)
+            # pdb.set_trace()
             th[i] = timestepper(op, th[i - 1], dt, M)
 
         #print('Time: ', tarray[i])

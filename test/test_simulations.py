@@ -13,7 +13,7 @@ def test_lit_enstrophy_sim():
 
     N_largest = 128  # largest number of modes
 
-    dt_stable_for_N_largest = 0.25 * dt_cfl(N_largest, L, kappa, gamma * L)
+    dt_stable_for_N_largest = dt_cfl(N_largest, L, kappa, gamma * L)
     M_smallest = int(np.ceil(T / dt_stable_for_N_largest))
     # M_smallest = 1
     M_largest = 16 * M_smallest  # largest number of time steps
@@ -22,15 +22,16 @@ def test_lit_enstrophy_sim():
     for N in [N_largest // 16, N_largest // 8, N_largest // 4, N_largest // 2]:
         # print(N)
         sol_N_collection.append(lit_enstrophy_sim(
-            N, Pe, T, M_largest, cfl=False))
+            N, L, Pe, T, M_largest, cfl=False))
 
     sol_M_collection = []
     for M in [M_largest // 16, M_largest // 8, M_largest // 4, M_largest // 2]:
         # print(M)
         sol_M_collection.append(lit_enstrophy_sim(
-            N_largest, Pe, T, M, cfl=False))
+            N_largest, L, Pe, T, M, cfl=False))
 
-    best_solution = lit_enstrophy_sim(N_largest, Pe, T, M_largest, cfl=False)
+    best_solution = lit_enstrophy_sim(
+        N_largest, L, Pe, T, M_largest, cfl=False)
     sol_N_collection.append(best_solution)
     sol_M_collection.append(best_solution)
 
