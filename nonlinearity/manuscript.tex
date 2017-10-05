@@ -164,6 +164,15 @@ Furthermore, we believe that the study of determining the smallest length scales
 
 The paper is organised as follows. We introduce the necessary theory regarding local-in-time optimisation, a shell model, and $L^{\infty}$ flow constraints in section \ref{sec:theory}. Section \ref{sec:numerical_experiment} details the methodology and results of numerically implementing local-in-time flow optimisation. Lastly, we finish with a discussion and conclusion in sections \ref{sec:discussion} and \ref{sec:conclusion} respectively.
 
+
+
+%%%
+%%%
+%%% THEORY
+%%%
+%%%
+
+
 \section{Theory}
 \label{sec:theory}
 \subsection{Local-in-time optimisation}
@@ -365,6 +374,14 @@ and this combined with  (\ref{eq:lambda_bound}) implies
 
 We solve (\ref{eq:nd_ade}) by using a Fourier basis to represent the $512 \times 512$ discretised spatial domain with a 4th order Runge-Kutta time-stepping method. All simulation code was created in the programming language Python with package modules, pyfftw and numpy. The code repository can be found at \href{http://github.com/cjm715/lit}{ http://github.com/cjm715/lit}.
 
+
+%%%
+%%%
+%%% RESULTS
+%%%
+%%%
+
+
 \subsection{Results}
 
 \begin{figure}
@@ -429,15 +446,24 @@ For the energy case, the long-term mixing rate decreases with decreasing $Pe$ (s
 
  For the enstrophy case, we saw a benefit of picking a lower $Pe$ to result in a earlier onset of the long-term mixing behaviour. The fixed energy case however is different. The onset of the long run-mixing behaviour can be determined by the following model. From the work of \cite{JMP2012} on the fixed energy case, $\lambda(t)$ can decrease linearly in time to produce perfect mixing in finite time. We model the transient phase as $\lambda(t)=\lambda(0)(1-\beta t)$. Therefore, we theorise that the critical transition time is $t_{c}=\frac{1}{\beta}(1 -\lambda_{U}/\lambda(0)) = \frac{1}{\beta}(1 - 1/Pe)$ with $Pe> 1$ (If $Pe \leq 1$, there is not transient phase) for the energy case. Thus, it is true that on can still achieve an earlier onset of the long-term mixing behaviour by choosing a smaller $Pe$. However, an earlier onset time is accompanied by a slower long-term mixing rate. As for choosing a large $Pe$, the onset time is bounded above by $\frac{1}{\beta}$ and results in a faster long-term mixing rate. Thus, it is advantageous to have weak diffusion (large $Pe$) for mixing in the fixed energy case. This benefit is well illustrated by $H^{-1}$ norm in figure \ref{fig:energy_norms}. Notice that the mixing rate is initially slow for $Pe = 512$ but then out competes the mixing rate of smaller values of $Pe$.    
 
-
-
-% Figures \ref{fig:enstrophy_norms} and \ref{fig:energy_norms} show the evolution the  $H^{-1}$,  $L^{2}$, and $H^{1}$ norms for different values of finite $Pe$.
+%%%
+%%%
+%%% DISCUSSION 
+%%%
+%%%
 
 \section{Discussion}
 \label{sec:discussion}
-The local-in-time optimisation results suggest that there is a limiting length scale and rate. The bounds derived, under the $L^{\infty}$ constrained flow assumption, did not result in proving either of these observations. However, they did definitively rule out the possibility of perfect mixing in finite time in either constraint. We believe these bounds could be drastically improved. We surmise that the deficiencies in these bounds is due to not fully exploiting the incompressibility condition. It remains to be shown that $\liminf_{t\rightarrow \infty} \lambda (t)\geq C\lambda_{\Gamma}$ where C is constant dependent on domain and initial condition under an enstrophy constrained flow. A similar problem remains open for the fixed energy case.  If these statements are shown, then many of the results demonstrated here numerically will hold more generally. 
+The local-in-time optimisation results suggest that there is a limiting length scale for passive tracer mixing whenever flows are optimised to decrease the mix-norm. The bounds derived under the $L^{\infty}$ constrained flow assumption did not result in proving either of these observations, but they did definitively rule out the possibility of perfect mixing in finite time for either constraint. These bounds could be drastically improved: we surmise that the deficiencies in these analyses may be due to not fully exploiting the incompressibility condition in the estimates. It remains to be shown that $\liminf_{t\rightarrow \infty} \lambda (t)\geq C\lambda_{\Gamma}$ where C is constant dependent on domain and initial condition under an enstrophy constrained flow. A similar problem remains open for the fixed energy case.  If these statements can be shown, then many of the results demonstrated here computationally will hold more generally. 
 
-In future work, we would like to consider the optimal control problem coined global-in-time optimisation which tries to minimise the filamentation width at the end time rather than instantaneously attempting to minimise its decay rate. This may lead to flows that are able to extend to even smaller length scales. This global-in-time optimisation has been explored in the work of \cite{Miles2017a} within the context of the shell model. The authors showed that global-in-time and local-in-time optimisation appeared to give similar mixing rates. 
+In future work, we would like to consider the optimal control problem with finite-time optimisation to minimise the filamentation width at the end time rather than instantaneously attempting to minimise its decay rate. This might lead to flows that are able to extend to even smaller length scales. Finite-time optimisation was explored in \cite{Miles2017a} in the context of the shell model where it was found that global-in-time and local-in-time optimisation appeared to give similar mixing rates. Fore the shell model, however, the analysis was consistent with computation. In the PDE case the gap between analysis and computation remains to be closed.
+
+
+%%%
+%%%
+%%% CONCLUSION
+%%%
+%%%
 
 
 \section{Conclusion}
