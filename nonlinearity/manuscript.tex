@@ -204,38 +204,7 @@ In this paper, we make progress towards answering ``What is the most optimal mix
 
 We approach the posed question by considering the general setup introduced of the evolution of passive scalar in a periodic box. We consider the local-in-time optimization problem first introduced by Z. Lin {\it et. al.} \cite{JFM2011} in the context of diffusion. Local-in-time optimization seeks to find the optimal flow that achieves the best instantaneous mixing rate. We will see that the best choice leads to a $\vec{u}$ that depends on $\theta$. This feedback causes the dynamics of $\theta$ governed by \eref{eq:PDE_advection} to be nonlinear.
 
-%These results also imply that the filamentation length scale $\lambda$ also decays exponentially to zero over time given by the observation that the denominator of \eref{eq:length} is constant in time (this can be shown directly from \eref{eq:PDE_advection}). Since the filamentation length scale $\lambda$ is proportional $H^{-1}$ for $\kappa = 0$, we know that the $\lambda$ can become arbitrarily small as well.
-
-
-
-%On the other hand, diffusion is generally perceived to enhance mixing rates of a passive tracer. It is a reasonable expectation since molecular diffusion of a dye can lead to a more homogeneous mixture as seen in everyday experience from allowing cream in coffee to diffusion over time without actively stirring --- diffusion surely benefits mixing in this case.  However, the case where advection and diffusion processes are both relevant with the goal of enhance mixing rates must be treated with care and is the topic of this paper. 
-
-
-%We use the $H^{-1}$ norm to define the (exponential) rate of mixing as
-%\begin{equation}
-%\label{eq:rate}
-%r(t) = -  \frac{\ddt{}\hmone{\theta}}{\hmone{\theta}}.
-%\end{equation}
-%The $L^{2}$ norm $\ltwo{\theta}$ and the $H^{1}$ norm $\hone{\theta}$ are also common measures of mixing and will be considered here as well. 
-
-%In particular, we explore the impact of molecular diffusion on mixing through analytic and computational means. 
-%
-%
-% \cite{JFM2011} showed numerical evidence that the filament width $\lambda$ seemingly decreased continually by instantaneous flow optimisation. This type of optimisation will be considered in this work as well. Self-similar flows can realise a decreasing $\lambda$ over time as shown analytically by \cite{Alberti2014a}.  It was rigorously proven independently by \cite{GI2014} and \cite{CS2013} that $\lambda$ decreased at most exponentially --- consistent with \cite{JFM2011} and \cite{Alberti2014a}. The work of \cite{GI2014} relied on PDE regularisation results of \cite{Crippa} while the approach of \cite{CS2013} used methods from optimal transportation theory \cite{villani2003topics}.
-%
-%For $Pe = \infty$ energy-constrained problem, \cite{JMP2012} showed that a `chequerboard' flow can also provide continually decreasing length scales. Moreover, $\lambda$ decreased at a fast enough rate to approach zero in finite time in contrast to the enstrophy-constrained problem where $\lambda$ decreases to zero in infinite time.
-%
-%The inclusion of diffusion ($Pe <\infty$) with the objective of optimal mixing has been explored.  \cite{DF2014} investigated optimal mixing and study the evolution of the mentioned measures ($H^{-1}, L^2,$ and $H^1$ norms) of mixing under the chequerboard flow introduced by \cite{JMP2012}. They show that the $H^{-1}$ and $L^2$ norms decrease monotonically under this flow while the $H^{1}$ increases until it reaches a peak and then decreases. This peak corresponds to a  time when the length scales developed are small enough for diffusion to effectively act on steep gradients. \cite{Miles2017a} explored this phenomena further in the context of a shell model, a reduced model using ordinary differential equations that mimic the spectral dynamics of the advection-diffusion equation. The authors concluded that shell-model mixing could not surpass length scales given by $\sqrt{\kappa/ \Gamma}$ for enstrophy-constrained flows and $\kappa/U$ for energy-constrained flows up to $O(1)$ constants. These length scales can be identified as a generalised Batchelor scale \cite{Batchelor1959a}, introduced in the context of turbulence theory. 
-%
-
-%Diffusion is generally perceived as a beneficiary to the goal of enhanced mixing rates of a passive tracer. It is a reasonable expectation since molecular diffusion of a dye can lead to a more homogeneous mixture as seen in everyday experience from allowing cream in coffee to diffusion over time without actively stirring --- diffusion surely benefits mixing in this case. However every coffee drinker knows that they can accelerate the mixing process by stirring or in other words advecting the fluid appropriately. Note that if diffusion were completely absent, then advection is the only way to enhance mixing.  Pure advection is undoubtedly beneficial in this case. However, the case where advection and diffusion processes are both relevant with the goal of enhance mixing rates must be treated with care and is the topic of this paper. 
-
-%The length scales achievable within a passive scalar can also be affected by the same fluid properties and environmental conditions. It has
-%
-% 
-% 
-
-In this work, we will demonstrate that homogenization via diffusion and filamentation via advection can sometimes be in conflict and collectively produce a negative impact on mixing. We explore how diffusion impacts the evolution of the filament width $\lambda$ over time and mixing rates. We show numerical evidence that $\lambda$ appears to be limited by the Batchelor scale as seen in the shell model. Even when actively trying to choose the most optimal flow to minimise filamentation length. Thus, this may suggest that the Batchelor scale does not only limit turbulent flows but also all incompressible flows under the flow constraints considered here. Although these quantities have been known in the context of turbulence theory, the impact of these limitations on mixing rates has not been fully studied to our knowledge.
+In this work, we will demonstrate that homogenization via diffusion and filamentation via advection can sometimes be in conflict and collectively produce a negative impact on mixing. We explore how diffusion impacts the evolution of the filament width $\lambda$ over time and mixing rates. We show numerical evidence that $\lambda$ appears to be limited by the Batchelor scale as seen in the shell model. Even when actively trying to choose the most optimal flow to enhance filamentation. Thus, this may suggest that the Batchelor scale does not only limit turbulent flows but also all incompressible flows under the flow constraints considered here. Although these quantities have been known in the context of turbulence theory, the impact of these limitations on mixing rates has not been fully studied to our knowledge.
 
 
 The paper is organised as follows. We introduce the necessary theory regarding local-in-time optimisation, a shell model, and $L^{\infty}$ flow constraints in section \ref{sec:theory}. Section \ref{sec:numerical_experiment} details the methodology and results of numerically implementing local-in-time flow optimisation. Lastly, we finish with a discussion and conclusion in sections \ref{sec:discussion} and \ref{sec:conclusion} respectively.
