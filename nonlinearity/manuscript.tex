@@ -80,7 +80,7 @@
 
 \title[Diffusion-limited mixing by incompressible flows]{Diffusion-limited mixing by incompressible flows}
 
-\author{C J Miles$^{1,2,3}$ and C R Doering$^{1,2,3}$ }
+\author{Christopher J. Miles$^{1,2,3}$ and Charles R. Doering$^{1,2,3}$ }
 
 \address{$^1$ Department of Physics, University of Michigan,
 Ann Arbor, MI 48104-1040, USA}
@@ -91,11 +91,11 @@ Ann Arbor, MI 48104-1107, USA}
 \ead{doering@umich.edu}
 \vspace{10pt}
 \begin{indented}
-\item[]February 2014
+\item[]\today
 \end{indented}
 
 \begin{abstract}
-Incompressible flows can be effective mixers by appropriately advecting a passive tracer to produce small filamentation length scales. The Batchelor length scale \cite{Batchelor1959a} was proposed as the lower limit of length scales achievable in turbulent flows. Here, we provide numerical evidence that this limitation may be even more general, applying as well to all incompressible flows under mild physical constraints such as bounded enstrophy or energy. We consider local-in-time flow optimisation under these flow intensity constraints with the objective of maximising mixing rate performance. We observe that, for enstrophy-bounded optimal flows, the strength of diffusion has no impact on the long-term mixing rate performance. For energy-constrained optimal flows, however an increase in the strength of diffusion decreases the mixing rate. We provide analytical lower bounds on mixing rates and length scales achievable under related constraints (point-wise bounded speed and rate-of-strain) by extending the work of \cite{JFM2011} and \cite{Chi-Cheu1996}. 
+Incompressible flows can be effective mixers by appropriately advecting a passive tracer to produce small filamentation length scales. In addition, diffusion is generally perceived as beneficial to mixing due to its ability to homogenize a passive tracer. However in the case where advection and diffusion are both actively present, we provide numerical evidence that diffusion in quite general cases produce nearly neutral or even {\it negative} effects by limiting the mixing effectiveness of incompressible optimal flows. The underlying mechanism causing this limitation appears to be due to the presence of a limiting length scale given by a generalized Batchelor length \cite{Batchelor1959a}. This length scale limitation in turn affects long-term mixing rates. More specifically, we consider local-in-time flow optimisation under energy and enstrophy flow constraints with the objective of maximising mixing rate performance. We observe that, for enstrophy-bounded optimal flows, the strength of diffusion has no impact on the long-term mixing rate performance. For energy-constrained optimal flows, however an increase in the strength of diffusion decreases the mixing rate. We provide analytical lower bounds on mixing rates and length scales achievable under related constraints (point-wise bounded speed and rate-of-strain) by extending the work of Z. Lin {\it et. al.} \cite{JFM2011} and C.-C. Poon \cite{Chi-Cheu1996}. 
 
 \end{abstract}
 %
@@ -118,17 +118,142 @@ Incompressible flows can be effective mixers by appropriately advecting a passiv
 
 \section{Introduction}
 
-Mixing a passive tracer concentration via an incompressible fluid flow is important to many areas of science and engineering. A question of interest across these domains is ``How can one stir to enhance the rate of mixing?'' We explore this question and study the impact of molecular diffusion. We address this topic by considering an incompressible flow with mild physical constraints in a periodic box with side length $L$ in $d$ dimensions. We consider a mean-zero tracer concentration field $\theta$ that evolves according to the advection-diffusion equation,
+%%%%%
+
+% 
+
+% 
+
+% Furthermore, we believe that the study of determining the smallest length scales achievable demands more attention. This assumption is used today throughout the computational fluid dynamics community to provide a heuristic for the grid resolutions necessary. Thus, it is important to determine what conditions on $\mathbf{u}$ are necessary to justify this assumption. 
+
+% We explore this question and study the impact of molecular diffusion. We address this topic by considering an incompressible flow with mild physical constraints in a periodic box with side length $L$ in $d$ dimensions. We consider a mean-zero tracer concentration field $\theta$ that evolves according to the advection-diffusion equation,
+%\begin{equation}
+%	\label{eq:PDE_advection}
+%	\ppt{\theta}+\mathbf{u}\cdot \nabla \theta=\kappa \lap\theta,
+%\end{equation}
+%with initial data $\theta(\mathbf{x},0)=\theta_{0}(\mathbf{x})$, where $\kappa$ is the molecular diffusion coefficient and $\mathbf{u}(\mathbf{x},t)$ is a incompressible ($\nabla\,\cdot\, \vec{u}=0$) flow field.
+
+%%%%%
+
+% -- Introduction of the advection-diffusion equation and inherent nonlinearities
+%%% 
+%%% Furthermore, the complexity of $u$ can be inherently complicated as solutions to the Navier-Stokes equations. Futhermore, when concerned with optimal mixing one must make a decision on which velocity field to  prescribe based on the the current scalar concentration field.
+
+% -- Motivation for fluid dynamicists / physicists
+%%% Impact on turbulence theory and Batchelor length.
+
+% -- Motivation for computionational fluid dynamics practioners
+%%% Impact considerations for smallest lengths in grid discretizations.
+
+% -- Motivation for industrial process engineers
+%%% Industrial processes as a motivation for studying mixing
+
+%-- Motivation for mathematicians
+%%% The approach taken here may apeal to the mathematician as an abstraction of the mixing process and focuses on the core transportation equation --- advection-diffusion. We ask how qualities (cecay of functional norms) of the solution depend on which function space $u$ belongs to. 
+%%% Fundamental insights into a core partial differential equation 
+
+%
+%%-- Motivation for mathematicians
+%The approach taken here may apeal to the mathematician as an abstraction of the mixing process and focuses on the core transportation equation --- advection-diffusion. We ask how qualities (cecay of functional norms) of the solution depend on which function space $\vec{u}$ belongs to. 
+%%%% Fundamental insights into a core partial differential equation 
+%
+%By `mixing', we mean the combined influence of advection or stirring of bulk fluid motion and molecular diffusion of a tracer concentration which could take the form of temperature, salinity, solute, or any scalar quantity.
+%
+%of a passive tracer concentration via an incompressible fluid flow 
+
+
+Mixing of a passive tracer quantity, such as temperature, solute cocentration, or salinity, by an incompressible flow is a fundamental fluid process. It is relevant to many domains such as turbulence theory \cite{Dimotakis2005,Violeau2000a}, aerospace engineering, oceanography \cite{Wunsch2004}, and atmospheric sciences. It also serves as a key industrial process within the food, pharmaceutical, petrochemical, and other industries \cite{paul2004handbook}. The estimated costs due to poor industrial mixing in 1989 was \$1 -- \$10 billion US dollars for the chemical industry alone \cite{paul2004handbook}. Although mixing is highly prevalent and used, its fundamental principles are still not fully known especially concerning how the interplay of advection and diffusion processes affect mixing rates and achievable filamentation length scales.
+
+The effect of diffusion and advection on the rate of fluid mixing depends on the particular mixing situation characterized by the unique fluid properties, specific mixing flow, and boundary geometry. In view of the vast complexity of the mixing situation, general principles of mixing underlying these various situations would be beneficial. In particular, it is valuable to determine how the mixing rate (typically the most optimal mixing rate) depends on aggregate flow intensity measures such as energy and enstrophy. This is the objective of the research program encompassing many efforts \cite{CS2013,GI2014,JLT2012,JFM2011, Miles2017a,  JLT2012, DF2014, GM2005} in last decade. 
+
+With these goals in mind, a common approach taken throughout the literature is to consider the evolution of a tracer quantity $\theta$ advected by an incompressible ($\nabla \cdot\vec{u}=0$) flow $\vec{u}$ with mild physical constraints within a periodic box  of side length $L$ in $d$ dimensions. The tracer concentration field $\theta$ evolves according to the advection-diffusion equation,
 \begin{equation}
 	\label{eq:PDE_advection}
 	\ppt{\theta}+\mathbf{u}\cdot \nabla \theta=\kappa \lap\theta,
 \end{equation}
-with initial data $\theta(\mathbf{x},0)=\theta_{0}(\mathbf{x})$, where $\kappa$ is the molecular diffusion coefficient and $\mathbf{u}(\mathbf{x},t)$ is a incompressible ($\nabla\,\cdot\, \vec{u}=0$) flow field. The flow is constrained by enstrophy $\ltwo{\nabla\u} = \Gamma L^{d/2}$ or energy $\ltwo{\u} = UL^{d/2}$ where $\Gamma$ is the root mean square rate-of-strain and $U$ is the root mean square speed. We primarily use the $H^{-1}$ norm or mix-norm throughout to measure homogenisation,   
+with initial data $\theta(\mathbf{x},0)=\theta_{0}(\mathbf{x})$, where $\kappa$ is the molecular diffusion coefficient. The flow is constrained by enstrophy $\ltwo{\nabla\u} = \Gamma L^{d/2}$ or energy $\ltwo{\u} = UL^{d/2}$ where $\Gamma$ is the root mean square rate-of-strain and $U$ is the root mean square speed. 
 
+
+The $H^{-1}$ norm or mix-norm \cite{GM2005} is also a common measure of mixing used throughout the literature and will be used here as well. For those interested in other measures of mixing, see \cite{JLT2012}. The $H^{-1}$ norm is given by  
+%
 \begin{equation}
 \hmone{\theta}=\sqrt{\sint{ |\nabla^{-1} \theta( \vec{x},t)|^2}}=\sqrt{ \sum_{\vec{k}\neq \vec{0}} L^d \frac{|\hat{\theta}_{\vec{k}}(t)|^{2}}{|\vec{k}|^2}}
 \end{equation}
-where $\nabla^{-1}=\nabla \Delta^{-1}$, the operator $\Delta^{-1}$ acting on  a function $\rho$ returns the solution $\phi$ of the Poisson equation $ \Delta \phi = \rho $, and $\hat{\theta}_{\vec{k}}(t) =  \frac{1}{L^{d}}\sint{\theta(\vec{x},t)e^{-i\vec{k}\cdot\vec{x}}}$.  Lower values of the  $H^{-1}$ norm corresponds to a more mixed state. Note that $H^{-1}$ norm can decrease in two ways: either by decreasing the amplitudes of $|\hat{\theta}_{\vec{k}}|$ or by advecting the flow such that the tracer concentration acquires more spectral mass in the higher wave numbers and takes advantage of the $1/|\vec{k}|^2$ dependence. We use the $H^{-1}$ norm to define the (exponential) rate of mixing as
+%
+where $\nabla^{-1}=\nabla \Delta^{-1}$, the operator $\Delta^{-1}$ acting on  a function $\rho$ returns the solution $\phi$ of the Poisson equation $ \Delta \phi = \rho $, and $\hat{\theta}_{\vec{k}}(t) =  \frac{1}{L^{d}}\sint{\theta(\vec{x},t)e^{-i\vec{k}\cdot\vec{x}}}$.  Lower values of the  $H^{-1}$ norm correspond to a more mixed state. Note that $H^{-1}$ norm can decrease in two ways. The first way is to decreasing the amplitudes of $|\hat{\theta}_{\vec{k}}|$ for $\vec{k}\neq 0$. This matches our first sense of mixing --- {\it homogenization}. The second way is by transferring spectral mass from the lower wave numbers to the higher wave numbers to take advantage of the $1/|\vec{k}|^2$ dependence. This produces a scalar field with sharp gradients and small length scales which matches our second sense of mixing --- {\it filamentation}. Thus we can see that the $H^{-1}$ embodies both senses. 
+
+In the case without advection ($\vec{u}=\vec{0}$), equation \eref{eq:PDE_advection} reduces to the classical heat equation \cite{Evans2010}. The Fourier modes evolve according to $\hat{\theta}_{\vec{k}}(t)=\hat{\theta}_{\vec{k}}(0)e^{-\kappa|\vec{k}|^2t}$. Thus we have explicit analytical results for the decay of the $H^{-1}$ mix-norm by simply substituting this result. Note that $H^{-1}$ mix-norm will surely decay monotonically. Diffusion is incapable of transferring spectral mass from the low wave number modes to the high wave number modes and thus is incapable of filamentation. Thus the pure diffusion case solely exploits homogenization. Also notice the unequal weighting attach to each mode. The Fourier modes with large wave number $|\vec{k}|$ decay at a faster rate relative to the decay of those with small wave number.
+
+
+%To further facilitate discussion, we define the following ratio as a measure of the characteristic {\it filamentation length} scale:
+%\begin{equation}
+%\label{eq:length}
+%\lambda(t)\equiv  2\pi \frac{\|\nabla^{-1}\theta(\,\cdot\,,t)\|_{L^{2}}}{\|\theta(\,\cdot\,,t)\|_{L^{2}}}.
+%\end{equation}
+%Note that $\lambda(t)$ returns the wavelength of the wave number $\vec{k}$ for a tracer concentration field composed only of the Fourier mode with wave number $\vec{k}$ (i.e. $\theta(\vec{x},t) = Re[ A e^{-i\vec{k}\cdot \vec{x}}]$ where $A$ is a complex constant). In general, $\lambda$ is the weighted root mean square wavelength with weights given by $|\theta_{\vec{k}}|^2/\ltwo{\theta}^2$. 
+
+In the case without diffusion ($\kappa = 0$), pure advection of the flow is the only method of mixing or colloquially known as stirring. For a flow that is constrained by enstrophy, the mix-norm decays at most exponentially where the exponential rate depends on the support of the initial data and is proportional to $\Gamma$ \cite{GI2014,CS2013}. This was mathematically proven by two separate approaches: G. Iyer {\it et. al.} \cite{GI2014} used regularisation results of partial differential equations \cite{Crippa} while C. Seis \cite{CS2013} used methods from optimal transportation theory \cite{villani2003topics}. Furthermore, enstrophy-constrained flows that realize this exponential decay rate have been constructed analytically \cite{Alberti2014a}. On the other hand, energy-constrained flows can achieve even faster mixing rates. In fact they can achieve {\it perfect mixing in finite time} which means that the $H^{-1}$ mix-norm approaches zero in finite time as opposed to approaching zero in infinite time as in the case for enstrophy-constrained mixing. This can be demonstrated by a `chequerboard' flow \cite{JMP2012} where the mix-norm achieves perfect mixing in finite time by a linear decay rate.  In either flow intensity constraint, note that $H^{-1}$ mix-norm decreases by exclusively exploiting filamentation without homogenization. This is  exactly opposite to the purely diffusive case.
+
+Finally, the case with diffusion and advection is the least explored in this framework and the focus of this paper. 
+It is known that the evolution of the $H^{-1}$ and $L^2$ norms decrease monotonically under the chequerboard flow introduced by \cite{JMP2012}
+ while the $H^{1}$ increases until it reaches a peak and then decreases \cite{DF2014}. This peak corresponds to a  time when the length scales developed are small enough for diffusion to effectively act on steep gradients. C. Miles and C. Doering \cite{Miles2017a} explored this phenomena further in the context of a shell model, a reduced model using ordinary differential equations that mimic the spectral dynamics of the advection-diffusion equation. The authors concluded that shell-model mixing could not surpass length scales given by $\sqrt{\kappa/ \Gamma}$ for enstrophy-constrained flows and $\kappa/U$ for energy-constrained flows up to $O(1)$ constants. These length scales can be identified as a generalised Batchelor scale \cite{Batchelor1959a}, introduced in the context of turbulence theory. These limitations on the length scale in turn controlled the long-run optimal mixing rates determined to be $\Gamma$ under the enstrophy constraint and $U^2/\kappa$ under the energy constraint up to $O(1)$ constants. In contrast to the `pure' cases mentioned earlier, it is important to note that the $H^{-1}$ can now decrease by the two avenues of homogenization and filamentation simultaneously. 
+
+At this point, we can already see a glimpse of a conflict between diffusion and advection for the ultimate goal of optimal mixing. Pure advection succeeds at filamentation by transferring spectral mass from the low wave number modes to the high wave number modes in a continuous fashion. However in the presence of diffusion, a once optimal pure advection flow exceptional at filamentation will be met with potential conflict since homogenization by diffusion may stifle its progress in progressing spectral mass to high wave number modes. Given that diffusion ubitquitous, we must come to terms with this conflict to promote more efficient mixing.
+
+In this paper, we make progress towards answering ``What is the most optimal mixing rate in the presence of diffusion for an enstrophy or energy constrained flow?'' This question was also asked in the question of the shell model. We would like to determine if the predictions of the shell model hold in the partial differential equation setting. 
+
+We approach the posed question by considering the general setup introduced of the evolution of passive scalar in a periodic box. We consider the local-in-time optimization problem first introduced by Z. Lin {\it et. al.} \cite{JFM2011} in the context of diffusion. Local-in-time optimization seeks to find the optimal flow that achieves the best instantaneous mixing rate. We will see that the best choice leads to a $\vec{u}$ that depends on $\theta$. This feedback causes the dynamics of $\theta$ governed by \eref{eq:PDE_advection} to be nonlinear.
+
+%These results also imply that the filamentation length scale $\lambda$ also decays exponentially to zero over time given by the observation that the denominator of \eref{eq:length} is constant in time (this can be shown directly from \eref{eq:PDE_advection}). Since the filamentation length scale $\lambda$ is proportional $H^{-1}$ for $\kappa = 0$, we know that the $\lambda$ can become arbitrarily small as well.
+
+
+
+%On the other hand, diffusion is generally perceived to enhance mixing rates of a passive tracer. It is a reasonable expectation since molecular diffusion of a dye can lead to a more homogeneous mixture as seen in everyday experience from allowing cream in coffee to diffusion over time without actively stirring --- diffusion surely benefits mixing in this case.  However, the case where advection and diffusion processes are both relevant with the goal of enhance mixing rates must be treated with care and is the topic of this paper. 
+
+
+%We use the $H^{-1}$ norm to define the (exponential) rate of mixing as
+%\begin{equation}
+%\label{eq:rate}
+%r(t) = -  \frac{\ddt{}\hmone{\theta}}{\hmone{\theta}}.
+%\end{equation}
+%The $L^{2}$ norm $\ltwo{\theta}$ and the $H^{1}$ norm $\hone{\theta}$ are also common measures of mixing and will be considered here as well. 
+
+%In particular, we explore the impact of molecular diffusion on mixing through analytic and computational means. 
+%
+%
+% \cite{JFM2011} showed numerical evidence that the filament width $\lambda$ seemingly decreased continually by instantaneous flow optimisation. This type of optimisation will be considered in this work as well. Self-similar flows can realise a decreasing $\lambda$ over time as shown analytically by \cite{Alberti2014a}.  It was rigorously proven independently by \cite{GI2014} and \cite{CS2013} that $\lambda$ decreased at most exponentially --- consistent with \cite{JFM2011} and \cite{Alberti2014a}. The work of \cite{GI2014} relied on PDE regularisation results of \cite{Crippa} while the approach of \cite{CS2013} used methods from optimal transportation theory \cite{villani2003topics}.
+%
+%For $Pe = \infty$ energy-constrained problem, \cite{JMP2012} showed that a `chequerboard' flow can also provide continually decreasing length scales. Moreover, $\lambda$ decreased at a fast enough rate to approach zero in finite time in contrast to the enstrophy-constrained problem where $\lambda$ decreases to zero in infinite time.
+%
+%The inclusion of diffusion ($Pe <\infty$) with the objective of optimal mixing has been explored.  \cite{DF2014} investigated optimal mixing and study the evolution of the mentioned measures ($H^{-1}, L^2,$ and $H^1$ norms) of mixing under the chequerboard flow introduced by \cite{JMP2012}. They show that the $H^{-1}$ and $L^2$ norms decrease monotonically under this flow while the $H^{1}$ increases until it reaches a peak and then decreases. This peak corresponds to a  time when the length scales developed are small enough for diffusion to effectively act on steep gradients. \cite{Miles2017a} explored this phenomena further in the context of a shell model, a reduced model using ordinary differential equations that mimic the spectral dynamics of the advection-diffusion equation. The authors concluded that shell-model mixing could not surpass length scales given by $\sqrt{\kappa/ \Gamma}$ for enstrophy-constrained flows and $\kappa/U$ for energy-constrained flows up to $O(1)$ constants. These length scales can be identified as a generalised Batchelor scale \cite{Batchelor1959a}, introduced in the context of turbulence theory. 
+%
+
+%Diffusion is generally perceived as a beneficiary to the goal of enhanced mixing rates of a passive tracer. It is a reasonable expectation since molecular diffusion of a dye can lead to a more homogeneous mixture as seen in everyday experience from allowing cream in coffee to diffusion over time without actively stirring --- diffusion surely benefits mixing in this case. However every coffee drinker knows that they can accelerate the mixing process by stirring or in other words advecting the fluid appropriately. Note that if diffusion were completely absent, then advection is the only way to enhance mixing.  Pure advection is undoubtedly beneficial in this case. However, the case where advection and diffusion processes are both relevant with the goal of enhance mixing rates must be treated with care and is the topic of this paper. 
+
+%The length scales achievable within a passive scalar can also be affected by the same fluid properties and environmental conditions. It has
+%
+% 
+% 
+
+In this work, we will demonstrate that homogenization via diffusion and filamentation via advection can sometimes be in conflict and collectively produce a negative impact on mixing. We explore how diffusion impacts the evolution of the filament width $\lambda$ over time and mixing rates. We show numerical evidence that $\lambda$ appears to be limited by the Batchelor scale as seen in the shell model. Even when actively trying to choose the most optimal flow to minimise filamentation length. Thus, this may suggest that the Batchelor scale does not only limit turbulent flows but also all incompressible flows under the flow constraints considered here. Although these quantities have been known in the context of turbulence theory, the impact of these limitations on mixing rates has not been fully studied to our knowledge.
+
+
+The paper is organised as follows. We introduce the necessary theory regarding local-in-time optimisation, a shell model, and $L^{\infty}$ flow constraints in section \ref{sec:theory}. Section \ref{sec:numerical_experiment} details the methodology and results of numerically implementing local-in-time flow optimisation. Lastly, we finish with a discussion and conclusion in sections \ref{sec:discussion} and \ref{sec:conclusion} respectively.
+
+
+
+%%%
+%%%
+%%% THEORY
+%%%
+%%%
+
+
+\section{Theory}
+\label{sec:theory}
+\subsection{Local-in-time optimisation}
+
+We use the $H^{-1}$ norm to define the (exponential) rate of mixing as
 \begin{equation}
 \label{eq:rate}
 r(t) = -  \frac{\ddt{}\hmone{\theta}}{\hmone{\theta}}.
@@ -151,31 +276,6 @@ where $Pe=  \frac{\Gamma L^2}{\kappa}$ for the enstrophy-constrained case and $P
 
 
 
-We will first review results for the $Pe = \infty$ enstrophy-constrained case. \cite{JFM2011} showed numerical evidence that the filament width $\lambda$ seemingly decreased continually by instantaneous flow optimisation. This type of optimisation will be considered in this work as well. Self-similar flows can realise a decreasing $\lambda$ over time as shown analytically by \cite{Alberti2014a}.  It was rigorously proven independently by \cite{GI2014} and \cite{CS2013} that $\lambda$ decreased at most exponentially --- consistent with \cite{JFM2011}  and \cite{Alberti2014a}. The work of \cite{GI2014} relied on PDE regularisation results of \cite{Crippa} while the approach of \cite{CS2013} used methods from optimal transportation theory \cite{villani2003topics}.
-
-For $Pe = \infty$ energy-constrained problem, \cite{JMP2012} showed that a `chequerboard' flow can also provide continually decreasing length scales. Moreover, $\lambda$ decreased at a fast enough rate to approach zero in finite time in contrast to the enstrophy-constrained problem where $\lambda$ decreases to zero in infinite time.
-
-The inclusion of diffusion ($Pe <\infty$) with the objective of optimal mixing has been explored.  \cite{DF2014} investigated optimal mixing and study the evolution of the mentioned measures ($H^{-1}, L^2,$ and $H^1$ norms) of mixing under the chequerboard flow introduced by \cite{JMP2012}. They show that the $H^{-1}$ and $L^2$ norms decrease monotonically under this flow while the $H^{1}$ increases until it reaches a peak and then decreases. This peak corresponds to a  time when the length scales developed are small enough for diffusion to effectively act on steep gradients. \cite{Miles2017a} explored this phenomena further in the context of a shell model, a reduced model using ordinary differential equations that mimic the spectral dynamics of the advection-diffusion equation. The authors concluded that shell-model mixing could not surpass length scales given by $\sqrt{\kappa/ \Gamma}$ for enstrophy-constrained flows and $\kappa/U$ for energy-constrained flows up to $O(1)$ constants. These length scales can be identified as a generalised Batchelor scale \cite{Batchelor1959a}, introduced in the context of turbulence theory. 
- 
- 
-In this work, we explore how diffusion impacts the evolution of the filament width $\lambda$ over time and mixing rates. We show numerical evidence that $\lambda$ appears to be limited by the Batchelor scale as seen in the shell model. Even when actively trying to choose the most optimal flow to minimise filamentation length. Thus, this may suggest that the Batchelor scale does not only limit turbulent flows but also all incompressible flows under the flow constraints considered here. Although these quantities have been known in the context of turbulence theory, the impact of these limitations on mixing rates has not been fully studied to our knowledge.
-
-Furthermore, we believe that the study of determining the smallest length scales achievable demands more attention. This assumption is used today throughout the computational fluid dynamics community to provide a heuristic for the grid resolutions necessary. Thus, it is important to determine what conditions on $\mathbf{u}$ are necessary to justify this assumption. 
-
-The paper is organised as follows. We introduce the necessary theory regarding local-in-time optimisation, a shell model, and $L^{\infty}$ flow constraints in section \ref{sec:theory}. Section \ref{sec:numerical_experiment} details the methodology and results of numerically implementing local-in-time flow optimisation. Lastly, we finish with a discussion and conclusion in sections \ref{sec:discussion} and \ref{sec:conclusion} respectively.
-
-
-
-%%%
-%%%
-%%% THEORY
-%%%
-%%%
-
-
-\section{Theory}
-\label{sec:theory}
-\subsection{Local-in-time optimisation}
 We consider the local-in-time optimisation strategy first introduced by \cite{JFM2011} in the diffusion-less case. We find that this strategy generalises to the case with diffusion. The local-in-time optimal velocity fields maximise the instantaneous mixing rate by minimising $\ddt{}\hmone{\theta}^2$ or equivalently minimising $\ddt{\lambda^2}$ . The optimal velocity fields are given instantaneously by (in non-dimensional form)
 %
 \begin{equation}
@@ -247,7 +347,7 @@ and using $\ddt{}\ltwo{\theta}^2 = -\frac{2}{Pe} \hone{\theta}^2$, it follows th
 \begin{equation}
 \ltwo{\theta}\geq  \ltwo{\theta_{0}}\exp\left[-\frac{1}{2Pe}\frac{\hone{\theta_{0}}^2}{\ltwo{\theta_{0}}^2}\left(e^{2 t} -1\right)\right].
 \end{equation}
-Using this with (\ref{eq:exponential_enstrophy}), we deduce the lower bound
+Using this with \eref{eq:exponential_enstrophy}, we deduce the lower bound
 \begin{equation}
 \hmone{\theta} \geq  \hmone{\theta_{0}} \exp\left[- t -\frac{1}{2 Pe}\frac{\hone{\theta_{0}}^2}{\ltwo{\theta_{0}}}\left(e^{2 t} -1\right)\right].
 \end{equation}
@@ -260,16 +360,16 @@ Here we extend the result of \cite{Chi-Cheu1996} to show that the presence of di
 	 							&=& Pe \sint{\theta\left(\ppt{\theta}
 	 									-\frac{1}{Pe}\lap \theta\right)} 
 	 									-Pe \sint{\theta\left(\ppt{\theta}
-	 									+\frac{1}{Pe}\lap \theta\right)} 
-\end{eqnarray},
+	 									+\frac{1}{Pe}\lap \theta\right)},
+\end{eqnarray}
 %
 \begin{eqnarray}
 	\ddt{}\ltwo{\theta}^2 &=& 2\sint{\theta\ppt{\theta}} \\
 										 &=&\sint{\theta\left(\ppt{\theta}
 	 									-\frac{1}{Pe}\lap \theta\right)} 
 										 + \sint{\theta\left(\ppt{\theta}
-	 									+\frac{1}{Pe}\lap \theta\right)} 
-\end{eqnarray},
+	 									+\frac{1}{Pe}\lap \theta\right)} ,
+\end{eqnarray}
 %
 and
 %
@@ -316,7 +416,7 @@ Then compute:
 			}.
 \end{eqnarray*}
 %
-Using H\"older's inequality and (\ref{eq:PDE_advection}), this simplifies to
+Using H\"older's inequality and \eref{eq:PDE_advection}, this simplifies to
 %
 \begin{eqnarray*}
 	\ddt{} \pbrac{ \frac{\hone{\theta}^2}{\ltwo{\theta}^2} } 
@@ -353,13 +453,13 @@ The inequality $\hone{\theta}\hmone{\theta}\geq \ltwo{\theta}^2$ then ensures th
 \lambda(t) \geq \frac{\ltwo{\theta_0}}{\hone{\theta_0}}\exp{\pbrac{-\frac{Pe}{2}t}}.
 \end{equation}
 %
-Using (\ref{eq:k2growth_energy}) together with  $\ddt{}\ltwo{\theta}^2 = -\frac{2}{Pe} \hone{\theta}^2$ we observe that
+Using \eref{eq:k2growth_energy} together with  $\ddt{}\ltwo{\theta}^2 = -\frac{2}{Pe} \hone{\theta}^2$ we observe that
 %
 \begin{equation}
 \ltwo{\theta}\geq \ltwo{\theta_{0}}\exp\left[-\frac{1}{Pe^2}\frac{\hone{\theta_0}^2}{\ltwo{\theta_0}^2}\left(e^{Pe \, \, t}-1\right)\right]
 \end{equation}
 %
-and this combined with  (\ref{eq:lambda_bound}) implies
+and this combined with  \eref{eq:lambda_bound} implies
 %
 \begin{equation}
 \hmone{\theta}\geq \frac{\ltwo{\theta_{0}}^2}{\hone{\theta_0}}\exp\left[-\frac{Pe}{2} \,\, t-\frac{1}{Pe^2}\frac{\hone{\theta_0}^2}{\ltwo{\theta_0}^2}\left(e^{Pe \,\, t}-1\right)\right].
@@ -372,7 +472,7 @@ and this combined with  (\ref{eq:lambda_bound}) implies
 \label{sec:numerical_experiment}
 \subsection{Methodology}
 
-We solve (\ref{eq:nd_ade}) by using a Fourier basis to represent the $512 \times 512$ discretised spatial domain with a 4th order Runge-Kutta time-stepping method. All simulation code was created in the programming language Python with package modules, pyfftw and numpy. The code repository can be found at \href{http://github.com/cjm715/lit}{ http://github.com/cjm715/lit}.
+We solve \eref{eq:nd_ade} by using a Fourier basis to represent the $512 \times 512$ discretised spatial domain with a 4th order Runge-Kutta time-stepping method. All simulation code was created in the programming language Python with package modules, pyfftw and numpy. The code repository can be found at \href{http://github.com/cjm715/lit}{ http://github.com/cjm715/lit}.
 
 
 %%%
@@ -444,7 +544,7 @@ Although it should be noted that the onset of the long-term rate is affected by 
  
 For the energy case, the long-term mixing rate decreases with decreasing $Pe$ (see the left subplot of figure \ref{fig:energy_rate}).  {\it Thus, strong diffusion results in a weak long-term mixing rate}. The right subplot of Figure \ref{fig:energy_rate} is $r/r_{U} =  r/Pe$. We see oscillations of $r/r_{U}$ around a value that is $O(1)$ which indicates that our numerical results are consistent with our predictions from the shell model. Thus, the long-term mixing rate is proportional to $Pe$ in contrast to the long-term mixing rate of enstrophy which carries no dependence on $Pe$.
 
- For the enstrophy case, we saw a benefit of picking a lower $Pe$ to result in a earlier onset of the long-term mixing behaviour. The fixed energy case however is different. The onset of the long run-mixing behaviour can be determined by the following model. From the work of \cite{JMP2012} on the fixed energy case, $\lambda(t)$ can decrease linearly in time to produce perfect mixing in finite time. We model the transient phase as $\lambda(t)=\lambda(0)(1-\beta t)$. Therefore, we theorise that the critical transition time is $t_{c}=\frac{1}{\beta}(1 -\lambda_{U}/\lambda(0)) = \frac{1}{\beta}(1 - 1/Pe)$ with $Pe> 1$ (If $Pe \leq 1$, there is not transient phase) for the energy case. Thus, it is true that on can still achieve an earlier onset of the long-term mixing behaviour by choosing a smaller $Pe$. However, an earlier onset time is accompanied by a slower long-term mixing rate. As for choosing a large $Pe$, the onset time is bounded above by $\frac{1}{\beta}$ and results in a faster long-term mixing rate. Thus, it is advantageous to have weak diffusion (large $Pe$) for mixing in the fixed energy case. This benefit is well illustrated by $H^{-1}$ norm in figure \ref{fig:energy_norms}. Notice that the mixing rate is initially slow for $Pe = 512$ but then out competes the mixing rate of smaller values of $Pe$.    
+ For the enstrophy case, we saw a benefit of picking a lower $Pe$ to result in a earlier onset of the long-term mixing behaviour. The fixed energy case however is different. The onset of the long run-mixing behaviour can be determined by the following model. From the work of \cite{JMP2012} on the fixed energy case, $\lambda(t)$ can decrease linearly in time to produce perfect mixing in finite time. We model the transient phase as $\lambda(t)=\lambda(0)(1-\beta t)$. Therefore, we theorise that the critical transition time is $t_{c}=\frac{1}{\beta}(1 -\lambda_{U}/\lambda(0)) = \frac{1}{\beta}(1 - 1/Pe)$ with $Pe> 1$ (If $Pe \leq 1$, there is no transient phase) for the energy case. Thus, it is true that on can still achieve an earlier onset of the long-term mixing behaviour by choosing a smaller $Pe$. However, an earlier onset time is accompanied by a slower long-term mixing rate. As for choosing a large $Pe$, the onset time is bounded above by $\frac{1}{\beta}$ and results in a faster long-term mixing rate. Thus, it is advantageous to have weak diffusion (large $Pe$) for mixing in the fixed energy case. This benefit is well illustrated by $H^{-1}$ norm in figure \ref{fig:energy_norms}. Notice that the mixing rate is initially slow for $Pe = 512$ but then out competes the mixing rate of smaller values of $Pe$.    
 
 %%%
 %%%
@@ -478,59 +578,8 @@ We gratefully acknowledge helpful comments from Hongjie Done, Luis Escauriaza, G
 
  
 
-%Our numerical study of local-in-time optimization suggest that there is a limiting length scale given by $\lambda_{\Gamma} = 1/\sqrt{Pe}$ (in dimensional form, $\sqrt{\kappa/\Gamma}$) for fixed enstrophy and $\lambda_{U} = 1/Pe$ (in dimensional form $\kappa/U$) for fixed energy. The study also suggests a long-term mixing rate given by  $r_{\Gamma} = 1 $ (in dimensional form, $\Gamma$) for fixed enstrophy and $r_{U} = Pe$ (in dimensional form, $U^2/\kappa$) for fixed energy.
-
-
-%
-%Define the spectral variance as
-%%
-%\begin{equation}
-%		\left[ 
-%			\frac{\hone{\theta}^2\hmone{\theta}^2}
-%			{\ltwo{\theta}^4}  
-%			- 1
-%		\right].
-%\end{equation}
-%%
-%By using this definition with H\"older's inequality provided that  $\linf{\nabla\vec{u}}\leq \Gamma$, we find that
-%%
-%\begin{equation}
-%\label{eq:length_ineq_rate-of-strain}
-%	\ddt{\lambda^2} \geq 2 1/Pe \sigma^2 - 2 \Gamma \lambda^2 .
-%\end{equation}
-%%
-%By taking the long-time average (noted as $\langle \cdot \rangle \equiv\lim_{T\rightarrow\infty}\frac{1}{T}\int_{0}^T \,\, \cdot \,\, dt $ ) of the inequality above, we find that 
-%%
-%\begin{equation}
-%	0 \geq  2 \kappa \tavg{\sigma^2} - 2 \Gamma \tavg{\lambda^2}.
-%\end{equation}
-%%
-%The left hand side is zero since $\lambda^2$ is bounded by Poincar\'e's inequality. Thus, we find that
-%%
-%\begin{equation}
-%	\tavg{\lambda^2} \geq   \lambda_{B}^2 \tavg{\sigma^2} 
-%\end{equation}
-%%
-%where the Batchelor scale is given by $\lambda_{B} = \sqrt{\kappa/\Gamma}.$ 
-%
-%
-%We conclude that ...
-%
-%By a dimensional analysis, we conjecture that the velocity field with $\hmone{\u}$=1 may be capable decreasing $\lambda$ past the Batchelor scale. 
-
-
-%\appendix
-%\section{Mixing time of modified checkerboard flow}
-%\label{appendix:checkerboard}
-%We consider a similar  the checkerboard flow from \cite{JMP2012}. Suppose one starts with the initial `binary' dye concentration field where $\theta_{0}(\vec{x}) = 1$ for $x_{1}< 1/2$ and $\theta_{0}(\vec{x}) = -1$ for $x_{1}\geq 1/2$. We constrain $\vec{u}$ to be  $\ltwo{\vec{u}} = 1$. We consider a sheer flow as described by \cite{JMP2012}
-
-
-%\section{Numerical analysis}
-%\label{sec:num_analysis}
-%Our conclusions rely heavily on the accuracy of our numerical solutions to the advection diffusion equations. Careful numerical analysis is thus important to make sure the length resolution is sufficient and spectral amplitudes are computed to sufficient numerical accuracy. 
-
-
-\bibliographystyle{unsrt.bst}
+\section*{References}
+\bibliographystyle{iopart-num}
 \bibliography{library}
 
 
