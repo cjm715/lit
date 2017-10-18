@@ -53,7 +53,6 @@ pycparser==2.18
 pyFFTW==0.10.4
 Pygments==2.2.0
 PyJWT==1.5.3
-pyopencl==2017.2
 pyparsing==2.2.0
 PySocks==1.6.7
 pytest==3.2.1
