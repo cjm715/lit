@@ -71,4 +71,4 @@ def movie(time, scalar_hist, N, L, output_path='output/'):
     os.system("ffmpeg -y -framerate 20 -i " + output_path + 'images/'
               "image%04d.png -c:v libx264 -pix_fmt yuv420p " + output_path + "movies.mp4")
 
-    os.system('rm -r ' + output_path + 'images/')
+    # os.system('rm -r ' + output_path + 'images/')
