@@ -8,3 +8,4 @@ Requirements:
 
 - Python 3
 - FFTW
+- ffmpeg
