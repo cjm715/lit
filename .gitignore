@@ -3,7 +3,6 @@ __pycache__
 .envrc
 .coverage
 flux
-*.clo
 *.aux
 *.bbl
 *.blg
