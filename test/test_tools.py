@@ -4,18 +4,12 @@ import math
 from tools import N_boyd
 
 
-# def test_N_boyd_should_return_50_given_M_10():
-#     assert N_boyd(10) == 50
-#
-#
-# def test_N_boyd_should_return_14_given_M_1():
-#     assert N_boyd(1) == 14
 def test_that_dt_cfl_works_for_kappa_0():
     N = 128
     L = 2.0
     kappa = 0.0
     U = 3.0
-    assert dt_cfl(N, L, kappa, U) == L / (N * U)
+    assert math.isclose(dt_cfl(N, L, kappa, U), L / (N * U))
 
 
 def test_that_l2norm_of_sinx_on_domain_with_L_of_2pi_equals_sqrt_of_half_of_Lsq():
@@ -212,14 +206,6 @@ def test_ifft_of_fft_equals_original_vector_function():
 
     vt = VectorTool(N, L)
     assert np.allclose(vt.ifft(vt.fft(u)), u)
-
-
-def test_particular_case_of_parameters_for_dt_cfl():
-    N = 128
-    L = 2.0
-    U = 1
-    kappa = 0.5
-    assert np.isclose(dt_cfl(N, L, kappa, U), 0.00048828125)
 
 
 def test_that_l2norm_of_vector_with_siny_for_xcomponent_equals_sqrt_of_half_of_Lsq():

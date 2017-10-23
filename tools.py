@@ -20,11 +20,10 @@ def create_grid(N, L):
 
 
 def dt_cfl(N, L, kappa, U):
-    prefactor = 0.10
     if kappa == 0:
-        dt = prefactor * L / (N * U)
+        dt = L / (N * U)
     else:
-        dt = prefactor * min(L / (N * U), L**2 / (N**2 * kappa))
+        dt = min(L / (N * U), L**2 / (N**2 * kappa))
 
     return dt
 
