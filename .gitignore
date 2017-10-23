@@ -4,6 +4,7 @@ __pycache__
 .direnv
 .envrc
 .coverage
+.cache
 *.aux
 *.bbl
 *.blg
