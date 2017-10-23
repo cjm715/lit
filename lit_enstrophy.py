@@ -30,7 +30,7 @@ if __name__ == "__main__":
     print('N_boyd = ', N_boyd(M))
     # N = min(N_boyd(M), 512)
     # N = 64
-    N = float(sys.argv[2])
+    N = int(sys.argv[2])
     print('N = ', N)
 
     # Create tool box
@@ -50,9 +50,9 @@ if __name__ == "__main__":
 
     # Perform simulation
     time_array = np.linspace(0, T, 200)
-    th0 = RK4_timestepper(sin_op, th0, 0.001)
+    th0 = RK4_timestepper(sin_op, th0, 0.0001)
     start_time = time.time()
-    dt0_cfl = 0.25 * dt_cfl(N, L, kappa, gamma * L)
+    dt0_cfl = 0.1 * dt_cfl(N, L, kappa, gamma * L)
     th = integrator2(lit_enstrophy_op, mega_RK4_timestepper,
                      th0, time_array, dt0_cfl)
 
