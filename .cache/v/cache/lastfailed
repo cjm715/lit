@@ -1,5 +1,4 @@
 {
-  "test/test_integrators.py::test_that_RK4_timestepper_using_hatted_formulation_has_fourth_order_convergence": true,
   "test/test_tools.py::test_particular_case_of_parameters_for_dt_cfl": true,
   "test_check_sol.py": true,
   "test_integrators.py::test_dt_alpha": true,
