@@ -75,6 +75,7 @@ def test_that_RK4_timestepper_has_fourth_order_convergence():
 
     # largest time step given by CFL condition
     dt0 = dt_cfl(N, L, kappa, U)
+    print("dt0 :", dt0)
     dt_list = dt0 * 2.0**(-np.arange(0, 3, 1))
     timesteps = 2**(np.arange(0, 3, 1))
     finalth_list = []
@@ -91,6 +92,8 @@ def test_that_RK4_timestepper_has_fourth_order_convergence():
 
     p = np.log2(error_large_small / error_medium_small - 1)
     print('p = ', p)
+    print('error_large_small=', error_large_small)
+    print('error_medium_small=', error_medium_small)
     assert abs(p - 4) < 0.1
 
 
@@ -109,7 +112,7 @@ def test_that_RK4_timestepper_using_hatted_formulation_has_fourth_order_converge
         return okit.sin_flow_op_hat(th_hat)
 
     # largest time step given by CFL condition
-    dt0 = dt_cfl(N, L, kappa, U)
+    dt0 = 0.1 * dt_cfl(N, L, kappa, U)
     dt_list = dt0 * 2.0**(-np.arange(0, 3, 1))
     timesteps = 2**(np.arange(0, 3, 1))
     finalth_list = []
@@ -126,6 +129,8 @@ def test_that_RK4_timestepper_using_hatted_formulation_has_fourth_order_converge
 
     p = np.log2(error_large_small / error_medium_small - 1)
     print('p = ', p)
+    print('error_large_small=', error_large_small)
+    print('error_medium_small=', error_medium_small)
     assert abs(p - 4) < 0.1
 
 

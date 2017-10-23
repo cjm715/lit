@@ -1,9 +1,9 @@
+# General compiled files
 __pycache__
 .ipynb_checkpoints
 .direnv
 .envrc
 .coverage
-flux
 *.aux
 *.bbl
 *.blg
@@ -11,4 +11,10 @@ flux
 *.out
 *.synctex.gz
 *.tex.bak
+*.pyc
+
+# Specific to project
 output-*/
+flux
+fluxtools.py
+
