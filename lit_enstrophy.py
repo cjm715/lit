@@ -7,7 +7,6 @@ import numpy as np
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-import pdb
 
 import time
 import pickle
@@ -17,8 +16,6 @@ import sys
 if __name__ == "__main__":
     Pe = float(sys.argv[1])
     N = int(float(sys.argv[2]))
-    M = int(float(sys.argv[2]))
-
     # Parameters
     L = 1.0
     gamma = 1.0
@@ -28,7 +25,7 @@ if __name__ == "__main__":
     print('Pe = ', Pe)
     print('N = ', N)
 
-    [time_array, th] = lit_enstrophy_sim(N, L, Pe, T, M, cfl=True)
+    [time_array, th] = lit_enstrophy_sim(N, L, Pe, T, cfl=True)
 
     # Output
     output_folder = 'output-pe=%d' % Pe + '-N=%d' % N + '/'

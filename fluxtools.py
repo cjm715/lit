@@ -117,6 +117,7 @@ def run_python_file(python_file, dict_of_parameter_lists, flux_folder_name, jobn
     os.system("mkdir " + flux_folder_name)
 
     # add all necessary python files
+    os.system("cp " + python_file + " " + flux_folder_name)
     os.system("cp operators.py " + flux_folder_name)
     os.system("cp post_processing.py " + flux_folder_name)
     os.system("cp sol_checking.py " + flux_folder_name)

@@ -1,6 +1,5 @@
 import numpy as np
 import pyfftw
-import pdb
 
 
 def FE_timestepper(op, th0, dt):
