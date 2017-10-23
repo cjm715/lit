@@ -1,0 +1,14 @@
+__pycache__
+.ipynb_checkpoints
+.envrc
+.coverage
+flux
+*.clo
+*.aux
+*.bbl
+*.blg
+*.log
+*.out
+*.synctex.gz
+*.tex.bak
+output-*/
