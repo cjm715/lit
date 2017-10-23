@@ -1,8 +1,10 @@
+# User files
+.envrc
+.direnv
+
 # General compiled files
 __pycache__
 .ipynb_checkpoints
-.direnv
-.envrc
 .coverage
 .cache
 *.aux
@@ -18,4 +20,3 @@ __pycache__
 output-*/
 flux
 fluxtools.py
-
