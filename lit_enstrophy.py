@@ -30,7 +30,7 @@ if __name__ == "__main__":
     print('N_boyd = ', N_boyd(M))
     # N = min(N_boyd(M), 512)
     # N = 64
-    N = 512
+    N = float(sys.argv[2])
     print('N = ', N)
 
     # Create tool box
