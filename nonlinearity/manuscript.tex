@@ -130,26 +130,26 @@ With these goals in mind, a common approach taken throughout the literature is t
 \end{equation}
 with initial data $\theta(\mathbf{x},0)=\theta_{0}(\mathbf{x})$, where $\kappa$ is the molecular diffusion coefficient. The flow is constrained by enstrophy $\ltwo{\nabla\u} = \Gamma L^{d/2}$ or energy $\ltwo{\u} = UL^{d/2}$ where $\Gamma$ is the root mean square rate-of-strain and $U$ is the root mean square speed. 
 
+We now would like to measure the `mixed-ness' of $\theta$. In the pioneering work of P. V. Danckwerts (1952)\cite{Danckwerts1952}, the author identifies two measures of mixedness: the scale of segregation and the intensity of segregation. The {\it scale of segregation } quantifies the characteristic length scale present in the tracer concentration $\theta$. For instance, the process of thinning, elongating, and folding of a blob, as seen in the top graphic of figure \ref{fig:scale-and-intensity}, reduces the scale of segregation by creating a rich maze-like pattern with thin strands of dye. We will refer to mixing by the reduction of the scale of segregation as {\it filamentation}.  On the other hand, the {\it intensity of segregation } quantifies the variation of the concentration amplitude. The bottom graphic of figure \ref{fig:scale-and-intensity} shows a reduction in the overall variation and the concentration tends towards a state with uniform concentration. We will refer to the reduction of the intensity of segregation as {\it homogenisation}.
 
-
-
-The $H^{-1}$ norm or mix-norm \cite{GM2005} is a common measure of mixing used throughout the literature and will be used here. The $H^{-1}$ norm is given by  
+The scale and intensity of segregation are both quantified by a single mixing measure known as $H^{-1}$ norm or mix-norm \cite{GM2005}. This is a common measure of mixing throughout the literature and is defined by  
 %
 \begin{equation}
 \hmone{\theta}=\sqrt{\sint{ |\nabla^{-1} \theta( \vec{x},t)|^2}}=\sqrt{ \sum_{\vec{k}\neq \vec{0}} L^d \frac{|\hat{\theta}_{\vec{k}}(t)|^{2}}{|\vec{k}|^2}}
 \end{equation}
 %
-where $\nabla^{-1}=\nabla \Delta^{-1}$, the operator $\Delta^{-1}$ acting on  a function $\rho$ returns the solution $\phi$ of the Poisson equation $ \Delta \phi = \rho $, and $\hat{\theta}_{\vec{k}}(t) =  \frac{1}{L^{d}}\sint{\theta(\vec{x},t)e^{-i\vec{k}\cdot\vec{x}}}$.  Lower values of the  $H^{-1}$ norm correspond to a more mixed state. Note that $H^{-1}$ norm can decrease in two ways. The first way is to decreasing the amplitudes of $|\hat{\theta}_{\vec{k}}|$ for $\vec{k}\neq 0$. This matches our first sense of mixing --- {\it homogenisation}. The second way is by transferring spectral mass from the lower wave numbers to the higher wave numbers to take advantage of the $1/|\vec{k}|^2$ dependence. This produces a scalar field with sharp gradients and small length scales which matches our second sense of mixing --- {\it filamentation}. Thus we can see that the $H^{-1}$ embodies both senses. 
+where $\nabla^{-1}=\nabla \Delta^{-1}$, the operator $\Delta^{-1}$ acting on  a function $\rho$ returns the solution $\phi$ of the Poisson equation $ \Delta \phi = \rho $, $\hat{\theta}_{\vec{k}}(t) =  \frac{1}{L^{d}}\sint{\theta(\vec{x},t)e^{-i\vec{k}\cdot\vec{x}}}$, and $\vec{k}$ is the wave number.  Lower values of the  $H^{-1}$ norm correspond to a more mixed state. Note that $H^{-1}$ norm can decrease in two ways.  The first way is by transferring spectral mass from the lower wave numbers to the higher wave numbers to take advantage of the $1/|\vec{k}|^2$ dependence. This produces a scalar field with sharp gradients and small length scales. This corresponds to the reduction of scale of segregation or filamentation. The second way is to decreasing the amplitudes of $|\hat{\theta}_{\vec{k}}|$ for $\vec{k}\neq 0$. This corresponds to a reduction in the intensity of segregation, or homogenisation. Thus we can see that the $H^{-1}$ embodies both senses of mixing. 
 
 \begin{figure}
 	\centering
 	\includegraphics[width=0.5\textwidth]{images/scale-and-intensity}
-	\caption{Top transformation is a reduction in the scale of segregation. Bottom transformation is a reduction in the intensity of segregation}
+	\caption{Filamentation is the reduction of the scale of segregation as illustrated by the top transformation. Homogenisation is the reduction of the intensity of segregation as illustrated by the bottom transformation.}
+	\label{fig:scale-and-intensity}
 \end{figure}
 
 The $L^{2}$ norm $\ltwo{\theta}$ and the $H^{1}$ norm $\hone{\theta}$ are also common measures of mixing and will be considered here as well.  For those interested in other measures of mixing, see \cite{JLT2012}. 
 
-In the case without advection ($\vec{u}=\vec{0}$), equation \eref{eq:PDE_advection} reduces to the classical heat equation \cite{Evans2010}. The Fourier modes evolve according to $\hat{\theta}_{\vec{k}}(t)=\hat{\theta}_{\vec{k}}(0)e^{-\kappa|\vec{k}|^2t}$. Thus we have explicit analytical results for the decay of the $H^{-1}$ mix-norm by simply substituting this result. Note that $H^{-1}$ mix-norm will surely decay monotonically. Diffusion is unable to transfer spectral mass from the low wave number modes to the high wave number modes and thus is incapable of filamentation. Thus the pure diffusion case solely exploits homogenisation. Also notice the unequal weighting attach to each mode. The Fourier modes with large wave number $|\vec{k}|$ decay at a faster rate relative to the decay of those with small wave number.
+In the case without advection ($\vec{u}=\vec{0}$), equation \eref{eq:PDE_advection} reduces to the classical heat equation \cite{Evans2010} and the Fourier modes evolve according to $\hat{\theta}_{\vec{k}}(t)=\hat{\theta}_{\vec{k}}(0)e^{-\kappa|\vec{k}|^2t}$. Thus we have explicit analytical results for the decay of the $H^{-1}$ mix-norm by simply substituting this result. Note that $H^{-1}$ mix-norm will surely decay monotonically. Diffusion is unable to transfer spectral mass from the low wave number modes to the high wave number modes and thus is incapable of filamentation. Thus the pure diffusion case solely exploits homogenisation. Also notice the unequal weighting attach to each mode. The Fourier modes with large wave number $|\vec{k}|$ decay at a faster rate relative to the decay of those with small wave number.
 
 %To further facilitate discussion, we define the following ratio as a measure of the characteristic {\it filamentation length} scale:
 %\begin{equation}
@@ -158,7 +158,7 @@ In the case without advection ($\vec{u}=\vec{0}$), equation \eref{eq:PDE_advecti
 %\end{equation}
 %Note that $\lambda(t)$ returns the wavelength of the wave number $\vec{k}$ for a tracer concentration field composed only of the Fourier mode with wave number $\vec{k}$ (i.e. $\theta(\vec{x},t) = Re[ A e^{-i\vec{k}\cdot \vec{x}}]$ where $A$ is a complex constant). In general, $\lambda$ is the weighted root mean square wavelength with weights given by $|\theta_{\vec{k}}|^2/\ltwo{\theta}^2$. 
 
-In the case without diffusion ($\kappa = 0$), pure advection of the flow is the only method of mixing or colloquially known as stirring. For a flow that is constrained by enstrophy, the mix-norm decays at most exponentially where the exponential rate is proportional to $\Gamma$ \cite{GI2014,CS2013}. This was mathematically proven by two separate approaches: G. Iyer {\it et. al.} \cite{GI2014} used regularisation results of partial differential equations \cite{Crippa} while C. Seis \cite{CS2013} used methods from optimal transportation theory \cite{villani2003topics}. Furthermore, enstrophy-constrained flows that realise this exponential decay rate have been constructed analytically \cite{Alberti2014a}. On the other hand, energy-constrained flows can achieve even faster mixing rates. In fact they can achieve {\it perfect mixing in finite time} which means that the $H^{-1}$ mix-norm approaches zero in finite time as opposed to approaching zero in infinite time as in the case for enstrophy-constrained mixing. This can be demonstrated by a `chequerboard' flow \cite{JMP2012} where the mix-norm achieves perfect mixing in finite time by a linear decay rate.  In either flow intensity constraint, note that $H^{-1}$ mix-norm decreases by exclusively exploiting filamentation without homogenisation. This is  exactly opposite to the purely diffusive case.
+In the case without diffusion ($\kappa = 0$), pure advection of the flow is the only method of mixing, colloquially known as stirring. For a flow that is constrained by enstrophy, the mix-norm decays at most exponentially where the exponential rate is proportional to $\Gamma$ \cite{GI2014,CS2013}. This was mathematically proven by two separate approaches: G. Iyer {\it et. al.} \cite{GI2014} used regularisation results of partial differential equations \cite{Crippa} while C. Seis \cite{CS2013} used methods from optimal transportation theory \cite{villani2003topics}. Furthermore, enstrophy-constrained flows that realise this exponential decay rate have been constructed analytically \cite{Alberti2014a}. On the other hand, energy-constrained flows can achieve even faster mixing rates. In fact they can achieve {\it perfect mixing in finite time} which means that the $H^{-1}$ mix-norm approaches zero in finite time as opposed to approaching zero in infinite time as in the case for enstrophy-constrained mixing. This can be demonstrated by a `chequerboard' flow \cite{JMP2012} where the mix-norm achieves perfect mixing in finite time with a linear decay rate.  In either flow intensity constraint, note that $H^{-1}$ mix-norm decreases by exclusively exploiting filamentation without homogenisation. This is  exactly opposite to the purely diffusive case.
 
 Finally, the case with diffusion and advection is the least explored in this framework and the focus of this paper. 
 It is known that the evolution of the $H^{-1}$ and $L^2$ norms decrease monotonically under the chequerboard flow introduced by \cite{JMP2012}
@@ -170,7 +170,7 @@ In this paper, we make progress towards answering ``What is the most optimal mix
 
 We approach the posed question by considering the general setup introduced of the evolution of passive scalar in a periodic box. We consider the local-in-time optimisation problem first introduced by Z. Lin {\it et. al.} \cite{JFM2011} in the context of diffusion. Local-in-time optimisation seeks to find the optimal flow that achieves the best instantaneous mixing rate. We will see that the best choice leads to a $\vec{u}$ that depends on $\theta$. This feedback causes the dynamics of $\theta$ governed by \eref{eq:PDE_advection} to be nonlinear.
 
-We will demonstrate that homogenisation via diffusion and filamentation via advection can sometimes be in conflict and collectively produce a negative impact on mixing. We show numerical evidence that filamentation length scale appears to be limited by the Batchelor scale as seen in the shell model. Even when actively trying to choose the most optimal flow to enhance filamentation. Thus, this may suggest that the Batchelor scale does not only limit turbulent flows but also all incompressible flows under the flow constraints considered here. Although these quantities have been known in the context of turbulence theory, the impact of these limitations on mixing rates has not been fully studied to our knowledge.
+We will demonstrate that homogenisation via diffusion and filamentation via advection can sometimes be in conflict and collectively produce a negative impact on mixing. We show numerical evidence that filamentation length scale appears to be limited by the Batchelor scale as seen in the shell model, even when actively trying to choose the most optimal flow to enhance filamentation. Thus, this may suggest that the Batchelor scale does not only limit turbulent flows but also all incompressible flows under the flow constraints considered here. Although these quantities have been known in the context of turbulence theory, the impact of these limitations on mixing rates has not been fully studied to our knowledge.
 
 
 The paper is organised as follows. We introduce the necessary theory regarding local-in-time optimisation, a shell model, and $L^{\infty}$ flow constraints in section \ref{sec:theory}. Section \ref{sec:numerical_experiment} details the methodology and results of numerically implementing local-in-time flow optimisation. Lastly, we finish with a discussion and conclusion in sections \ref{sec:discussion} and \ref{sec:conclusion} respectively.
@@ -188,7 +188,7 @@ The paper is organised as follows. We introduce the necessary theory regarding l
 \label{sec:theory}
 \subsection{Local-in-time flow optimisation}
 
-We will consider the evolution of a tracer quantity $\theta$ governed by equation \ref{eq:PDE_advection} under an the incompressible flow $\vec{u}$.  Recall the flow is constrained by $\ltwo{\nabla\u} = \Gamma L^{d/2}$ or energy $\ltwo{\u} = UL^{d/2}$ where $\Gamma$ is the root mean square rate-of-strain and $U$ is the root mean square speed. 
+We will consider the evolution of a tracer quantity $\theta$ governed by equation \ref{eq:PDE_advection} under an the incompressible flow $\vec{u}$.  Recall the flow is constrained by enstrophy $\ltwo{\nabla\u} = \Gamma L^{d/2}$ or energy $\ltwo{\u} = UL^{d/2}$ where $\Gamma$ is the root mean square rate-of-strain and $U$ is the root mean square speed. 
 
 For the enstrophy-bounded flow problem, we choose the same length scale $L$, the velocity scale $L\Gamma $, and  the time scale $1/\Gamma$. For the energy-bounded flow problem, we non-dimensionalise the system by choosing $L$ as the length scale, $U$ as the velocity scale, and $L/U$ as the time scale.  Both scalings produce the following form of the advection-diffusion equation,
 \begin{equation}
@@ -197,19 +197,19 @@ For the enstrophy-bounded flow problem, we choose the same length scale $L$, the
 \end{equation}
 where $Pe=  \frac{\Gamma L^2}{\kappa}$ for the enstrophy-constrained case and $Pe= \frac{UL}{\kappa}$ for the energy-constrained case.   
 
-We consider the local-in-time optimisation strategy first introduced by \cite{JFM2011} in the diffusion-less case. We find that this strategy generalises to the case with diffusion. The local-in-time optimal velocity fields maximise the instantaneous mixing rate by minimising $\ddt{}\hmone{\theta}^2$. The optimal velocity fields are given instantaneously by (in non-dimensional form)
-%
-\begin{equation}
-\mathbf{u}= \frac{\mathds{P}(\theta \nabla \invlap\theta)}{\langle |\mathds{P}(\theta \nabla \invlap\theta)|^2\rangle^{1/2}}
-\end{equation} 
-%
-for the energy constraint and by 
+We consider the local-in-time optimisation strategy first introduced by \cite{JFM2011} in the case without diffusion. We find that this strategy generalises to the case with diffusion. The local-in-time optimal velocity fields maximise the instantaneous mixing rate by minimising $\ddt{}\hmone{\theta}^2$. The optimal velocity fields are given instantaneously for the enstrophy case by (in non-dimensional form)
 %
 \begin{equation}
 \mathbf{u}= \frac{-\invlap\mathds{P}(\theta \nabla \invlap\theta)}{\langle |\nabla^{-1}\mathds{P}(\theta \nabla \invlap\theta)|^2\rangle^{1/2}}
 \end{equation}
 %
-for the enstrophy constraint where $\mathds{P}$ is the Leray divergence-free projector given by $\mathds{P}(\vec{v}) = \vec{v} - \nabla \Delta^{-1}(\nabla \cdot \vec{v})$. These flows will be studied numerically later and is the main focus of this paper.
+and for the energy case by 
+% 
+\begin{equation}
+\mathbf{u}= \frac{\mathds{P}(\theta \nabla \invlap\theta)}{\langle |\mathds{P}(\theta \nabla \invlap\theta)|^2\rangle^{1/2}}
+\end{equation} 
+%
+where $\mathds{P}$ is the Leray divergence-free projector given by $\mathds{P}(\vec{v}) = \vec{v} - \nabla \Delta^{-1}(\nabla \cdot \vec{v})$ and $\langle \cdot \rangle$ is the spatial average. These flows will be studied numerically later and is the main focus of this paper.
 
 
 We introduce the following measures as useful observables of mixing over time. we use the $H^{-1}$ norm to define the (exponential) rate of mixing as
@@ -221,12 +221,12 @@ We define the following ratio as a measure of the characteristic filamentation l
 \begin{equation}
 \lambda(t)\equiv  2\pi \frac{\|\nabla^{-1}\theta(\,\cdot\,,t)\|_{L^{2}}}{\|\theta(\,\cdot\,,t)\|_{L^{2}}}.
 \end{equation}
-Note that $\lambda(t)$ returns the wavelength of the wave number $\vec{k}$ for a tracer concentration field composed only of the Fourier mode with wave number $\vec{k}$ (i.e. $\theta(\vec{x},t) = Re[ A e^{-i\vec{k}\cdot \vec{x}}]$ where $A$ is a complex constant). In general, $\lambda$ is the weighted root mean square wavelength with weights given by $|\theta_{\vec{k}}|/\ltwo{\theta}$. 
+Note that if the tracer concentration field is composed of only one Fourier mode with wave number $\vec{k}$ (i.e. $\theta(\vec{x},t) = Re[ A e^{-i\vec{k}\cdot \vec{x}}]$ where $A$ is a complex constant), then $\lambda(t)$ returns the wavelength of the wave number $\vec{k}$. In general, $\lambda$ is the weighted root mean square wavelength with weights given by $|\theta_{\vec{k}}|/\ltwo{\theta}$. 
 
 
 \subsection{Shell model predictions of local-in-time optimisation}
 
-The shell model is a reduced model of the spectral dynamics present in the advection-diffusion equation. The model consists of a system of ordinary differential equations with nearest-neighbour coupling between `shells' in wave number space. \cite{Miles2017a} performed local-in-time mixing optimisation in this model. The shell-model analysis predicts a limiting length scale given by the Batchelor scale, $\Lambda_{\Gamma} =\sqrt{\frac{\kappa}{\Gamma}}$  and its generalisation $\Lambda_{U}= \frac{U}{\kappa} $. The non-dimensional versions are given by $\lambda_{\Gamma}= \frac{1}{\sqrt{Pe}}$ and $\lambda_{U} = \frac{1}{Pe}$.  Also from here forward, we will refer to the Batchelor scale to mean either $\lambda_{\Gamma}$ or its generalisation $\lambda_{U}$.  The predicted long-term rates (after reaching the Batchelor scale) are given by $R_{\Gamma} =\kappa/\lambda_{\Gamma}^2 $  and  $R_{U}=\kappa/\lambda_{U}^2$  The non-dimensional versions are given by $r_{\Gamma} =1$ and $r_{U} = Pe $.
+The shell model is a reduced model but still represents the spectral dynamics present in the advection-diffusion equation. The model consists of a system of ordinary differential equations with nearest-neighbour coupling between `shells' in wave number space. \cite{Miles2017a} performed local-in-time mixing optimisation in this model. The shell-model analysis predicts a limiting length scale given by the Batchelor scale, $\Lambda_{\Gamma} =\sqrt{\frac{\kappa}{\Gamma}}$  and its generalisation $\Lambda_{U}= \frac{U}{\kappa} $. The non-dimensional versions are given by $\lambda_{\Gamma}= \frac{1}{\sqrt{Pe}}$ and $\lambda_{U} = \frac{1}{Pe}$.  Also from here forward, we will refer to the Batchelor scale to mean either $\lambda_{\Gamma}$ or its generalisation $\lambda_{U}$.  The predicted long-term rates (after reaching the Batchelor scale) are given by $R_{\Gamma} =\kappa/\lambda_{\Gamma}^2 $  and  $R_{U}=\kappa/\lambda_{U}^2$  The non-dimensional versions are given by $r_{\Gamma} =1$ and $r_{U} = Pe $.
 
 \subsection{Bounds for $L^{\infty}$ constrained flows}
 We consider a subset of $L^{2}$ constrained flows --- those belonging to $L^{\infty}$. In this restricted setting the rate-of-strain and speed are bounded point-wise uniformly in space and time rather than demanding that they merely be $L^2$ integrable as before. We will provide bounds on $\lambda$ and measures of mixing in this restricted setting. 
@@ -270,9 +270,7 @@ Furthermore,
  \begin{eqnarray*}
 \frac{d}{dt}\left(\frac{\|\nabla\theta\|_{L^{2}}^2}{\|\theta\|_{L^{2}}^2}\right) &= \frac{\|\theta\|_{L^{2}}^2\frac{d}{dt}\|\nabla\theta\|_{L^{2}}^2-\|\nabla\theta\|_{L^{2}}^2\frac{d}{dt}\|\theta\|_{L^{2}}^2}{\|\theta\|_{L^{2}}^4}\\
 &= \frac{-2\int \partial_{i}u_{j}\partial_{i}\theta\partial_{j}\theta - \frac{2}{Pe} \|\Delta\theta\|_{L^{2}}^2}{\|\theta\|_{L^{2}}^2}+\frac{2}{Pe}\frac{\|\nabla\theta\|_{L^{2}}^4}{\|\theta\|_{L^{2}}^4} \\
-&=-\frac{2}{Pe}\left(\frac{\|\Delta\theta\|_{L^{2}}^2}{\|\theta\|_{L^{2}}^2} - \frac{\|\nabla\theta\|_{L^{2}}^4}{\|\theta\|_{L^{2}}^4} \right) \\
-& \qquad \qquad \qquad \qquad \qquad 
-- 2\frac{\sint{\nabla\theta \cdot \nabla\vec{u} \cdot \nabla\theta  }}{\|\theta\|_{L^{2}}^2} 
+&=-\frac{2}{Pe}\left(\frac{\|\Delta\theta\|_{L^{2}}^2}{\|\theta\|_{L^{2}}^2} - \frac{\|\nabla\theta\|_{L^{2}}^4}{\|\theta\|_{L^{2}}^4} \right) - 2\frac{\sint{\nabla\theta \cdot \nabla\vec{u} \cdot \nabla\theta  }}{\|\theta\|_{L^{2}}^2} 
 \\
 &\leq 2 \frac{\hone{\theta}^2}{\ltwo{\theta}^2}
 \end{eqnarray*}
@@ -396,7 +394,7 @@ and this combined with  \eref{eq:lambda_bound} implies
 \label{sec:numerical_experiment}
 \subsection{Methodology}
 
-We solve \eref{eq:nd_ade} by using a Fourier basis to represent the $512 \times 512$ discretised spatial domain with a 4th order Runge-Kutta time-stepping method. All simulation code was created in the programming language Python with package modules, pyfftw and numpy. The code repository can be found at \href{http://github.com/cjm715/lit}{ http://github.com/cjm715/lit}.
+We solve \eref{eq:nd_ade} by using a Fourier basis to represent the discretised spatial domain with a 4th order Runge-Kutta time-stepping method. All simulation code was created in the programming language Python with package modules, pyfftw and numpy. The code repository can be found at \href{http://github.com/cjm715/lit}{ http://github.com/cjm715/lit}.
 
 
 %%%
@@ -460,7 +458,7 @@ We solve \eref{eq:nd_ade} by using a Fourier basis to represent the $512 \times 
 
 
 
- Figure \ref{fig:enstrophy_film} shows the evolution of a scalar field under the optimal flow for the enstrophy constraint. The top film strip corresponds to $Pe =\infty$ while the bottom is $Pe = 256$. The time evolution is initially similar but soon diverges over time. Figure \ref{fig:energy_film} shows the evolution for the energy case. The top film strip corresponds to $Pe =\infty$ while the bottom is $Pe = 32$. Notice that, unlike the $Pe = \infty$ cases, the flows with finite $Pe$ are incapable of creating length scales arbitrarily small for either the energy or enstrophy cases.  The left subplot of Figures \ref{fig:enstrophy_length} and \ref{fig:energy_length} shows this phenomena more quantitatively by showing $\lambda$ over time eventually reaching a plateau. The shell-model prediction of this limiting length scale is the Batchelor scale given by $\lambda_{\Gamma} = 1/\sqrt{Pe}$ for the enstrophy case and  $\lambda_{U} = 1/Pe$ for the energy case. The right plots of Figures \ref{fig:enstrophy_length} and \ref{fig:energy_length} shows scaled versions of $\lambda$ given by  $\lambda/\lambda_{\Gamma}$ and $\lambda/\lambda_{U}$ respectively.  Notice how they plateau around an $O(1)$ constant. Thus this result is consistent with the shell-model predictions. 
+ Figure \ref{fig:enstrophy_film} shows the evolution of a scalar field under the optimal flow for the enstrophy constraint. The top film strip corresponds to $Pe =\infty$ while the bottom is $Pe = 256$. The time evolution is initially similar but soon diverges over time. Figure \ref{fig:energy_film} shows the evolution for the energy constraint. The top film strip corresponds to $Pe =\infty$ while the bottom is $Pe = 32$. Notice that, unlike the $Pe = \infty$ cases, the flows with finite $Pe$ are incapable of creating length scales arbitrarily small for either the energy or enstrophy cases.  The left subplot of Figures \ref{fig:enstrophy_length} and \ref{fig:energy_length} shows this phenomena more quantitatively by showing $\lambda$ over time eventually reaching a plateau. The shell-model prediction of this limiting length scale is the Batchelor scale given by $\lambda_{\Gamma} = 1/\sqrt{Pe}$ for the enstrophy case and  $\lambda_{U} = 1/Pe$ for the energy case. The right plots of Figures \ref{fig:enstrophy_length} and \ref{fig:energy_length} shows scaled versions of $\lambda$ given by  $\lambda/\lambda_{\Gamma}$ and $\lambda/\lambda_{U}$ respectively.  Notice how they plateau around an $O(1)$ constant. Thus this result is consistent with the shell-model predictions. 
    
 Figure \ref{fig:enstrophy_rate} shows the mixing rates for the enstrophy case. The rate during the transient phase is $\Gamma$ which is consistent with rates expected from $Pe=\infty$ mixing studies. For all $Pe$ considered, there is an increase in the rate of mixing after transient behaviour has finished to a long-term rate. Perhaps surprisingly, this long-term mixing rate appears to be {\it independent} of $Pe$ for fixed enstrophy. This suggests that the optimal long-term rate of mixing is only dependent on the rate-of-strain $\Gamma$ and not influenced by the strength of diffusion. 
 
