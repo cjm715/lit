@@ -15,9 +15,10 @@ __pycache__
 *.synctex.gz
 *.tex.bak
 *.pyc
-*-eps-converted-to.pdf
+*.pdf
 
 # Specific to project
 output-*/
 flux
 fluxtools.py
+ioplatexguidelines/
