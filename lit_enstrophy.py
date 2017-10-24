@@ -28,9 +28,9 @@ if __name__ == "__main__":
 
     M = L / l_smallest
     print('N_boyd = ', N_boyd(M))
-    # N = min(N_boyd(M), 512)
+    N = min(N_boyd(M), 512)
     # N = 64
-    N = int(sys.argv[2])
+    # N = int(sys.argv[2])
     print('N = ', N)
 
     # Create tool box
