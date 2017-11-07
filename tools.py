@@ -99,7 +99,7 @@ class ScalarTool(object):
         integrand = np.ravel(grad_invlap_scalar_sq)
         return np.sum(integrand * self.h**2.0)**0.5
 
-    def plot(self, scalar, high_quality=False):
+    def plot(self, scalar, high_quality=False, vmin=-1, vmax=1):
 
         if high_quality:
             plt.rc('text', usetex=True)
@@ -112,7 +112,9 @@ class ScalarTool(object):
         im = plt.imshow(np.transpose(scalar),
                         cmap=plt.cm.gray,
                         extent=(0, self.L, 0, self.L),
-                        origin="lower")
+                        origin="lower",
+                        vmin=vmin,
+                        vmax=vmax)
         plt.xlabel(r'$x$')
         plt.ylabel(r'$y$')
         plt.colorbar(im)

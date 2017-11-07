@@ -55,6 +55,7 @@ def plot_norms(time, scalar_hist, N, L, high_quality=False, graph='log'):
 
 
 def movie(time, scalar_hist, N, L, output_path='output/'):
+    os.system('mkdir ' + output_path)
     os.system('mkdir ' + output_path + 'images/')
     st = ScalarTool(N, L)
     # st.plot(scalar_hist[i])
