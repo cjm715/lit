@@ -120,7 +120,7 @@ Incompressible flows can be effective mixers by appropriately advecting a passiv
 
 Mixing of a passive tracer quantity, such as temperature, solute concentration, or salinity, by an incompressible flow is a fundamental fluid process. It is relevant to many domains such as turbulence theory \cite{Dimotakis2005,Violeau2000a}, aerospace engineering, oceanography \cite{Wunsch2004}, and atmospheric sciences. It also serves as a key industrial process within the food, pharmaceutical, petrochemical, and other industries \cite{paul2004handbook}. Although mixing is highly prevalent and used, its fundamental principles are still not fully known.
 
-The effect of diffusion and advection on the rate of fluid mixing depends on the unique fluid properties, specific mixing flow, and boundary geometry. Thus general principles of mixing applicable to the vast variety of mixing situations would be beneficial. In particular, it is valuable to determine how the mixing rate (typically the most optimal mixing rate) depends on aggregate flow intensity measures such as energy and enstrophy. This is the objective of the research program encompassing many efforts \cite{CS2013,GI2014,JLT2012,JFM2011, Miles2017a,  JLT2012, DF2014, GM2005} in last decade. 
+The effect of diffusion and advection on the rate of fluid mixing depends on the unique fluid properties, specific mixing flow, and boundary geometry. Thus general principles of mixing applicable to the vast variety of mixing situations would be beneficial. In particular, it is valuable to determine how the mixing rate (typically the most optimal mixing rate) depends on aggregate flow intensity measures such as energy and enstrophy. This is the objective of the research program encompassing many efforts \cite{CS2013,GI2014,JLT2012,JFM2011, Miles2017a,  JLT2012, DF2014, GM2005,Cortelezzi2008} in the last decade. 
 
 With these goals in mind, a common approach taken throughout the literature is to consider the evolution of a tracer quantity $\theta (\vec{x},t)$ advected by an incompressible ($\nabla \cdot\vec{u}=0$) flow $\vec{u}$ with mild physical constraints within a periodic box  of side length $L$ in $d$ dimensions. The tracer concentration field $\theta$ evolves according to the advection-diffusion equation,
 \begin{equation}
@@ -137,7 +137,7 @@ We also need a measure of `mixed-ness'. In the pioneering work of P. V. Danckwer
 \hmone{\theta}=\sqrt{\sint{ |\nabla^{-1} \theta( \vec{x},t)|^2}}=\sqrt{ \sum_{\vec{k}\neq \vec{0}} L^d \frac{|\hat{\theta}_{\vec{k}}(t)|^{2}}{|\vec{k}|^2}}
 \end{equation}
 %
-where $\nabla^{-1}=\nabla \Delta^{-1}$, the operator $\Delta^{-1}$ acting on  a function $\rho$ returns the solution $\phi$ of the Poisson equation $ \Delta \phi = \rho $, $\hat{\theta}_{\vec{k}}(t) =  \frac{1}{L^{d}}\sint{\theta(\vec{x},t)e^{-i\vec{k}\cdot\vec{x}}}$, and $\vec{k}$ is the wave number.  Lower values of the  $H^{-1}$ norm correspond to a more mixed state. Note that $H^{-1}$ norm can decrease in two ways.  The first way is by transferring spectral mass from the lower wave numbers to the higher wave numbers to take advantage of the $1/|\vec{k}|^2$ dependence. This produces a scalar field with sharp gradients and small length scales. This corresponds to the reduction of scale of segregation or filamentation. The second way is to decrease the Fourier amplitudes $|\hat{\theta}_{\vec{k}}|$ for $\vec{k}\neq 0$. This corresponds to a reduction in the intensity of segregation, or homogenization. Thus we can see that the $H^{-1}$ embodies both senses of mixing. 
+where $\nabla^{-1}=\nabla \Delta^{-1}$, the operator $\Delta^{-1}$ acting on  a function $\rho$ returns the solution $\phi$ of the Poisson equation $ \Delta \phi = \rho $, $\hat{\theta}_{\vec{k}}(t) =  \frac{1}{L^{d}}\sint{\theta(\vec{x},t)e^{-i\vec{k}\cdot\vec{x}}}$, and $\vec{k}$ is the wave number.  Lower values of the  $H^{-1}$ norm correspond to a more mixed state. Note that $H^{-1}$ norm can decrease in two ways.  The first way is by transferring spectral mass from the lower wave numbers to the higher wave numbers to take advantage of the $1/|\vec{k}|^2$ dependence. This produces a scalar field with sharp gradients and small length scales. This corresponzds to the reduction of scale of segregation or filamentation. The second way is to decrease the Fourier amplitudes $|\hat{\theta}_{\vec{k}}|$ for $\vec{k}\neq 0$. This corresponds to a reduction in the intensity of segregation, or homogenization. Thus we can see that the $H^{-1}$ embodies both senses of mixing. 
 
 \begin{figure}
 	\centering
@@ -194,7 +194,9 @@ For the enstrophy-bounded flow problem, we choose the same length scale $L$, the
 \end{equation}
 where $Pe=  \frac{\Gamma L^2}{\kappa}$ for the enstrophy-constrained case and $Pe= \frac{UL}{\kappa}$ for the energy-constrained case.   
 
-We consider the local-in-time optimisation strategy first introduced by Lin {\it et al.} \cite{JFM2011} in the case without diffusion. We find that this strategy generalises to the case with diffusion. The local-in-time optimal velocity fields maximise the instantaneous mixing rate by minimising $\ddt{}\hmone{\theta}^2$. The optimal velocity fields are given instantaneously for the enstrophy case by (in non-dimensional form)
+We consider the local-in-time optimisation strategy first introduced by Lin {\it et al.} \cite{JFM2011} in the case without diffusion. We find that this strategy generalises to the case with diffusion. The local-in-time optimal velocity fields maximise the instantaneous mixing rate by minimising $\ddt{}\hmone{\theta}^2$. We highlight that local-in-time optimization is not the same as global-in-time or finite-time optimization where the objective is to minimise $\|\theta(\,\cdot\, , T)\|_{H^{-1}}$ at the final time $T$. These objectives generally produce different results.  In the context of the shell model, however, these strategies yielded similar decay rates. The differences between these two objectives under the evolution of  \eref{eq:nd_ade}  will be the focus of a future study. 
+
+The optimal velocity fields are given instantaneously for the enstrophy case by (in non-dimensional form)
 %
 \begin{equation}
 \mathbf{u}= \frac{-\invlap\mathds{P}(\theta \nabla \invlap\theta)}{\langle |\nabla^{-1}\mathds{P}(\theta \nabla \invlap\theta)|^2\rangle^{1/2}}
@@ -271,7 +273,7 @@ Furthermore,
 \\
 &\leq 2 \frac{\hone{\theta}^2}{\ltwo{\theta}^2}
 \end{eqnarray*}
-%
+%t
 and using $\ddt{}\ltwo{\theta}^2 = -\frac{2}{Pe} \hone{\theta}^2$, it follows that
 \begin{equation}
 \ltwo{\theta}\geq  \ltwo{\theta_{0}}\exp\left[-\frac{1}{2Pe}\frac{\hone{\theta_{0}}^2}{\ltwo{\theta_{0}}^2}\left(e^{2 t} -1\right)\right].
@@ -282,7 +284,7 @@ Using this with \eref{eq:exponential_enstrophy}, we deduce the lower bound
 \end{equation}
 
 \subsubsection{Results for $\linf{\u}= 1$}
-Here we extend the result of \cite{Chi-Cheu1996} to show that the presence of diffusion rules out perfect mixing in finite time for bounded velocity flows.  First note that
+Here we follow and refine an analysis of Poon \cite{Chi-Cheu1996} to show that the presence of diffusion rules out perfect mixing in finite time for bounded velocity flows.  First note that
 %
 \begin{eqnarray*}
 	 \hone{\theta}^2 &=& - 2\sint{\theta \lap \theta} \\
@@ -335,15 +337,15 @@ Then compute:
 			\Bigg].
 \end{eqnarray*}
 %
-Using H\"older's inequality and \eref{eq:PDE_advection}, this simplifies to
+Using H\"older's inequality and \eref{eq:PDE_advection}, this simplifies to a observation originally noted by Poon \cite{Chi-Cheu1996}:
 %
-\begin{eqnarray*}
+\begin{eqnarray}
 	\ddt{} \pbrac{ \frac{\hone{\theta}^2}{\ltwo{\theta}^2} } 
 			&\leq & \frac{Pe}{\ltwo{\theta}^2}
 			\sbrac{
 					 \sint{(\vec{u}\cdot \nabla \theta)^2} 
 			}.
-\end{eqnarray*}
+\end{eqnarray}
 Again applying H\"older's inequality we have
 \begin{equation}
 \label{eq:k2growth_energy}
@@ -402,7 +404,7 @@ We solve \eref{eq:nd_ade} by using a Fourier basis to represent the discretised 
 \subsection{Results}
 
 \begin{figure}
-\includegraphics[width=\textwidth]{enstrophy_norms}
+\includegraphics[width=\textwidth]{images/enstrophy_norms}
 \caption{$H^{-1}, L^{2},$ and $H^{1}$ norms of the concentration field under the optimal enstrophy-constrained flow.  }
 \label{fig:enstrophy_norms}
 \end{figure}
@@ -429,7 +431,7 @@ We now investigate the mixing performance under the local-in-time optimal flows.
 \end{figure}
 %
 \begin{figure}
-\includegraphics[width=\textwidth]{enstrophy_length}
+\includegraphics[width=\textwidth]{images/enstrophy_length}
 \caption{The left subplot shows the filament length $\lambda$ over time subject to the optimal enstrophy-constrained flow. The right subplot is the same data except scaled: $\lambda(t)/\lambda_{\Gamma} = \lambda(t)\sqrt{Pe}$.}
 \label{fig:enstrophy_length}
 \end{figure}
@@ -442,7 +444,7 @@ We now investigate the mixing performance under the local-in-time optimal flows.
 %
 \begin{figure}
 \centering
-\includegraphics[width=0.5\textwidth]{enstrophy_rate}
+\includegraphics[width=1.0\textwidth]{images/enstrophy_rate}
 \caption{Mixing rate $r(t)$ over time when subject to the optimal enstrophy-constrained flow.}
 \label{fig:enstrophy_rate}
 \end{figure}
@@ -473,9 +475,9 @@ For the energy case, the onset of the long run-mixing behaviour can be determine
 \section{Discussion}
 \label{sec:discussion}
 %
-The local-in-time optimisation results suggest that there is a limiting length scale for passive tracer mixing whenever $L^{2}$ flows are instantaneously optimised to decrease the mix-norm. The bounds derived under the $L^{\infty}$ constrained flow assumption did not result in proving this observation, but they did definitively rule out the possibility of perfect mixing in finite time for $L^{\infty}$ flow constraints. 
+The local-in-time optimisation results suggest that there is a limiting length scale for passive tracer mixing whenever $L^{2}$ flows (either $\ltwo{\mathbf{u}}$ or $\ltwo{\nabla\mathbf{u}}$) are instantaneously optimised to decrease the mix-norm. The bounds derived under both $L^{\infty}$ constrained flow assumptions did not result in proving this observation, but they did definitively rule out the possibility of perfect mixing in finite time for these $L^{\infty}$ flow constraints. 
 
-We suspect that the bounds obtained for $L^{\infty}$ flows are not sharp and could be improved further. The $L^{\infty}$ flow analysis produced a double-exponential lower bound on the $H^{-1}$ mix-norm rather than exponential as possibly expected given the numerical results for local-in-time optimal $L^2$ flows. The double-exponential bounds arise from the use of exponential upper bounds on the quantity $\frac{\hone{\theta}}{\ltwo{\theta}}$ in time for both $L^{\infty}$ flow constraints considered. We surmise that $\frac{\hone{\theta}}{\ltwo{\theta}} < C$ (where $C$ is a constant) for all time $t$ as supported by our numerical results and may be proven by exploiting the incompressiblity condition. If this is true generally for all $L^{\infty}$  flows, then our previous analysis would demonstrate that the $H^{-1}$ mix-norm is bounded below by an exponential.
+We suspect that the bounds obtained for $L^{\infty}$ flows are not sharp and could be improved further. The $L^{\infty}$ flow analysis produced a double-exponential lower bound on the $H^{-1}$ mix-norm rather than exponential as possibly expected given the numerical results for local-in-time optimal $L^2$ flows. The double-exponential bounds arise from the use of exponential upper bounds on the quantity $\frac{\hone{\theta}}{\ltwo{\theta}}$ in time for both $L^{\infty}$ flow constraints considered. We surmise that in fact $\frac{\hone{\theta}}{\ltwo{\theta}} < C$ (where $C$ is a constant) for all time $t$ as suggested by the numerical results. If this is true generally for the $L^{\infty}$  flows, then our previous analysis would demonstrate that the $H^{-1}$ mix-norm is bounded below by a single exponential instead of a double exponential.
 
 Note that the pure diffusive case discussed in the introduction can always be employed as a mixing strategy by simply not having a flow field at all ($\vec{u} =\vec{0}$) provided that the flow intensity constraints are generalised to inequalities such as $\|\vec{u}\| \leq UL^{d/2}$ and $\|\nabla \vec{u}\| \leq \Gamma L^{d/2}$.This is a valuable strategy if one is content with mixing at a long-term rate of $\kappa k_{\min}^2$ where $k_{\min} = \min \{ |\vec{k}|  :  |\hat{\theta}_{\vec{k}}(0)| > 0  \}$. This may be advised in fact if $k_{\min} > 2 \pi / \lambda_{B}$. This may well be the most optimal strategy. Invoking a flow may cause the lower wave number modes to become `populated' and therefore may limit the mixing rate. It is important to keep this simple strategy in mind when trying to rigorously prove bounds on the mix-norm. This strategy has an important implication --- there does not exist a lower bound on the mix-norm of the form $\hmone{\theta} \geq A e^{-rt}$ where  $r$ is independent of the initial data.
 
