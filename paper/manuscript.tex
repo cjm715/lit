@@ -141,7 +141,7 @@ where $\nabla^{-1}=\nabla \Delta^{-1}$, the operator $\Delta^{-1}$ acting on  a 
 
 \begin{figure}
 	\centering
-	\includegraphics[width=0.5\textwidth]{scale-and-intensity}
+	\includegraphics[width=0.5\textwidth]{images/scale-and-intensity}
 	\caption{Filamentation is the reduction of the scale of segregation as illustrated by the top transformation. homogenization is the reduction of the intensity of segregation as illustrated by the bottom transformation.}
 	\label{fig:scale-and-intensity}
 \end{figure}
@@ -268,7 +268,7 @@ Furthermore,
 %
  \begin{eqnarray*}
 \frac{d}{dt}\left(\frac{\|\nabla\theta\|_{L^{2}}^2}{\|\theta\|_{L^{2}}^2}\right) &= \frac{\|\theta\|_{L^{2}}^2\frac{d}{dt}\|\nabla\theta\|_{L^{2}}^2-\|\nabla\theta\|_{L^{2}}^2\frac{d}{dt}\|\theta\|_{L^{2}}^2}{\|\theta\|_{L^{2}}^4}\\
-&= \frac{-2\int \partial_{i}u_{j}\partial_{i}\theta\partial_{j}\theta - \frac{2}{Pe} \|\Delta\theta\|_{L^{2}}^2}{\|\theta\|_{L^{2}}^2}+\frac{2}{Pe}\frac{\|\nabla\theta\|_{L^{2}}^4}{\|\theta\|_{L^{2}}^4} \\
+&= \frac{-2\sint{\nabla\theta \cdot \nabla\vec{u} \cdot \nabla\theta  } - \frac{2}{Pe} \|\Delta\theta\|_{L^{2}}^2}{\|\theta\|_{L^{2}}^2}+\frac{2}{Pe}\frac{\|\nabla\theta\|_{L^{2}}^4}{\|\theta\|_{L^{2}}^4} \\
 &=-\frac{2}{Pe}\left(\frac{\|\Delta\theta\|_{L^{2}}^2}{\|\theta\|_{L^{2}}^2} - \frac{\|\nabla\theta\|_{L^{2}}^4}{\|\theta\|_{L^{2}}^4} \right) - 2\frac{\sint{\nabla\theta \cdot \nabla\vec{u} \cdot \nabla\theta  }}{\|\theta\|_{L^{2}}^2} 
 \\
 &\leq 2 \frac{\hone{\theta}^2}{\ltwo{\theta}^2}
@@ -280,7 +280,7 @@ and using $\ddt{}\ltwo{\theta}^2 = -\frac{2}{Pe} \hone{\theta}^2$, it follows th
 \end{equation}
 Using this with \eref{eq:exponential_enstrophy}, we deduce the lower bound
 \begin{equation}
-\hmone{\theta} \geq  \hmone{\theta_{0}} \exp\left[- t -\frac{1}{2 Pe}\frac{\hone{\theta_{0}}^2}{\ltwo{\theta_{0}}}\left(e^{2 t} -1\right)\right].
+\hmone{\theta} \geq  \hmone{\theta_{0}} \exp\left[- t -\frac{1}{2 Pe}\frac{\hone{\theta_{0}}^2}{\ltwo{\theta_{0}}^2}\left(e^{2 t} -1\right)\right].
 \end{equation}
 
 \subsubsection{Results for $\linf{\u}= 1$}
@@ -312,7 +312,7 @@ and
 	 									+\frac{1}{Pe}\lap \theta\right)^2} .
 \end{eqnarray*}
 
-Then compute:
+Then simply after substitution:
 %
 \begin{eqnarray*}
 	\ddt{} \pbrac{ \frac{\hone{\theta}^2}{\ltwo{\theta}^2} } 
@@ -337,7 +337,7 @@ Then compute:
 			\Bigg].
 \end{eqnarray*}
 %
-Using H\"older's inequality and \eref{eq:PDE_advection}, this simplifies to a observation originally noted by Poon \cite{Chi-Cheu1996}:
+Using H\"older's inequality and \eref{eq:nd_ade}, this simplifies to a observation originally noted by Poon \cite{Chi-Cheu1996}:
 %
 \begin{eqnarray}
 	\ddt{} \pbrac{ \frac{\hone{\theta}^2}{\ltwo{\theta}^2} } 
@@ -410,7 +410,8 @@ We solve \eref{eq:nd_ade} by using a Fourier basis to represent the discretised 
 \end{figure}
 %
 \begin{figure}
-\includegraphics[width=\textwidth]{energy_norms}
+\centering
+\includegraphics[]{images/energy_norms}
 \caption{$H^{-1}, L^{2},$ and $H^{1}$ norms of the concentration field under the optimal energy-constrained flow.}
 \label{fig:energy_norms}
 \end{figure}
@@ -419,39 +420,39 @@ We solve \eref{eq:nd_ade} by using a Fourier basis to represent the discretised 
 We now investigate the mixing performance under the local-in-time optimal flows. Figure \ref{fig:enstrophy_norms} and \ref{fig:energy_norms} show how the different mixing measures ($H^{-1}$, $L^2$, and $H^{1}$ norms) vary in time for different values of $Pe$ for the enstrophy and energy constrained cases respectively. Notice how the long-term mixing rate appears to be exponential for all three mixing measures. This exponential rate is consistent with shell model predictions, yet weaker than the double-exponential decay rate derived by the $L^{\infty}$ constrained flow analysis.
 
 \begin{figure}
-\includegraphics[width=\textwidth]{enstrophy_film}
+\includegraphics[]{images/enstrophy_film}
 \caption{Local-in-time optimisation with enstrophy constraint. Top filmstrip is for $Pe =\infty$ and the bottom filmstrip is $Pe=256$. Note that the grey-scale for the $Pe=\infty$ is constant in time while it is adjusted to show the tracer concentration structure in the finite $Pe$ case. }
 \label{fig:enstrophy_film}
 \end{figure}
 %
 \begin{figure}
-\includegraphics[width=\textwidth]{energy_film}
+\includegraphics[]{images/energy_film}
 \caption{Local-in-time optimisation with energy constraint. Top filmstrip is for $Pe = \infty$ and the bottom filmstrip is $Pe=32$. Note that the grey-scale for the $Pe=\infty$ is constant in time while it is adjusted to show the tracer concentration structure in the finite $Pe$ case. The numerical computation is truncated at time $t=0.34$ due to length scales rapidly decreasing past the grid size resolution immediately after $t=0.34$. Fixed energy constrained flows that produce infinitesimally small lengths in finite time have been constructed \cite{JMP2012}. We suspect that the same phenomena may be occurring here.}
 \label{fig:energy_film}
 \end{figure}
 %
 \begin{figure}
-\includegraphics[width=\textwidth]{images/enstrophy_length}
+\includegraphics[]{images/enstrophy_length}
 \caption{The left subplot shows the filament length $\lambda$ over time subject to the optimal enstrophy-constrained flow. The right subplot is the same data except scaled: $\lambda(t)/\lambda_{\Gamma} = \lambda(t)\sqrt{Pe}$.}
 \label{fig:enstrophy_length}
 \end{figure}
 %
 \begin{figure}
-\includegraphics[width=\textwidth]{energy_length}
+\includegraphics[]{images/energy_length}
 \caption{The left subplot shows the filament length $\lambda$ over time subject to the optimal energy-constrained flow. The right subplot is the same data except scaled: $\lambda(t)/\lambda_{U} = \lambda(t) Pe$.}
 \label{fig:energy_length}
 \end{figure}
 %
 \begin{figure}
 \centering
-\includegraphics[width=1.0\textwidth]{images/enstrophy_rate}
+\includegraphics[]{images/enstrophy_rate}
 \caption{Mixing rate $r(t)$ over time when subject to the optimal enstrophy-constrained flow.}
 \label{fig:enstrophy_rate}
 \end{figure}
 %
 \begin{figure}
 \centering
-\includegraphics[width=\textwidth]{energy_rate}
+\includegraphics[]{images/energy_rate}
 \caption{The left subplot shows the mixing rate $r(t)$ over time when subject to the optimal energy-constrained flow. The right subplot is the same data except scaled: $r(t)/r_{U} = r(t)/Pe$.}
 \label{fig:energy_rate}
 \end{figure}
