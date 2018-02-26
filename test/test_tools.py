@@ -4,6 +4,23 @@ import math
 from tools import N_boyd
 
 
+def test_l2norm_squared_of_curl_of_vector_is_spatial_integral_of_neg_vector_times_lap_vector():
+    N = 128
+    L = 2.0
+    kappa = 0.0
+    gamma = 1.0
+    v = np.random.random((2, N, N))
+    # print(np.shape(v))
+    st = ScalarTool(N, L)
+    vt = VectorTool(N, L)
+    v = vt.div_free_proj(v)
+    v = vt.dealias(v)
+    curl = vt.curl(v)
+    a = st.l2norm(curl)**2.
+    b = st.sint(np.sum(-vt.lap(v) * v, 0))
+    assert np.allclose(a, b)
+
+
 def test_that_dt_cfl_works_for_kappa_0():
     N = 128
     L = 2.0
