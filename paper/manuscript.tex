@@ -150,6 +150,7 @@ The $L^{2}$ norm $\ltwo{\theta}$ and the $H^{1}$ norm $\hone{\theta}$ are also c
 
 In the case without advection ($\vec{u}=\vec{0}$), equation \eref{eq:PDE_advection} reduces to the classical heat equation \cite{Evans2010} and the Fourier modes evolve according to $\hat{\theta}_{\vec{k}}(t)=\hat{\theta}_{\vec{k}}(0)e^{-\kappa|\vec{k}|^2t}$. Thus we have explicit analytical results for the decay of the $H^{-1}$ norm by simply substituting this result. Note that $H^{-1}$ norm will decay monotonically. Diffusion is unable to transfer spectral mass from the low wave number modes to the high wave number modes and thus is incapable of filamentation. Thus the pure diffusion case solely exploits homogenization. Also notice the unequal weighting attached to each mode. The Fourier modes with large wave number $|\vec{k}|$ decay at a faster rate relative to the decay of those with small wave number.
 
+
 %To further facilitate discussion, we define the following ratio as a measure of the characteristic {\it filamentation length} scale:
 %\begin{equation}
 %\label{eq:length}
@@ -157,7 +158,9 @@ In the case without advection ($\vec{u}=\vec{0}$), equation \eref{eq:PDE_advecti
 %\end{equation}
 %Note that $\lambda(t)$ returns the wavelength of the wave number $\vec{k}$ for a tracer concentration field composed only of the Fourier mode with wave number $\vec{k}$ (i.e. $\theta(\vec{x},t) = Re[ A e^{-i\vec{k}\cdot \vec{x}}]$ where $A$ is a complex constant). In general, $\lambda$ is the weighted root mean square wavelength with weights given by $|\theta_{\vec{k}}|^2/\ltwo{\theta}^2$. 
 
+
 In the case without diffusion ($\kappa = 0$), pure advection of the flow is the only method of mixing, colloquially known as stirring. For a flow that is constrained by enstrophy, the $H^{-1}$ norm decays at most exponentially where the exponential rate is proportional to $\Gamma$ \cite{GI2014,CS2013}. This was mathematically proven by two separate approaches: G. Iyer {\it et al.} \cite{GI2014} used regularisation results \cite{Crippa} of partial differential equations  while C. Seis \cite{CS2013} used methods from optimal transportation theory \cite{villani2003topics}. Furthermore, enstrophy-constrained flows that realise this exponential decay rate have been constructed analytically \cite{Alberti2014a}. On the other hand, energy-constrained flows can achieve even faster mixing rates. In fact they can achieve {\it perfect mixing in finite time} which means that the $H^{-1}$ norm approaches zero in finite time as opposed to approaching zero in infinite time as in the case for enstrophy-constrained mixing. This can be demonstrated by a `chequerboard' flow \cite{JMP2012} where the  $H^{-1}$ norm achieves perfect mixing in finite time with a linear decay rate.  In either flow intensity constraint, note that $H^{-1}$ norm decreases by exclusively exploiting filamentation without homogenization. This is  exactly opposite to the purely diffusive case.
+
 
 Finally, the case with diffusion and advection is the least explored in this framework and the focus of this paper. D. Foures {\it et al.} \cite{DF2014} showed that the evolution of the $H^{-1}$ and $L^2$ norms decrease monotonically under the chequerboard flow introduced by E. Lunasin {\it et al.} \cite{JMP2012} while the $H^{1}$ increases until it reaches a peak and then decreases. This peak corresponds to a  time when the length scales developed are small enough for diffusion to effectively act on steep gradients. C. Miles and C. Doering \cite{Miles2017a} explored this phenomena further in the context of a shell model, a reduced model using ordinary differential equations that mimic the spectral dynamics of the advection-diffusion equation. The authors concluded that shell-model mixing could not surpass length scales given by $\sqrt{\kappa/ \Gamma}$ for enstrophy-constrained flows and $\kappa/U$ for energy-constrained flows up to $O(1)$ constants. These length scales can be identified as a generalised Batchelor scale \cite{Batchelor1959a}, introduced in the context of turbulence theory. The limitations on the length scale controlled the long-run optimal mixing rates determined to be $\Gamma$ under the enstrophy constraint and $U^2/\kappa$ under the energy constraint up to $O(1)$ constants. In contrast to the `pure' cases mentioned earlier, it is important to note that the $H^{-1}$ can now decrease by the two avenues of homogenization and filamentation simultaneously. 
 
@@ -392,6 +395,7 @@ and this combined with  \eref{eq:lambda_bound} implies
 \section{Numerical experiment: local-in-time optimisation}
 \label{sec:numerical_experiment}
 \subsection{Methodology}
+
 
 We solve \eref{eq:nd_ade} with either flow \eref{eq:u_lit_enstrophy} or \eref{eq:u_lit_energy} by using a Fourier basis to represent the discretised spatial domain with a 4th order Runge-Kutta time-stepping method. All simulation code was created in the programming language Python with package modules, pyfftw and numpy. The code repository can be found at \href{http://github.com/cjm715/lit}{ http://github.com/cjm715/lit}.
 

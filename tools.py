@@ -304,7 +304,8 @@ class VectorTool(object):
         self.vector_input_test(vector)
         vector_hat = self.fft(vector)
         w = fft.irfftn(
-            1j * self.K[1] * vector_hat[0] - 1j * self.K[0] * vector_hat[1], threads=self.num_threads)
+            1j * self.K[0] * (2.0 * np.pi / self.L) * vector_hat[1]
+            - 1j * self.K[1] * (2.0 * np.pi / self.L) * vector_hat[0], threads=self.num_threads)
         return w
 
     def invlap(self, vector):
