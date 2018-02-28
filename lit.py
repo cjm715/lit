@@ -299,11 +299,14 @@ if __name__ == "__main__":
         os.system('mkdir ' + output_folder)
         pickle_file = output_folder + "pe=" + str(Pe) + "-M=" + str(M) + ".pkl"
 
-        save_every = int(round(M / 65))
-        solution = sim(N=N, M=M, T=T, L=L, U=U, gamma=gamma, Pe=Pe, constraint=constraint,
-                       save_every=save_every, pickle_file=pickle_file, plot=False)
+        save_th_every = int(round(M / 100))
+        save_u_every = int(round(M / 5))
 
-        movie(solution.hist_time, solution.hist_th,
+        solution = sim(N=N, M=M, T=T, L=L, U=U, gamma=gamma, Pe=Pe, constraint=constraint,
+                       save_th_every=save_th_every, save_u_every=save_u_every,
+                       pickle_file=pickle_file, plot=False)
+
+        movie(solution.hist_th_time, solution.hist_th,
               N, L, output_path=output_folder)
 
         plt.figure()
@@ -313,5 +316,5 @@ if __name__ == "__main__":
         plt.savefig(output_folder + 'plot_final_frame-pe=' + str(Pe) + '.png')
 
         plt.figure()
-        plot_norms(solution.hist_time, solution.hist_th, N, L)
+        plot_norms(solution.hist_th_time, solution.hist_th, N, L)
         plt.savefig(output_folder + 'plot_norms-pe=' + str(Pe) + '.png')

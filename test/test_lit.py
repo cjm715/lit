@@ -13,7 +13,7 @@ def test_fourth_order_convergence_of_entrophy_constained_lit_simulation():
     Pe = 512
 
     for M in M_list:
-        s.append(lit.sim(N=N, M=M, T=T, L=L, save_every=1,
+        s.append(lit.sim(N=N, M=M, T=T, L=L, save_th_every=1,
                          T_kick=0.01, Pe=Pe, plot=False))
     st = tools.ScalarTool(N, L)
     R = st.l2norm(s[0].hist_th[-1] - s[1].hist_th[-1]) / \
@@ -33,7 +33,7 @@ def test_fourth_order_convergence_of_energy_constained_lit_simulation():
     U = 1.0
 
     for M in M_list:
-        s.append(lit.sim(N=N, M=M, U=U, T=T, L=L, save_every=1,
+        s.append(lit.sim(N=N, M=M, U=U, T=T, L=L, save_th_every=1,
                          T_kick=0.01, Pe=Pe, plot=False, constraint="energy"))
     st = tools.ScalarTool(N, L)
     R = st.l2norm(s[0].hist_th[-1] - s[1].hist_th[-1]) / \
