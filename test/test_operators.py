@@ -134,6 +134,20 @@ def test_that_LIT_enstrophy_flow_satisfies_budget_constraint():
         st.l2norm(vt.curl(okit.u_lit_enstrophy(th, gamma))), gamma * L)
 
 
+def test_that_LIT_enstrophy_flow_satisfies_budget_constraint_2nd():
+    L = 10.0
+    N = 128
+    kappa = 0.1
+    gamma = 2.0
+    vt = VectorTool(N, L)
+    st = ScalarTool(N, L)
+    th = np.exp(np.sin((2 * np.pi / L) *
+                       st.X[0]) * np.cos((2 * np.pi / L) * st.X[1]))
+    okit = OperatorKit(N, L, kappa)
+    assert np.isclose(
+        vt.h1norm(okit.u_lit_enstrophy(th, gamma)), gamma * L)
+
+
 def test_that_LIT_enstrophy_flow_is_incompressible():
     L = 10.0
     N = 128

@@ -99,7 +99,7 @@ class ScalarTool(object):
         integrand = np.ravel(grad_invlap_scalar_sq)
         return np.sum(integrand * self.h**2.0)**0.5
 
-    def plot(self, scalar, high_quality=False, vmin=-1, vmax=1):
+    def plot(self, scalar, high_quality=False, fixed_vertical_axis=False):
 
         if high_quality:
             plt.rc('text', usetex=True)
@@ -108,6 +108,12 @@ class ScalarTool(object):
             plt.rc('text', usetex=False)
             plt.rc('font', family='sans-serif', size=12)
 
+        if fixed_vertical_axis:
+            vmin = -1
+            vmax = 1
+        else:
+            vmin = np.amin(scalar)
+            vmax = np.amax(scalar)
         self.scalar_input_test(scalar)
         im = plt.imshow(np.transpose(scalar),
                         cmap=plt.cm.gray,
@@ -271,6 +277,20 @@ class VectorTool(object):
         """ L2 norm of a vector field """
         self.vector_input_test(vector)
         integrand = np.sum(vector * vector, 0)
+
+        return np.sum(np.ravel(integrand) * self.h**2)**0.5
+
+    def h1norm(self, vector):
+        """ L2 norm of a vector field """
+        self.vector_input_test(vector)
+        vector_hat = self.fft(vector)
+        grad_vx = fft.irfftn(1.0j * self.K * (2 * np.pi / self.L)
+                             * vector_hat[0], axes=(1, 2), threads=self.num_threads)
+        grad_vy = fft.irfftn(1.0j * self.K * (2 * np.pi / self.L)
+                             * vector_hat[1], axes=(1, 2), threads=self.num_threads)
+
+        integrand = (grad_vx[0]**2.0 + grad_vx[1]**2.0
+                     + grad_vy[0]**2.0 + grad_vy[1]**2.0)
 
         return np.sum(np.ravel(integrand) * self.h**2)**0.5
 

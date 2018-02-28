@@ -20,10 +20,10 @@ if __name__ == "__main__":
     print('Pe = ', Pe)
     kappa = 1.0 / Pe
     gamma = 1.0
-    T = 2.0
+    T = 13.0
 
     lb = (kappa / gamma)**0.5
-    l_smallest = lb
+    l_smallest = 0.2 * lb
     print('lb = ', lb)
 
     M = L / l_smallest

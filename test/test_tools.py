@@ -4,6 +4,47 @@ import math
 from tools import N_boyd
 
 
+def test_h1normsq_of_vector_is_spatial_integral_neg_lapvec_times_vec():
+    N = 128
+    L = 2.0
+    kappa = 0.0
+    gamma = 1.0
+    v = np.random.random((2, N, N))
+    st = ScalarTool(N, L)
+    vt = VectorTool(N, L)
+    v = vt.div_free_proj(v)
+    v = vt.dealias(v)
+
+    a = vt.h1norm(v)**2
+    b = st.sint(np.sum(-vt.lap(v) * v, 0))
+    assert np.allclose(a, b)
+
+
+def test_h1norm_of_sin_flow():
+    N = 128
+    L = 2.0
+    vt = VectorTool(N, L)
+    X = np.mgrid[:N, :N].astype(float) * (L / N)
+    u = np.zeros((2, N, N))
+    u[0] = np.sin(2. * np.pi / L * X[1])
+    assert np.isclose(vt.h1norm(u)**2., 2. * np.pi**2.)
+
+
+def test_curl_is_equal_to_curl_computed_with_grad_function():
+    N = 128
+    L = 2.0
+    kappa = 0.0
+    gamma = 1.0
+    v = np.random.random((2, N, N))
+    # print(np.shape(v))
+    st = ScalarTool(N, L)
+    vt = VectorTool(N, L)
+    v = vt.div_free_proj(v)
+    v = vt.dealias(v)
+    c = st.grad(v[1])[0] - st.grad(v[0])[1]
+    assert np.allclose(c, vt.curl(v))
+
+
 def test_l2norm_squared_of_curl_of_vector_is_spatial_integral_of_neg_vector_times_lap_vector():
     N = 128
     L = 2.0
