@@ -253,12 +253,12 @@ if __name__ == "__main__":
 
     L = 1.0
     kappa = 1.0 / Pe
-    constraint = "energy"
+    constraint = "enstrophy"
     U = 1.0
-    T = 0.01
+    #T = 1.0
 
     gamma = 1.0
-    #T = 13.0
+    T = 13.0
 
     if constraint == "enstrophy":
         if Pe == np.inf:

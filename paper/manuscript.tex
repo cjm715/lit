@@ -242,7 +242,7 @@ We consider a subset of $L^{2}$ constrained flows --- those belonging to $L^{\in
 The time derivative of $\lambda^2$ is
 %
 \begin{equation*}
-	\ddt{\lambda^2} = \frac{2}{Pe}
+	\frac{1}{(2\pi)^2}\ddt{\lambda^2} = \frac{2}{Pe}
 		\left[ 
 			\frac{\hone{\theta}^2\hmone{\theta}^2}
 					{\ltwo{\theta}^4}  
@@ -255,11 +255,11 @@ The time derivative of $\lambda^2$ is
 and by H\"older's inequality, we deduce
 \begin{equation*}
 \label{eq:length_ineq_rate-of-strain}
-	\ddt{\lambda^2} \geq \frac{2}{Pe} \left[ 
+	\frac{1}{(2\pi)^2}\ddt{\lambda^2} \geq \frac{2}{Pe} \left[ 
 			\frac{\hone{\theta}^2\hmone{\theta}^2}
 					{\ltwo{\theta}^4}  
 			- 1
-		\right] - 2  \lambda^2 .
+		\right] - \frac{2}{(2\pi)^2}  \lambda^2 .
 \end{equation*}
 This establishes a lower bound on $\lambda$ at each instant: by apply Gr\"onwall's inequality and the fact that the bracketed term is greater than or equal to zero, it follows that
 %
@@ -377,7 +377,7 @@ The inequality $\hone{\theta}\hmone{\theta}\geq \ltwo{\theta}^2$ then ensures th
 %
 \begin{equation}
 \label{eq:lambda_bound}
-\lambda(t) \geq \frac{\ltwo{\theta_0}}{\hone{\theta_0}}\exp{\pbrac{-\frac{Pe}{2}t}}.
+\lambda(t) \geq  2\pi\frac{\ltwo{\theta_0}}{\hone{\theta_0}}\exp{\pbrac{-\frac{Pe}{2}t}}.
 \end{equation}
 %
 Using \eref{eq:k2growth_energy} together with  $\ddt{}\ltwo{\theta}^2 = -\frac{2}{Pe} \hone{\theta}^2$ we observe that
