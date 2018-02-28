@@ -315,33 +315,3 @@ if __name__ == "__main__":
         plt.figure()
         plot_norms(solution.hist_time, solution.hist_th, N, L)
         plt.savefig(output_folder + 'plot_norms-pe=' + str(Pe) + '.png')
-
-    # # Test convergence
-    # f = open('convergence-report-pe=' + str(Pe) + '-M=' + str(M) + '.txt', 'w')
-    # s = []
-    # for M in M_list:
-    #     pickle_file = "output-pe=" + str(Pe) + "-M=" + str(M) + \
-    #         "/pe=" + str(Pe) + "-M=" + str(M) + ".pkl"
-    #
-    #     with open(pickle_file, 'rb') as f:
-    #         s.append(pickle.load(f, encoding='latin1'))
-    #
-    # dt_list = [item.T / item.M for item in s]
-    # st = tools.ScalarTool(N, L)
-    # low2med_res_error = st.l2norm(s[0].hist_th[-1] - s[1].hist_th[-1])
-    # med2high_res_error = st.l2norm(s[1].hist_th[-1] - s[2].hist_th[-1])
-    #
-    # for i, dt in enumerate(dt_list):
-    #     f.write('Simulation #' + str(i) + ': dt = ' + str(dt) + ' \n')
-    #     f.write('Simulation #' + str(i) +
-    #             ': Number of time steps = ' + str(M_list[i]) + ' \n')
-    #
-    # f.write('Absolute l2norm error difference between low and med res solutions: ' +
-    #         str(low2med_res_error) + '\n')
-    # f.write('Absolute l2norm error difference between med and high res solutions: ' +
-    #         str(med2high_res_error) + '\n')
-    # R = low2med_res_error / med2high_res_error
-    # p = np.log(R) / np.log(2)
-    # f.write(
-    #     'Verify 4-th order convergence of RK4 method: measured p =  ' + str(p) + ' \n')
-    # f.close()
