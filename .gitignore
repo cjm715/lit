@@ -1,6 +1,8 @@
 # User files
 .envrc
 .direnv
+..bfg-report/
+.pytest_cache/
 
 # General compiled files
 __pycache__
