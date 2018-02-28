@@ -46,18 +46,6 @@ def sim(N=128, M=10000, T=13.0, L=1.0, gamma=1.0, Pe=1024, T_kick=0.01,
     # Parameters
     h = L / N
     kappa = 1. / Pe
-    print('Pe = ', Pe)
-    if np.isinf(Pe):
-        dt_cfl = (L / N) / (gamma * L)
-        print('dt (CFL) = ', dt_cfl)
-    else:
-        length_min = 0.25 * 1. / (Pe)**0.5
-        M_boyd = L / length_min
-        N_boyd = int(2**np.ceil(np.log2(4 * (M_boyd - 1) + 6)))
-        dt_cfl = min((L / N)**2. / kappa, (L / N) / (gamma * L))
-        print('dt (CFL) = ', dt_cfl)
-        print('N (Boyd) = ', N_boyd)
-    print('N =', N)
 
     # ## Double precision
     ftype = np.float64
@@ -67,7 +55,6 @@ def sim(N=128, M=10000, T=13.0, L=1.0, gamma=1.0, Pe=1024, T_kick=0.01,
     print('dt = ', dt)
     final_time_ind = total_steps
     total_time_pts = total_steps + 1
-    time_array = np.linspace(0, T, total_time_pts, dtype=ftype)
 
     X = np.mgrid[:N, :N].astype(ftype) * h
     Nf = N // 2 + 1
@@ -79,71 +66,70 @@ def sim(N=128, M=10000, T=13.0, L=1.0, gamma=1.0, Pe=1024, T_kick=0.01,
     st = tools.ScalarTool(N, L)
     vt = tools.VectorTool(N, L)
 
-    th = np.zeros((total_time_pts, N, N))
     th0 = np.sin(2. * np.pi * X[0] / L)
-    th[0] = copy.copy(th0)
+    th = copy.copy(th0)
 
     # Initial kick
     # The default value for T_kick equal to 0.01 is sufficient to
     # initiate LIT optimization.
 
-    num_steps_kick = max(round(T_kick / dt), 10)
+    num_steps_kick = int(max(round(T_kick / dt), 10))
     dt_kick = T_kick / num_steps_kick
 
     u_kick = np.zeros((2, N, N), dtype=ftype)
     u_kick[0, :, :] = np.sin(2. * np.pi * X[1] / L)
 
     for i in range(num_steps_kick):
-        k1 = f(th[0], u_kick)
-        k2 = f(th[0] + 0.5 * dt_kick * k1, u_kick)
-        k3 = f(th[0] + 0.5 * dt_kick * k2, u_kick)
-        k4 = f(th[0] + dt_kick * k3, u_kick)
-        th[0] = th[0] + dt_kick * (1.0 / 6.0) * (k1 + 2.0 * k2 + 2.0 * k3 + k4)
+        k1 = f(th, u_kick)
+        k2 = f(th + 0.5 * dt_kick * k1, u_kick)
+        k3 = f(th + 0.5 * dt_kick * k2, u_kick)
+        k4 = f(th + dt_kick * k3, u_kick)
+        th = th + dt_kick * (1.0 / 6.0) * (k1 + 2.0 * k2 + 2.0 * k3 + k4)
 
     time = 0.0
     hist_time = [time]
 
-    hist_th = [th[0]]
-    hist_th_hm1 = [st.hm1norm(th[0])]
-    hist_th_l2 = [st.l2norm(th[0])]
-    hist_th_h1 = [st.h1norm(th[0])]
+    hist_th = [th]
+    hist_th_hm1 = [st.hm1norm(th)]
+    hist_th_l2 = [st.l2norm(th)]
+    hist_th_h1 = [st.h1norm(th)]
 
-    u = u_lit(th[0])
+    u = u_lit(th)
     hist_u = [u]
     hist_u_h1 = [vt.h1norm(u)]
     hist_u_l2 = [vt.l2norm(u)]
     if plot:
         plt.figure()
-        st.plot(th[0])
-        plt.title('time = %2.3f' % time_array[0])
+        st.plot(th)
+        plt.title('time = %2.3f' % time)
         plt.show()
 
     u0 = copy.copy(u)
     assert total_steps == M
     for i in range(total_steps):
-        k1 = f_lit(th[i])
-        k2 = f_lit(th[i] + 0.5 * dt * k1)
-        k3 = f_lit(th[i] + 0.5 * dt * k2)
-        k4 = f_lit(th[i] + dt * k3)
-        th[i + 1] = th[i] + dt * (1.0 / 6.0) * (k1 + 2.0 * k2 + 2.0 * k3 + k4)
+        k1 = f_lit(th)
+        k2 = f_lit(th + 0.5 * dt * k1)
+        k3 = f_lit(th + 0.5 * dt * k2)
+        k4 = f_lit(th + dt * k3)
+        th = th + dt * (1.0 / 6.0) * (k1 + 2.0 * k2 + 2.0 * k3 + k4)
         time += dt
 
-        if np.mod(i, save_every) == 0:
+        if np.mod(i, save_every) == 0 or i == total_steps - 1:
             hist_time.append(time)
 
-            hist_th.append(th[i + 1])
-            hist_th_hm1.append(st.hm1norm(th[i + 1]))
-            hist_th_l2.append(st.l2norm(th[i + 1]))
-            hist_th_h1.append(st.h1norm(th[i + 1]))
+            hist_th.append(th)
+            hist_th_hm1.append(st.hm1norm(th))
+            hist_th_l2.append(st.l2norm(th))
+            hist_th_h1.append(st.h1norm(th))
 
-            u = u_lit(th[i + 1])
+            u = u_lit(th)
             hist_u.append(u)
             hist_u_h1.append(vt.h1norm(u))
             hist_u_l2.append(vt.l2norm(u))
             if plot:
                 plt.figure()
-                st.plot(th[i + 1])
-                plt.title('time = %2.3f' % time_array[i + 1])
+                st.plot(th)
+                plt.title('time = %2.3f' % time)
                 plt.show()
 
                 vt.plot(u)
@@ -252,11 +238,11 @@ if __name__ == "__main__":
     L = 1.0
     kappa = 1.0 / Pe
     gamma = 1.0
-    T = 0.01
+    T = 13.0
 
     if Pe == np.inf:
         N = 512
-        dt_cfl = (L / N) / (gamma * L)
+        dt_cfl = 0.25 * (L / N) / (gamma * L)
     else:
         lb = (kappa / gamma)**0.5
         l_smallest = 0.25 * lb  # a quarter of batchelor scale
@@ -264,7 +250,7 @@ if __name__ == "__main__":
         num_wavelengths = L / l_smallest
         print('N_boyd = ', tools.N_boyd(num_wavelengths))
         N = min(tools.N_boyd(num_wavelengths), 512)
-        dt_cfl = min((L / N)**2. / kappa, (L / N) / (gamma * L))
+        dt_cfl = 0.25 * min((L / N)**2. / kappa, (L / N) / (gamma * L))
 
     print('N = ', N)
     print('dt CFL = ', dt_cfl)
@@ -276,8 +262,9 @@ if __name__ == "__main__":
     for M in M_list:
         output_folder = "output-pe=" + str(Pe) + "-M=" + str(M) + "/"
         os.system('mkdir ' + output_folder)
-        pickle_file = output_folder + "pe=" + str(Pe) + ".pkl"
+        pickle_file = output_folder + "pe=" + str(Pe) + "-M=" + str(M) + ".pkl"
 
+        save_every = int(round(M / 200))
         solution = sim(N=N, M=M, T=T, L=L, gamma=gamma, Pe=Pe,
                        save_every=10, pickle_file=pickle_file, plot=False)
 

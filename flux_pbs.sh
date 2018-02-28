@@ -9,7 +9,7 @@
 #PBS -V
 
 # Change the number of cores (ppn=1), amount of memory, and walltime:
-#PBS -l procs=1,pmem=8000mb,walltime=10:00:00
+#PBS -l procs=1,pmem=8000mb,walltime=24:00:00
 
 # Change "example_flux" to the name of your Flux allocation:
 #PBS -A lsa_flux
@@ -47,5 +47,6 @@ done
 
 if [ "$PBS_ARRAYID" = 9 ]
 then
+    description=("Pe=inf")
    python lit.py "inf" -> log-$description.txt
 fi
