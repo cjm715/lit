@@ -1,4 +1,4 @@
-from tools import ScalarTool, VectorTool, create_grid, dt_cfl
+from tools import ScalarTool, VectorTool
 import numpy as np
 import math
 from tools import N_boyd
@@ -60,14 +60,6 @@ def test_l2norm_squared_of_curl_of_vector_is_spatial_integral_of_neg_vector_time
     a = st.l2norm(curl)**2.
     b = st.sint(np.sum(-vt.lap(v) * v, 0))
     assert np.allclose(a, b)
-
-
-def test_that_dt_cfl_works_for_kappa_0():
-    N = 128
-    L = 2.0
-    kappa = 0.0
-    U = 3.0
-    assert math.isclose(dt_cfl(N, L, kappa, U), L / (N * U))
 
 
 def test_that_l2norm_of_sinx_on_domain_with_L_of_2pi_equals_sqrt_of_half_of_Lsq():
@@ -202,27 +194,6 @@ def test_laplacian_of_sinkx_is_neq_ksq_times_sinkx():
     lapth = st.lap(th)
 
     assert np.allclose(lapth, -k**2 * np.sin(k * X[0]))
-
-
-def test_create_grid_size():
-    L = 10.0
-    N = 15
-    assert np.shape(create_grid(N, L)) == (2, N, N)
-
-
-def test_xendpoint_of_grid():
-    # test for ij indexing of grid
-    L = 10.0
-    N = 15
-    grid = create_grid(N, L)
-    assert math.isclose(grid[0, -1, 0], L - L / N)
-
-
-def test_yendpoint_of_grid():
-    L = 10.0
-    N = 15
-    grid = create_grid(N, L)
-    assert math.isclose(grid[1, 0, -1], L - L / N)
 
 
 def test_integral_of_sinkx():

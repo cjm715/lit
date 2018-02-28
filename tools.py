@@ -15,19 +15,6 @@ def N_boyd(M):
     return int(2**np.ceil(np.log2(4 * (M - 1) + 6)))
 
 
-def create_grid(N, L):
-    return np.mgrid[:N, :N].astype(float) * (L / N)
-
-
-def dt_cfl(N, L, kappa, U):
-    if kappa == 0:
-        dt = L / (N * U)
-    else:
-        dt = min(L / (N * U), L**2 / (N**2 * kappa))
-
-    return dt
-
-
 class ScalarTool(object):
     """
     Description:

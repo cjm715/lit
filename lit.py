@@ -27,23 +27,33 @@ class sol(object):
         self.hist_u_l2 = []
 
 
-def sim(N=128, M=10000, T=13.0, L=1.0, gamma=1.0, Pe=1024, T_kick=0.01,
-        save_every=100, pickle_file=None, plot=False):
+def sim(N=128, M=1000, T=1.0, L=1.0, gamma=1.0, U=1.0, Pe=1024, T_kick=0.01,
+        save_every=10, pickle_file=None, plot=False, constraint='enstrophy'):
 
     def f(th, u):
         return -1.0 * np.sum(vt.dealias(u) * st.grad(st.dealias(th)), 0) + kappa * st.lap(st.dealias(th))
-        # return -1.0*np.sum(u*st.grad(th),0) + kappa * st.lap(th)
 
     def f_lit(th):
         return f(th, u_lit(th))
 
-    def u_lit(th):
+    def u_lit_enstrophy(th):
         u_lit = st.dealias(th) * vt.dealias(st.grad_invlap(th))
         u_lit = - vt.invlap(vt.div_free_proj(u_lit))
         u_lit = gamma * L * u_lit / st.l2norm(vt.curl(u_lit))
         return u_lit
 
-    # Parameters
+    def u_lit_energy(th):
+        u_lit = st.dealias(th) * vt.dealias(st.grad_invlap(th))
+        u_lit = vt.div_free_proj(u_lit)
+        u_lit = U * L * u_lit / vt.l2norm(u_lit)
+        return u_lit
+
+    if constraint == 'enstrophy':
+        u_lit = u_lit_enstrophy
+    elif constraint == 'energy':
+        u_lit = u_lit_energy
+
+        # Parameters
     h = L / N
     kappa = 1. / Pe
 
@@ -237,20 +247,39 @@ if __name__ == "__main__":
 
     L = 1.0
     kappa = 1.0 / Pe
-    gamma = 1.0
-    T = 13.0
+    constraint = "energy"
+    U = 1.0
+    T = 2.0
 
-    if Pe == np.inf:
-        N = 512
-        dt_cfl = 0.25 * (L / N) / (gamma * L)
-    else:
-        lb = (kappa / gamma)**0.5
-        l_smallest = 0.25 * lb  # a quarter of batchelor scale
-        print('lb = ', lb)
-        num_wavelengths = L / l_smallest
-        print('N_boyd = ', tools.N_boyd(num_wavelengths))
-        N = min(tools.N_boyd(num_wavelengths), 512)
-        dt_cfl = 0.25 * min((L / N)**2. / kappa, (L / N) / (gamma * L))
+    gamma = 1.0
+    #T = 13.0
+
+    if constraint == "enstrophy":
+        if Pe == np.inf:
+            N = 512
+            dt_cfl = 0.25 * (L / N) / (gamma * L)
+        else:
+            lb = (kappa / gamma)**0.5
+            l_smallest = 0.25 * lb  # a quarter of batchelor scale
+            print('lb = ', lb)
+            num_wavelengths = L / l_smallest
+            print('N_boyd = ', tools.N_boyd(num_wavelengths))
+            N = min(tools.N_boyd(num_wavelengths), 512)
+            dt_cfl = 0.25 * min((L / N)**2. / kappa, (L / N) / (gamma * L))
+
+    elif constraint == "energy":
+
+        if Pe == np.inf:
+            N = 512
+            dt_cfl = 0.25 * (L / N) / (U)
+        else:
+            lb = (kappa / U)
+            l_smallest = 0.25 * lb  # a quarter of batchelor scale
+            print('lb = ', lb)
+            num_wavelengths = L / l_smallest
+            print('N_boyd = ', tools.N_boyd(num_wavelengths))
+            N = min(tools.N_boyd(num_wavelengths), 512)
+            dt_cfl = 0.25 * min((L / N)**2. / kappa, (L / N) / U)
 
     print('N = ', N)
     print('dt CFL = ', dt_cfl)
@@ -265,8 +294,8 @@ if __name__ == "__main__":
         pickle_file = output_folder + "pe=" + str(Pe) + "-M=" + str(M) + ".pkl"
 
         save_every = int(round(M / 200))
-        solution = sim(N=N, M=M, T=T, L=L, gamma=gamma, Pe=Pe,
-                       save_every=10, pickle_file=pickle_file, plot=False)
+        solution = sim(N=N, M=M, T=T, L=L, U=U, gamma=gamma, Pe=Pe, constraint=constraint,
+                       save_every=save_every, pickle_file=pickle_file, plot=False)
 
         movie(solution.hist_time, solution.hist_th,
               N, L, output_path=output_folder)
