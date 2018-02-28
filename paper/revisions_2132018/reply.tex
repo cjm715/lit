@@ -1,0 +1,120 @@
+\documentclass[]{article}
+
+
+
+\newcommand{\ddt}[1]{\frac{d #1}{dt}}
+%\newcommand{\hmone}[1]{\|#1\|_{H^{-1}}}
+\newcommand{\hmone}[1]{\|\nabla^{-1} #1\|_{L^{2}}}
+\newcommand{\ltwo}[1]{\|#1\|_{L^{2}}}
+%\newcommand{\hone}[1]{\|#1\|_{H^{1}}}
+\newcommand{\hone}[1]{\| \nabla #1\|_{L^{2}}}
+\newcommand{\htwo}[1]{\|#1\|_{H^{2}}}
+\newcommand{\sint}[1]{\int_{D} #1 \, d^{d}\mathbf{x}}
+\newcommand{\tint}[1]{\int_{0}^{T} #1 \, dt}
+\renewcommand{\vec}[1]{\mathbf{#1}}
+\newcommand{\linf}[1]{\| #1 \|_{L^{\infty}}}
+\newcommand{\tavg}[1]{\langle  #1 \rangle}
+\renewcommand{\u}{\mathbf{u}}
+%\newcommand{\ppt}[1]{\frac{\partial #1}{\partial t}}
+\newcommand{\ppt}[1]{\partial_{t} #1}
+\newcommand{\lap}{\Delta }
+\newcommand{\invlap}{\Delta^{-1}}
+%\newcommand{\lap}{\nabla^{2}}
+%\newcommand{\invlap}{\nabla^{-2}}
+\newcommand{\pbrac}[1]{\left( #1 \right)}
+\newcommand{\sbrac}[1]{\left[ #1 \right]}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
+
+
+
+
+\title{Reply to Referee and Editor Reports}
+\date{}
+\begin{document}
+%\maketitle
+
+\begin{flushleft}
+Dear Editors and Referees,
+\end{flushleft}
+
+Thank you for taking the time to read and provide important feedback on our manuscript. Below you will find the changes made to the revised version. 
+
+\begin{flushleft}
+Best Regards, 
+\end{flushleft}
+
+\begin{flushleft}
+Christopher J. Miles \\
+Charles R. Doering
+\end{flushleft}
+
+\vspace{1cm}
+
+\noindent\rule{\textwidth}{1pt}
+
+\vspace{1cm}
+
+{\bf Changes made in response to Referee \#1:} Below you will find the original comment of the referee with our changes and comments immediately after each.
+\begin{enumerate}
+\item  ``{\it In citation [2] Thiffeault has too many initials.}'' \\
+\\
+This error has been corrected.
+
+\item {\it ``Homogenization is more conventional spelling than homogenisation.''}\\
+\\
+This change has been made. However, the original spelling choice ``homogenisation" was based off of the guidelines of the journal. The guidelines state UK spelling.  
+
+\item  {\it ``On p.3 should `attached' instead of `attach'.''} \\
+\\
+This has been corrected.
+
+\end{enumerate}
+
+{\bf Changes made in response to Referee \#2:} Below you will find the original comment of the referee with our changes and comments immediately after each.
+
+\begin{enumerate}
+\item {\it ``On chapter 2 of this paper (theory part), the authors mainly provide two proofs of the
+lower bound of  $\lambda(t)$ and upper bound of $r(t)$, the proofs seem to be standard and the results
+are about some properties of standard parabolic equation, is there any literature to refer for
+these results? I'm very curious about this.''} \\
+\\
+We agree that both proofs utilize familiar energy methods, however we have every reason to believe that both calculations are original in the context of the problems at hand. For the enstrophy-constrained problem, the proof is particularly straightforward but it is desirable to include it for both clarity and completeness. The energy-constrained problem requires somewhat more clever analysis and in this regard we were inspired by the previous work of Poon (1996) that was brought to our attention by A. Kiselev (whom we gratefully acknowledged!).  
+
+
+\item {\it ``All the prediction about the $r(t)$ as well as the $\lambda(t)$ are based on the local-in-time optimisation flow, however there is no literature about whether this kind of flow is global optimisation mixing flow or not, could the authors clearify this?''} \\
+\\
+We thoroughly recognize that the relationship between local- and global-in-time optimization is not fully understood beyond the fact that local-in-time optimization is the short-time-horizon limit of global-in-time optimization. In order to stress this, in the theory section when local-in-time optimization is introduced we added ``We highlight that local-in-time optimization is not the same as global-in-time or finite-time optimization where the objective is to minimise $\|\theta(\,\cdot\, , T)\|_{H^{-1}}$ at the final time $T$. These objectives generally produce different results.  In the context of the shell model, however, these strategies yielded similar decay rates. The differences between these two objectives under the evolution of  (3)  will be the focus of a future study.''
+
+\item {\it ``In this paper, the authors studied the ratio $r(t)$, in the previous work of the same authors, another ratio $\frac{\|\theta\|_{H^{1}}}{\|\theta\|_{L^2}}$ is also considered. It seems that both of the numerical results show they both reached the constant as time goes to infinity under optimal enstrophy-constrained flow. Physically they are of the same scale (up to a minus one power), is there any reason for this paper to consider $H^{-1}$ instead of $H^1$? Is there more connection between these two ratios other than Holder's inequality? Please ignore this question if it is impossible to answer shortly.''}\\
+\\
+The $H^{1}$ and $H^{-1}$ norms formally scale as reciprocal powers of a length scale, and exactly so for narrow Fourier-band functions. However, generally the $H^{1}$ norm could diverge leaving the $H^{-1}$ finite as may be the case for mixing without diffusion. In the presence of diffusion as considered here, the $H^{1}$ increases before it decreases while the $H^{-1}$ norm decreases monotonically in time. It is the asymptotic state induced by sustained mixing that results in their scaling the same up to the expected $-1$ power because of the emergence of the Batchelor scale dominating the spectrum.
+
+The referee is thus correct that the $\|\theta\|_{H^{1}}/\|\theta\|_{L^2}$ also reaches a constant --- essentially the reciprocal of the previous constant. We could also provide a plot of this ratio in time if necessary. For the sake of brevity and minimizing repetition we decided to only provide $\|\theta\|_{H^{-1}}/\|\theta\|_{L^2}$ over time since this provides the same essential information as $\|\theta\|_{H^{1}}/\|\theta\|_{L^2}$ . 
+
+\end{enumerate}
+
+{\bf Changes made in response to Editor-in-Chief and Associate Editor:} Below you will find the original comment of the referee with our changes and comments immediately after each.
+
+\begin{enumerate}
+\item {\it ``... the relation between the bounds presented in the analytical section 2 and the earlier work on these quantities be stated explicitly and fully, second that the authors should address (at least in a reply to the reviewer, if not also in the manuscript) the extent to which global-in-time mixing optimization might be possible, and third that the relative advantages of the two approaches (earlier work based on the $H^1$ norm of theta, and this work using the $H^{-1}$ norm) be discussed.''}
+
+We fully addressed two of these three issues above, the remaining issue being the {\it extent} to which global-in-time mixing optimization might be possible. As discussed in detail in our previous paper on the shell model, global-in-time optimization requires finite-time-horizon optimal control techniques which are computationally challenging (although feasible) and analytically daunting (and the focus current research). 
+
+
+\item {\it ``The AE recommends that revisions are required and asks that the authors revise the manuscript to account for the comments of referee 2, including a detailed reply to the three comments of this reviewer, The AE asks that special attention be paid to adding statements about the relation of the analysis here and that of reference 3. The bases of the AE's recommendation are the two referee reports and the AE's reading of the manuscript. The AE thinks that it will be useful to have a suitably revised article on this topic in the journal, since there is considerable interest in understanding why the analytical results are as yet insufficiently sharp (involving double exponentials) to get close to the numerically observed exponential mixing rates in optimal mixing flows. In addition, the AE points out that the analytical and numerical results presented in a suitably revised manuscript would also constitute a good road map for future research in this topic.'' }
+
+With regards to the relation between our analysis and that of Poon (1996), we have followed and refined the analysis of Poon to produce an upper bound on $\frac{d}{dt} \left(\frac{\hone{\theta}}{\ltwo{\theta}}\right)$ as shown in equation (11). To make this explicit, we added the introductory sentence to section 2.3.2 : ``Here we follow and refine an analysis of Poon [3] to show that the presence of diffusion rules out perfect mixing in finite time for bounded velocity flows''. In addition when arriving at (11), we say ``Using H\"older's inequality and (3), this simplifies to a observation originally noted by Poon [3].''
+
+With regards to the gap between the derived analytical bound (involving a double exponential) and numerical results (suggesting single exponential decay), the second paragraph of the revised discussion section addresses this issue explicitly. There we say ``We suspect that the bounds obtained for $L^{\infty}$ flows are not sharp and could be improved further. The $L^{\infty}$ flow analysis produced a double-exponential lower bound on the $H^{-1}$ mix-norm rather than exponential as possibly expected given the numerical results for local-in-time optimal $L^2$ flows. The double-exponential bounds arise from the use of exponential upper bounds on the quantity $\frac{\hone{\theta}}{\ltwo{\theta}}$ in time for both $L^{\infty}$ flow constraints considered. We surmise that in fact $\frac{\hone{\theta}}{\ltwo{\theta}} < C$ (where $C$ is a constant) for all time $t$ as suggested by the numerical results. If this is true generally for the $L^{\infty}$  flows, then our previous analysis would demonstrate that the $H^{-1}$ mix-norm is bounded below by a single exponential instead of a double exponential.''
+
+
+\item {\it ``Finally, please also make some editorial adjustments, including to increase the thickness of the curves in the figures in Section 3 and to increase the sizes of the labels and numbers on the axes in all of the figures.''}
+
+This has been corrected.
+\end{enumerate}
+
+{\bf Changes made by Authors:} We made minor stylistic and grammatical changes. In addition, we changed the color scheme of plots to increase visibility.
+
+
+\end{document}
