@@ -20,15 +20,17 @@ class sol(object):
         self.hist_th_hm1 = []
         self.hist_th_l2 = []
         self.hist_th_h1 = []
-        self.hist_time = []
+        self.hist_th_time = []
         self.hist_th = []
+
         self.hist_u = []
+        self.hist_u_time = []
         self.hist_u_h1 = []
         self.hist_u_l2 = []
 
 
 def sim(N=128, M=1000, T=1.0, L=1.0, gamma=1.0, U=1.0, Pe=1024, T_kick=0.01,
-        save_every=10, pickle_file=None, plot=False, constraint='enstrophy'):
+        save_th_every=10, save_u_every=10, pickle_file=None, plot=False, constraint='enstrophy'):
 
     def f(th, u):
         return -1.0 * np.sum(vt.dealias(u) * st.grad(st.dealias(th)), 0) + kappa * st.lap(st.dealias(th))
@@ -97,15 +99,16 @@ def sim(N=128, M=1000, T=1.0, L=1.0, gamma=1.0, U=1.0, Pe=1024, T_kick=0.01,
         th = th + dt_kick * (1.0 / 6.0) * (k1 + 2.0 * k2 + 2.0 * k3 + k4)
 
     time = 0.0
-    hist_time = [time]
 
     hist_th = [th]
+    hist_th_time = [time]
     hist_th_hm1 = [st.hm1norm(th)]
     hist_th_l2 = [st.l2norm(th)]
     hist_th_h1 = [st.h1norm(th)]
 
     u = u_lit(th)
     hist_u = [u]
+    hist_u_time = [time]
     hist_u_h1 = [vt.h1norm(u)]
     hist_u_l2 = [vt.l2norm(u)]
     if plot:
@@ -124,18 +127,14 @@ def sim(N=128, M=1000, T=1.0, L=1.0, gamma=1.0, U=1.0, Pe=1024, T_kick=0.01,
         th = th + dt * (1.0 / 6.0) * (k1 + 2.0 * k2 + 2.0 * k3 + k4)
         time += dt
 
-        if np.mod(i, save_every) == 0 or i == total_steps - 1:
-            hist_time.append(time)
+        if np.mod(i, save_th_every) == 0 or i == total_steps - 1:
 
             hist_th.append(th)
+            hist_th_time.append(time)
             hist_th_hm1.append(st.hm1norm(th))
             hist_th_l2.append(st.l2norm(th))
             hist_th_h1.append(st.h1norm(th))
 
-            u = u_lit(th)
-            hist_u.append(u)
-            hist_u_h1.append(vt.h1norm(u))
-            hist_u_l2.append(vt.l2norm(u))
             if plot:
                 plt.figure()
                 st.plot(th)
@@ -145,6 +144,13 @@ def sim(N=128, M=1000, T=1.0, L=1.0, gamma=1.0, U=1.0, Pe=1024, T_kick=0.01,
                 vt.plot(u)
                 plt.show()
 
+        if np.mod(i, save_u_every) == 0 or i == total_steps - 1:
+            u = u_lit(th)
+            hist_u.append(u)
+            hist_u_time.append(time)
+            hist_u_h1.append(vt.h1norm(u))
+            hist_u_l2.append(vt.l2norm(u))
+
     sol_save = sol()
     sol_save.M = total_time_pts
     sol_save.N = N
@@ -153,14 +159,14 @@ def sim(N=128, M=1000, T=1.0, L=1.0, gamma=1.0, U=1.0, Pe=1024, T_kick=0.01,
     sol_save.Pe = Pe
     sol_save.L = L
 
-    sol_save.hist_time = hist_time
-
     sol_save.hist_th = hist_th
+    sol_save.hist_th_time = hist_th_time
     sol_save.hist_th_hm1 = hist_th_hm1
     sol_save.hist_th_l2 = hist_th_l2
     sol_save.hist_th_h1 = hist_th_h1
 
     sol_save.hist_u = hist_u
+    sol_save.hist_u_time = hist_u_time
     sol_save.hist_u_h1 = hist_u_h1
     sol_save.hist_u_l2 = hist_u_l2
 
@@ -249,7 +255,7 @@ if __name__ == "__main__":
     kappa = 1.0 / Pe
     constraint = "energy"
     U = 1.0
-    T = 2.0
+    T = 0.01
 
     gamma = 1.0
     #T = 13.0
@@ -284,16 +290,16 @@ if __name__ == "__main__":
     print('N = ', N)
     print('dt CFL = ', dt_cfl)
 
+    # Run 3 different simulations with 2 and 4 times as many time num_steps
+    # This will be used to calculate convergence metrics.
     M0 = int(round(T / dt_cfl))
-
     M_list = [M0, int(2 * M0), int(4 * M0)]
-
     for M in M_list:
         output_folder = "output-pe=" + str(Pe) + "-M=" + str(M) + "/"
         os.system('mkdir ' + output_folder)
         pickle_file = output_folder + "pe=" + str(Pe) + "-M=" + str(M) + ".pkl"
 
-        save_every = int(round(M / 200))
+        save_every = int(round(M / 65))
         solution = sim(N=N, M=M, T=T, L=L, U=U, gamma=gamma, Pe=Pe, constraint=constraint,
                        save_every=save_every, pickle_file=pickle_file, plot=False)
 
@@ -309,3 +315,33 @@ if __name__ == "__main__":
         plt.figure()
         plot_norms(solution.hist_time, solution.hist_th, N, L)
         plt.savefig(output_folder + 'plot_norms-pe=' + str(Pe) + '.png')
+
+    # # Test convergence
+    # f = open('convergence-report-pe=' + str(Pe) + '-M=' + str(M) + '.txt', 'w')
+    # s = []
+    # for M in M_list:
+    #     pickle_file = "output-pe=" + str(Pe) + "-M=" + str(M) + \
+    #         "/pe=" + str(Pe) + "-M=" + str(M) + ".pkl"
+    #
+    #     with open(pickle_file, 'rb') as f:
+    #         s.append(pickle.load(f, encoding='latin1'))
+    #
+    # dt_list = [item.T / item.M for item in s]
+    # st = tools.ScalarTool(N, L)
+    # low2med_res_error = st.l2norm(s[0].hist_th[-1] - s[1].hist_th[-1])
+    # med2high_res_error = st.l2norm(s[1].hist_th[-1] - s[2].hist_th[-1])
+    #
+    # for i, dt in enumerate(dt_list):
+    #     f.write('Simulation #' + str(i) + ': dt = ' + str(dt) + ' \n')
+    #     f.write('Simulation #' + str(i) +
+    #             ': Number of time steps = ' + str(M_list[i]) + ' \n')
+    #
+    # f.write('Absolute l2norm error difference between low and med res solutions: ' +
+    #         str(low2med_res_error) + '\n')
+    # f.write('Absolute l2norm error difference between med and high res solutions: ' +
+    #         str(med2high_res_error) + '\n')
+    # R = low2med_res_error / med2high_res_error
+    # p = np.log(R) / np.log(2)
+    # f.write(
+    #     'Verify 4-th order convergence of RK4 method: measured p =  ' + str(p) + ' \n')
+    # f.close()
