@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import copy
 import time
 import os
+import sys
 import pickle
 import pprint
 
@@ -77,9 +78,6 @@ def sim(N=128, M=10000, T=13.0, L=1.0, gamma=1.0, Pe=1024, T_kick=0.01,
 
     st = tools.ScalarTool(N, L)
     vt = tools.VectorTool(N, L)
-
-    temp_folder = 'temp/'
-    os.system('mkdir ' + temp_folder)
 
     th = np.zeros((total_time_pts, N, N))
     th0 = np.sin(2. * np.pi * X[0] / L)
@@ -180,7 +178,7 @@ def sim(N=128, M=10000, T=13.0, L=1.0, gamma=1.0, Pe=1024, T_kick=0.01,
 def movie(time, scalar_hist, N, L, output_path='output/'):
     os.system('mkdir ' + output_path)
     os.system('mkdir ' + output_path + 'images/')
-    st = ScalarTool(N, L)
+    st = tools.ScalarTool(N, L)
     # st.plot(scalar_hist[i])
     # plt.savefig(outputPath + "image%.4d.png" % i, format='png')
     for i in range(len(time)):
@@ -199,7 +197,7 @@ def movie(time, scalar_hist, N, L, output_path='output/'):
 
 
 def compute_norms(scalar_hist, N, L):
-    st = ScalarTool(N, L)
+    st = tools.ScalarTool(N, L)
     time_length, _, _ = np.shape(scalar_hist)
 
     hm1norm_hist = np.zeros(time_length)
@@ -245,9 +243,53 @@ def plot_norms(time, scalar_hist, N, L, high_quality=False, graph='log'):
 
 if __name__ == "__main__":
 
-    N = int(sys.argv[0])
-    Pe = int(sys.argv[1])
-    pickle_file = "pe=" + str(Pe) + ".pkl"
+    arg = sys.argv[1]
+    if arg == 'inf':
+        Pe = np.inf
+    else:
+        Pe = float(arg)
 
-    sim(N=N, M=1000, T=13.0, L=1.0, gamma=1.0, Pe=1024,
-        save_every=10, pickle_file=pickle_file, plot=False)
+    L = 1.0
+    kappa = 1.0 / Pe
+    gamma = 1.0
+    T = 0.01
+
+    if Pe == np.inf:
+        N = 512
+        dt_cfl = (L / N) / (gamma * L)
+    else:
+        lb = (kappa / gamma)**0.5
+        l_smallest = 0.25 * lb  # a quarter of batchelor scale
+        print('lb = ', lb)
+        num_wavelengths = L / l_smallest
+        print('N_boyd = ', tools.N_boyd(num_wavelengths))
+        N = min(tools.N_boyd(num_wavelengths), 512)
+        dt_cfl = min((L / N)**2. / kappa, (L / N) / (gamma * L))
+
+    print('N = ', N)
+    print('dt CFL = ', dt_cfl)
+
+    M0 = int(round(T / dt_cfl))
+
+    M_list = [M0, int(2 * M0), int(4 * M0)]
+
+    for M in M_list:
+        output_folder = "output-pe=" + str(Pe) + "-M=" + str(M) + "/"
+        os.system('mkdir ' + output_folder)
+        pickle_file = output_folder + "pe=" + str(Pe) + ".pkl"
+
+        solution = sim(N=N, M=M, T=T, L=L, gamma=gamma, Pe=Pe,
+                       save_every=10, pickle_file=pickle_file, plot=False)
+
+        movie(solution.hist_time, solution.hist_th,
+              N, L, output_path=output_folder)
+
+        plt.figure()
+
+        st = tools.ScalarTool(N, L)
+        st.plot(solution.hist_th[-1])
+        plt.savefig(output_folder + 'plot_final_frame-pe=' + str(Pe) + '.png')
+
+        plt.figure()
+        plot_norms(solution.hist_time, solution.hist_th, N, L)
+        plt.savefig(output_folder + 'plot_norms-pe=' + str(Pe) + '.png')

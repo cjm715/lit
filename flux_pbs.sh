@@ -40,7 +40,12 @@ do
       then
          description=("Pe=$Pe")
          arguments=("$Pe ")
-         python lit_enstrophy.py $arguments -> log-$description.txt
+         python lit.py $arguments -> log-$description.txt
       fi
       count=`expr $count + 1`
 done
+
+if [ "$PBS_ARRAYID" = 9 ]
+then
+   python lit.py "inf" -> log-$description.txt
+fi
