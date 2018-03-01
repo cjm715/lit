@@ -73,6 +73,12 @@ class ScalarTool(object):
         scalar_hat = self.fft(scalar)
         return self.ifft((-1.0) * self.K2 * (2 * np.pi / self.L)**2.0 * scalar_hat)
 
+    def invlap(self, scalar):
+        self.scalar_input_test(scalar)
+        scalar_hat = self.fft(scalar)
+        return np.real(self.ifft(-1.0 * (2.0 * np.pi / self.L)**(-2.0) *
+                                 self.oneoverK2 * self.mean_zero_array * scalar_hat))
+
     def grad_invlap(self, scalar):
         self.scalar_input_test(scalar)
         scalar_hat = self.fft(scalar)

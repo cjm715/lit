@@ -4,6 +4,77 @@ import math
 from tools import N_boyd
 
 
+def test_dealias_of_sinkx_where_k_is_above_two_thirds_dealias_boundary_is_zero():
+    L = 2.0 * np.pi
+    N = 128
+    st = ScalarTool(N, L)
+
+    kabove = np.ceil(st.kmax_dealias) + 1
+    th = np.sin(2. * np.pi / L * kabove * st.X[0])
+    z = np.zeros(th.shape)
+
+    assert np.allclose(st.dealias(th), z)
+
+
+def test_dealias_of_sinkx_where_k_is_above_two_thirds_dealias_boundary_is_zero_y_direction():
+    L = 2.0 * np.pi
+    N = 128
+    st = ScalarTool(N, L)
+
+    kabove = np.ceil(st.kmax_dealias) + 1
+    th = np.sin(2. * np.pi / L * kabove * st.X[1])
+    z = np.zeros(th.shape)
+
+    assert np.allclose(st.dealias(th), z)
+
+
+def test_dealias_of_sinkx_where_k_is_below_two_thirds_dealias_boundary_is_zero():
+    L = 2.0 * np.pi
+    N = 128
+    st = ScalarTool(N, L)
+
+    k = np.floor(st.kmax_dealias) - 1
+    th = np.sin(2. * np.pi / L * k * st.X[0])
+    z = np.zeros(th.shape)
+
+    assert not np.allclose(st.dealias(th), z)
+
+
+def test_dealias_of_sinkx_where_k_is_below_two_thirds_dealias_boundary_is_zero_y_direction():
+    L = 2.0 * np.pi
+    N = 128
+    st = ScalarTool(N, L)
+
+    k = np.floor(st.kmax_dealias) - 1
+    th = np.sin(2. * np.pi / L * k * st.X[1])
+    z = np.zeros(th.shape)
+
+    assert not np.allclose(st.dealias(th), z)
+
+
+def test_lap_invlap_of_th_is_th_minus_mean_value():
+    L = 2.0 * np.pi
+    N = 128
+    st = ScalarTool(N, L)
+
+    th = np.random.random((N, N))
+
+    assert np.allclose(st.lap(st.invlap(th)), st.subtract_mean(th))
+
+
+def test_spatial_integral_of_neg_invlap_th_time_th_equals_hm1_norm_sq():
+    L = 2.0 * np.pi
+    N = 128
+    st = ScalarTool(N, L)
+
+    th = np.random.random((N, N))
+    th = st.dealias(th)
+    a = st.sint(-1.0 * st.invlap(th) * th)
+    b = st.hm1norm(th)**2.
+    print(a, b)
+    assert np.allclose(a, b)
+
+
 def test_h1normsq_of_vector_is_spatial_integral_neg_lapvec_times_vec():
     N = 128
     L = 2.0
@@ -308,7 +379,7 @@ def test_validate_div_free_projector():
     assert np.allclose(projection_alt, vt.div_free_proj(u))
 
 
-def test_lap_invlap_of_th_is_th_minus_mean_value():
+def test_lap_invlap_of_u_is_u_minus_mean_value():
     L = 2.0 * np.pi
     N = 128
     vt = VectorTool(N, L)
