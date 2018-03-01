@@ -7,6 +7,20 @@ from tools import N_boyd
 def test_dealias_of_sinkx_where_k_is_above_two_thirds_dealias_boundary_is_zero():
     L = 2.0 * np.pi
     N = 128
+    vt = ScalarTool(N, L)
+
+    kabove = np.ceil(st.kmax_dealias) + 1
+    v = np.zeros((2, N, N))
+    v[0] = np.sin(2. * np.pi / L * kabove * st.X[0])
+    v[0] = np.sin(2. * np.pi / L * kabove * st.X[1])
+    z = np.zeros(v.shape)
+
+    assert np.allclose(st.dealias(th), z)
+
+
+def test_dealias_of_sinkx_where_k_is_above_two_thirds_dealias_boundary_is_zero():
+    L = 2.0 * np.pi
+    N = 128
     st = ScalarTool(N, L)
 
     kabove = np.ceil(st.kmax_dealias) + 1
