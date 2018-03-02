@@ -4,18 +4,31 @@ import math
 from tools import N_boyd
 
 
-def test_dealias_of_sinkx_where_k_is_above_two_thirds_dealias_boundary_is_zero():
+def test_dealias_of_velocity_with_components_equal_to_sinkx_where_k_is_above_two_thirds_dealias_boundary_is_zero():
     L = 2.0 * np.pi
     N = 128
-    vt = ScalarTool(N, L)
+    vt = VectorTool(N, L)
 
-    kabove = np.ceil(st.kmax_dealias) + 1
+    kabove = np.ceil(vt.kmax_dealias) + 1
     v = np.zeros((2, N, N))
-    v[0] = np.sin(2. * np.pi / L * kabove * st.X[0])
-    v[0] = np.sin(2. * np.pi / L * kabove * st.X[1])
+    v[0] = np.sin(2. * np.pi / L * kabove * vt.X[0])
+    v[0] = np.sin(2. * np.pi / L * kabove * vt.X[1])
     z = np.zeros(v.shape)
 
-    assert np.allclose(st.dealias(th), z)
+    assert np.allclose(vt.dealias(v), z)
+
+    def test_dealias_of_velocity_with_components_equal_to_sinkx_where_k_is_below_two_thirds_dealias_boundary_is_zero():
+        L = 2.0 * np.pi
+        N = 128
+        vt = VectorTool(N, L)
+
+        kabove = np.floor(vt.kmax_dealias) - 1
+        v = np.zeros((2, N, N))
+        v[0] = np.sin(2. * np.pi / L * kabove * vt.X[0])
+        v[0] = np.sin(2. * np.pi / L * kabove * vt.X[1])
+        z = np.zeros(v.shape)
+
+        assert np.allclose(vt.dealias(v), z)
 
 
 def test_dealias_of_sinkx_where_k_is_above_two_thirds_dealias_boundary_is_zero():

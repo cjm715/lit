@@ -11,7 +11,7 @@ import pprint
 
 class sol(object):
     def __init__(self):
-        self.M = 0  # Number of timepts
+        self.M = 0  # Number of total steps
         self.N = 0  # Number of spatial grid points in a single dimension
         self.T = 0.  # Final time
         self.dt = 0.
@@ -29,8 +29,9 @@ class sol(object):
         self.hist_u_l2 = []
 
 
-def sim(N=128, M=1000, T=1.0, L=1.0, gamma=1.0, U=1.0, Pe=1024, T_kick=0.01,
-        save_th_every=10, save_u_every=10, pickle_file=None, plot=False, constraint='enstrophy'):
+def sim(N=128, M=1000, T=1.0, L=1.0, gamma=1.0, U=1.0, Pe=1024,
+        T_kick=0.01, save_th_every=10, save_u_every=10, pickle_file=None,
+        plot=False, constraint='enstrophy'):
 
     def f(th, u):
         return -1.0 * np.sum(vt.dealias(u) * st.grad(st.dealias(th)), 0) + kappa * st.lap(st.dealias(th))
