@@ -196,7 +196,7 @@ For the enstrophy-bounded flow problem, we choose the same length scale $L$, the
 \label{eq:nd_ade}
 	\ppt{\theta}+\mathbf{u}\cdot \nabla \theta=\frac{1}{Pe} \lap\theta,
 \end{equation}
-where $Pe=  \frac{\Gamma L^2}{\kappa}$ for the enstrophy-constrained case and $Pe= \frac{UL}{\kappa}$ for the energy-constrained case.   
+where $Pe=  \frac{\Gamma L^2}{\kappa}$ for the enstrophy-constrained case and $Pe= \frac{UL}{\kappa}$ for the energy-constrained case. The non-dimensional flow constraints become $\ltwo{\nabla\u} = 1$ or $\ltwo{\u} = 1$.
 
 We consider the local-in-time optimisation strategy first introduced by Lin {\it et al.} \cite{JFM2011} in the case without diffusion. We find that this strategy generalises to the case with diffusion. The local-in-time optimal velocity fields maximise the instantaneous mixing rate by minimising $\ddt{}\hmone{\theta}^2$. We highlight that local-in-time optimization is not the same as global-in-time or finite-time optimization where the objective is to minimise $\|\theta(\,\cdot\, , T)\|_{H^{-1}}$ at the final time $T$. These objectives generally produce different results.  In the context of the shell model, however, these strategies yielded similar decay rates. The differences between these two objectives under the evolution of  \eref{eq:nd_ade}  will be the focus of a future study. 
 

@@ -34,13 +34,16 @@ def sim(N=128, M=1000, T=1.0, L=1.0, gamma=1.0, U=1.0, Pe=1024,
         plot=False, constraint='enstrophy'):
 
     def f(th, u):
-        return -1.0 * np.sum(vt.dealias(u) * st.grad(st.dealias(th)), 0) + kappa * st.lap(st.dealias(th))
+        th_d = st.dealias(th)
+        return st.dealias(-1.0 * np.sum(vt.dealias(u) * st.grad(th_d), 0)
+                          + kappa * st.lap(th_d))
 
     def f_lit(th):
         return f(th, u_lit(th))
 
     def u_lit_enstrophy(th):
-        u_lit = st.dealias(th) * vt.dealias(st.grad_invlap(th))
+        th_d = st.dealias(th)
+        u_lit = th_d * st.grad_invlap(th_d)
         u_lit = - vt.invlap(vt.div_free_proj(u_lit))
         u_lit = gamma * L * u_lit / st.l2norm(vt.curl(u_lit))
         return u_lit
@@ -120,7 +123,8 @@ def sim(N=128, M=1000, T=1.0, L=1.0, gamma=1.0, U=1.0, Pe=1024,
 
     u0 = copy.copy(u)
     assert total_steps == M
-    for i in range(total_steps):
+
+    for i in range(1, total_steps + 1):
         k1 = f_lit(th)
         k2 = f_lit(th + 0.5 * dt * k1)
         k3 = f_lit(th + 0.5 * dt * k2)
@@ -128,7 +132,7 @@ def sim(N=128, M=1000, T=1.0, L=1.0, gamma=1.0, U=1.0, Pe=1024,
         th = th + dt * (1.0 / 6.0) * (k1 + 2.0 * k2 + 2.0 * k3 + k4)
         time += dt
 
-        if np.mod(i, save_th_every) == 0 or i == total_steps - 1:
+        if np.mod(i, save_th_every) == 0:
 
             hist_th.append(th)
             hist_th_time.append(time)
@@ -145,7 +149,7 @@ def sim(N=128, M=1000, T=1.0, L=1.0, gamma=1.0, U=1.0, Pe=1024,
                 vt.plot(u)
                 plt.show()
 
-        if np.mod(i, save_u_every) == 0 or i == total_steps - 1:
+        if np.mod(i, save_u_every) == 0:
             u = u_lit(th)
             hist_u.append(u)
             hist_u_time.append(time)
@@ -194,7 +198,8 @@ def movie(time, scalar_hist, N, L, output_path='output/'):
         plt.close(fig)
 
     os.system("ffmpeg -y -framerate 20 -i " + output_path + 'images/'
-              "image%04d.png -c:v libx264 -pix_fmt yuv420p " + output_path + "movies.mp4")
+              "image%04d.png -c:v libx264 -pix_fmt yuv420p " + output_path +
+              "movies.mp4")
 
     # os.system('rm -r ' + output_path + 'images/')
 
@@ -256,10 +261,10 @@ if __name__ == "__main__":
     kappa = 1.0 / Pe
     constraint = "enstrophy"
     U = 1.0
-    #T = 1.0
+    # T = 1.0
 
     gamma = 1.0
-    T = 13.0
+    T = 0.1
 
     if constraint == "enstrophy":
         if Pe == np.inf:
@@ -293,15 +298,17 @@ if __name__ == "__main__":
 
     # Run 3 different simulations with 2 and 4 times as many time num_steps
     # This will be used to calculate convergence metrics.
-    M0 = int(round(T / dt_cfl))
+    M0 = round(T / dt_cfl)  # approx number of time steps according to CFL
+    M0 = int(2**np.ceil(np.log2(M0)))  # make power of two
+
     M_list = [M0, int(2 * M0), int(4 * M0)]
     for M in M_list:
         output_folder = "output-pe=" + str(Pe) + "-M=" + str(M) + "/"
         os.system('mkdir ' + output_folder)
         pickle_file = output_folder + "pe=" + str(Pe) + "-M=" + str(M) + ".pkl"
 
-        save_th_every = int(round(M / 100))
-        save_u_every = int(round(M / 5))
+        save_th_every = max(int(round(M / 128)), 1)
+        save_u_every = max(int(round(M / 8)), 1)
 
         solution = sim(N=N, M=M, T=T, L=L, U=U, gamma=gamma, Pe=Pe, constraint=constraint,
                        save_th_every=save_th_every, save_u_every=save_u_every,

@@ -345,6 +345,15 @@ def test_that_l2norm_of_vector_with_siny_for_xcomponent_equals_sqrt_of_half_of_L
     assert np.isclose(vt.l2norm(u), (0.5 * L ** 2)**0.5)
 
 
+def test_that_is_incompressible_projection():
+    N = 128
+    L = 2 * np.pi
+    vt = VectorTool(N, L)
+    u = np.random.random((2, N, N))
+    u = vt.dealias(vt.div_free_proj(u))
+    assert vt.is_incompressible(u)
+
+
 def test_that_is_incompressible_function_returns_true_for_cellular_flow():
     N = 128
     L = 2 * np.pi
@@ -354,6 +363,7 @@ def test_that_is_incompressible_function_returns_true_for_cellular_flow():
         np.sin((2.0 * np.pi / L) * vt.X[1])
     u[1] = np.cos((2.0 * np.pi / L) * vt.X[0]) * \
         np.cos((2.0 * np.pi / L) * vt.X[1])
+
     assert vt.is_incompressible(u)
 
 
