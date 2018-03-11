@@ -251,21 +251,39 @@ def plot_norms(time, scalar_hist, N, L, high_quality=False, graph='log'):
 
 if __name__ == "__main__":
 
-    arg = sys.argv[1]
-    if arg == 'inf':
-        Pe = np.inf
-    else:
-        Pe = float(arg)
+    # PLEASE READ BEFORE RUNNING ON FLUX SERVER!
+    #
+    # Transfer this script lit.py , tools.py, and flux_pbs_enstrophy.sh (or flux_pbs_energy.sh)
+    # to flux.
+    #
+    # This is specifically built to interface with the pbs scrpts to work on
+    # univeristy of Michigan's flux server. Make sure to use the following command
+    # `qsub -t 1-27 flux_pbs_enstrophy.sh' where 27 is chosen since it is the (Length
+    # of Pe_list[=9]) times (number of trials per Peclet[=3]). Similarly
+    # for the energy constraint run `qsub -t 1-33 flux_pbs_energy.sh'
 
-    L = 1.0
+    sim_num = int(sys.argv[1])
+    constraint = str(sys.argv[2])
+    T = float(sys.argv[3])
+
+    print(sim_num)
+
+    if constraint == "enstrophy":
+        Pe_list = [128.0, 256.0, 512.0, 1024.0,
+                   2048.0, 4096.0, 8192.0, 16384.0, np.inf]
+    elif constraint == "energy":
+        Pe_list = [1.0, 2.0, 4.0, 8.0, 16.0, 32.0,
+                   64.0, 128.0, 256.0, 512.0, np.inf]
+
+    Pe = Pe_list[(sim_num - 1) // 3]
     kappa = 1.0 / Pe
-    constraint = "enstrophy"
+
+    # THESE PARAMETERS SHOULD NOT BE CHANGE!
+    L = 1.0
     U = 1.0
-    # T = 1.0
-
     gamma = 1.0
-    T = 0.1
 
+    # Determine N and dt_cfl
     if constraint == "enstrophy":
         if Pe == np.inf:
             N = 512
@@ -296,33 +314,37 @@ if __name__ == "__main__":
     print('N = ', N)
     print('dt CFL = ', dt_cfl)
 
+    # Determine M_list given dt_cfl
     # Run 3 different simulations with 2 and 4 times as many time num_steps
     # This will be used to calculate convergence metrics.
     M0 = round(T / dt_cfl)  # approx number of time steps according to CFL
     M0 = int(2**np.ceil(np.log2(M0)))  # make power of two
-
     M_list = [M0, int(2 * M0), int(4 * M0)]
-    for M in M_list:
-        output_folder = "output-pe=" + str(Pe) + "-M=" + str(M) + "/"
-        os.system('mkdir ' + output_folder)
-        pickle_file = output_folder + "pe=" + str(Pe) + "-M=" + str(M) + ".pkl"
 
-        save_th_every = max(int(round(M / 128)), 1)
-        save_u_every = max(int(round(M / 8)), 1)
+    # Select M based off of sim_num
+    M_index = (sim_num - 1) % 3
+    M = M_list[M_index]
 
-        solution = sim(N=N, M=M, T=T, L=L, U=U, gamma=gamma, Pe=Pe, constraint=constraint,
-                       save_th_every=save_th_every, save_u_every=save_u_every,
-                       pickle_file=pickle_file, plot=False)
+    output_folder = "output-pe=" + str(Pe) + "-M=" + str(M) + "/"
+    os.system('mkdir ' + output_folder)
+    pickle_file = output_folder + "pe=" + str(Pe) + "-M=" + str(M) + ".pkl"
 
-        movie(solution.hist_th_time, solution.hist_th,
-              N, L, output_path=output_folder)
+    save_th_every = max(int(round(M / 128)), 1)
+    save_u_every = max(int(round(M / 8)), 1)
 
-        plt.figure()
+    solution = sim(N=N, M=M, T=T, L=L, U=U, gamma=gamma, Pe=Pe, constraint=constraint,
+                   save_th_every=save_th_every, save_u_every=save_u_every,
+                   pickle_file=pickle_file, plot=False)
 
-        st = tools.ScalarTool(N, L)
-        st.plot(solution.hist_th[-1])
-        plt.savefig(output_folder + 'plot_final_frame-pe=' + str(Pe) + '.png')
+    movie(solution.hist_th_time, solution.hist_th,
+          N, L, output_path=output_folder)
 
-        plt.figure()
-        plot_norms(solution.hist_th_time, solution.hist_th, N, L)
-        plt.savefig(output_folder + 'plot_norms-pe=' + str(Pe) + '.png')
+    plt.figure()
+
+    st = tools.ScalarTool(N, L)
+    st.plot(solution.hist_th[-1])
+    plt.savefig(output_folder + 'plot_final_frame-pe=' + str(Pe) + '.png')
+
+    plt.figure()
+    plot_norms(solution.hist_th_time, solution.hist_th, N, L)
+    plt.savefig(output_folder + 'plot_norms-pe=' + str(Pe) + '.png')
