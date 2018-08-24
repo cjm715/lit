@@ -12,10 +12,15 @@ System Requirements:
 - ffmpeg
 
 Python packages: 
+All required packages can be install by using the command `pip install -r requirements.txt` within this repository folder.
 - jupyter
 - numpy
 - pyfftw 
 - matplotlib
+
+## Usage
+
+To load `sinflow.ipynb`, you must start a jupyter notebook session by running the command `jupyter notebook sinflow.ipynb` from the root directory of the repository.
 
 
 ## Testing
