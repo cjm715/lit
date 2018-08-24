@@ -1,4 +1,4 @@
-# Local-in-time optimal mixing project
+# Fluid mixing project
 
 ## Setup
 
